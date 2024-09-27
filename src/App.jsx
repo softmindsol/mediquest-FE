@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/authentication/Login";
+import SignUpStep1 from "./pages/authentication/SignUpStep1";
+import SignUpStep2 from "./pages/authentication/SignUpStep2";
+import Home from "./pages/Home/Home";
+import EmailConfirmation from "./pages/email-confirmation./EmailConfirmation";
+import Subscription from "./pages/subscription/Subscription";
+import Topic from "./pages/Topic/Topic";
+import Settings from "./pages/settings/settings";
+import Question from "./pages/questionstemplate/Questions";
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/log-in" element={<Login />} />
+        <Route path="/sign-up" element={<SignUpStep1 />} />
+        <Route path="/sign-up2" element={<SignUpStep2 />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/topic" element={<Topic />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/email-confirmation" element={<EmailConfirmation />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/question" element={<Question />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
