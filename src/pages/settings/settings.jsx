@@ -6,7 +6,7 @@ import Button from "../../components/Button";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import { Link } from "react-router-dom";
 
-const inputFields = [  
+const inputFields = [
   {
     name: "oldPassword",
     type: "password",
@@ -30,12 +30,19 @@ const Settings = () => {
       <>
         <Breadcrumb pageName="Settings" />
 
-        <div className="mb-15 mt-3">
+        <div className=" mt-3">
           <p className="text-sm text-black-2 font-medium">
             If you wish to change your email{" "}
             <span className="text-[#0038FF]">contact</span> us at
             contact@medquest.com
           </p>
+        </div>
+        <div className="flex justify-end mb-10">
+          <Button
+            text="Logout"
+            type="submit" // Ensure the button type is submit
+            className="text-[#DC3545] bg-white font-semibold text-title-p rounded-[4px] px-5 py-1 border border-[#DC3545]    focus:outline-none "
+          />
         </div>
         <div className=" bg-white rounded-lg border border-[#E6E9EC]">
           <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b border-[#E9ECEF] p-3 ">
@@ -116,12 +123,57 @@ const Settings = () => {
             />
           </div>
         </div>
-        <div className="flex justify-end mt-15">
-          <Button
-            text="Logout"
-            type="submit" // Ensure the button type is submit
-            className="text-[#DC3545] bg-white font-semibold text-title-p rounded-[4px] px-5 py-1 border border-[#DC3545]    focus:outline-none "
-          />
+        <div className="mt-6 bg-white rounded-lg border mb-5 border-[#E6E9EC]">
+          <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b border-[#E9ECEF] p-3 ">
+            Plan & Billing
+          </h2>
+          <div className="p-3 flex justify-center px-11 py-7 ">
+            <div className="flex justify-between w-1/2 ">
+              <div className="space-y-5 ">
+                <span className="text-[13px] font-semibold text-[#6D6D6D] ">
+                  Plan
+                </span>
+                <div className="text-[15px] font-semibold text-black">
+                  PLAN NAME HERE
+                </div>
+              </div>
+              <div className="space-y-5 ">
+                <span className="text-[13px] font-semibold text-[#6D6D6D] ">
+                  Payment
+                </span>
+                <div className="text-[15px] font-semibold text-black">
+                  99 MAD
+                </div>
+              </div>
+
+              <div className="space-y-5 ">
+                <span className="text-[13px] font-semibold text-[#6D6D6D] ">
+                  Next Billing Cycle
+                </span>
+                <div className="text-[15px] font-semibold text-black">
+                  07/08/2024
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2 flex justify-end   gap-6 items-start ">
+              <span className="text-[13px] font-semibold text-[#6D6D6D] item-center">
+                Cancel Subscription
+              </span>
+              <button className="bg-[#007AFF] text-white text-base font-semibold px-5 py-2 rounded-md ">
+                Upgrade
+              </button>
+            </div>
+          </div>
+          <div className="border-t border-[#E6E9EC] mx-8 mt-4 py-4 text-center text-[14px] text-black-2">
+            For any billing questions please 
+            <a
+              href="mailto:contact@medquest.ma"
+              className="text-[#0038FF] hover:underline ml-1"
+            >
+               contact us
+            </a>
+            <span className="text-black"> at contact@medquest.ma</span>
+          </div>
         </div>
       </>
     </DefaultLayout>

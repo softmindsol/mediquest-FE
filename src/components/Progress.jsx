@@ -34,17 +34,17 @@ const Progress = () => {
         </div>
 
         {/* Main Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10 justify-center">
           {/* Left side: Two circular charts */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             {/* Performance (without difficulty) */}
             <div className="text-center">
               <p className="text-[#343A40] text-title-sm font-semibold">
                 Performance
               </p>
-              <p className="text-title-p text-[#343A40] font-semibold">
+              {/* <p className="text-title-p text-[#343A40] font-semibold">
                 (without difficulty)
-              </p>
+              </p> */}
               <GaugeChart series={[60]} />
               <p className="text-[#8D8D8D] font-semibold text-sm mt-4 ">
                 Performance NOT adjusted to question difficulty
@@ -52,7 +52,7 @@ const Progress = () => {
             </div>
 
             {/* Weighted Performance (with difficulty) */}
-            <div className="text-center">
+            {/* <div className="text-center">
               <p className="text-[#343A40] text-title-sm font-semibold">
                 Weighted Performance
               </p>
@@ -63,7 +63,7 @@ const Progress = () => {
               <p className="text-[#8D8D8D] font-semibold text-sm mt-4 ">
                 Performance adjusted to question difficulty
               </p>
-            </div>
+            </div> */}
           </div>
 
           {/* Right side: SplineChart comparison */}
