@@ -14,9 +14,34 @@ const categories = [
       { name: "Casablanca", progress: "1 of 403" },
     ],
   },
-  { name: "An item", progress: "1 of 493" },
-  { name: "An item", progress: "1 of 493" },
-  { name: "An item", progress: "1 of 493" },
+  {
+    name: "An item",
+    progress: "1 of 493",
+    subcategories: [
+      { name: "Rabat", progress: "1 of 403" },
+      { name: "Marrakech", progress: "1 of 403" },
+      { name: "Casablanca", progress: "1 of 403" },
+    ],
+  },
+  {
+    name: "An item",
+    progress: "1 of 493",
+    subcategories: [
+      { name: "Rabat", progress: "1 of 403" },
+      { name: "Marrakech", progress: "1 of 403" },
+      { name: "Casablanca", progress: "1 of 403" },
+    ],
+  },
+  {
+    name: "An item",
+    progress: "1 of 493",
+    subcategories: [
+      { name: "Rabat", progress: "1 of 403" },
+      { name: "Marrakech", progress: "1 of 403" },
+      { name: "Casablanca", progress: "1 of 403" },
+    ],
+  },
+
 ];
 
 // Array of category items from the design
@@ -211,11 +236,11 @@ const closeModal = () => setModalOpen(false);
                 {categories.map((category, index) => (
                   <div key={index}>
                     {/* Main Category */}
-                    <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
+                    <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4 ">
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          className="mr-3 "
+                          className="mr-3 cursor-pointer"
                           onClick={() => toggleCategory(index)}
                         />
                         <span className="text-[14px] text-primary">
@@ -238,7 +263,10 @@ const closeModal = () => setModalOpen(false);
                                 className="flex justify-between items-center  pl-15 py-2 px-4 border-b border-[#DEE2E6]"
                               >
                                 <div className="flex items-center">
-                                  <input type="checkbox" className="mr-3" />
+                                  <input
+                                    type="checkbox"
+                                    className="mr-3 cursor-pointer"
+                                  />
                                   <span className="text-[14px] text-primary ">
                                     {subcategory.name}
                                   </span>
@@ -336,7 +364,6 @@ const closeModal = () => setModalOpen(false);
                   </div>
                 ))}
               </div>
-            
             </div>
 
             {/* Recent Tests */}

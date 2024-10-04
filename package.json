@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.9",
+    "@heroicons/react": "^2.1.5",
     "apexcharts": "^3.53.0",
     "formik": "^2.4.6",
     "postcss-nested": "^6.2.0",
