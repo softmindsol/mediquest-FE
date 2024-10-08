@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ~/mediquest-FE/_work/mediquest-FE/mediquest-FE/
-
 # Check if the build directory exists
 if [ -d "dist" ]; then
   echo "Build directory exists."
