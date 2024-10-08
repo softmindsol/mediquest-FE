@@ -16,6 +16,7 @@ import Subscription from "./pages/subscription/Subscription";
 import Topic from "./pages/Topic/Topic";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { verifyToken } from "./store/features/auth/auth.service";
+import VerifyEmail from "./pages/authentication/VerifyEmail";
 
 function App() {
   // Access the isLoggedIn state from Redux
@@ -62,6 +63,10 @@ function App() {
               <Topic />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/verify-email/:verificationToken"
+          element={<VerifyEmail />}
         />
         <Route
           path="/settings"

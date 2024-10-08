@@ -65,10 +65,10 @@ const inputFieldsStep2 = [
 const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
 
 const SignUp = () => {
-  const { user } = useSelector((state) => state?.user || {});
+  const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
 
-  console.log(user?.data);
+  console.log(user);
 
   localStorage.setItem("userId", user?.data?.id);
 

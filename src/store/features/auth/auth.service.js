@@ -115,7 +115,7 @@ export const verifyToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosWithoutToken.get("/auth/verify-token");
-      return response.data.data.isLoggedIn;
+      return response?.data?.data?.isLoggedIn;
     } catch (error) {
       console.error("Token verification failed:", error);
       return rejectWithValue(error);

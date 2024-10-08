@@ -22,15 +22,13 @@ export const RegisterSchema = Yup.object().shape({
 
   year: Yup.string()
     .required("Year is required")
-    .matches(/^S([1-9]|10)$/, "Year must be S1 to S10"), // Validate year as S1 to S10
+    .matches(/^S([1-9]|10)$/, "Year must be S1 to S10"),
 
   city: Yup.string().required("City is required"),
 
   university: Yup.string().required("University is required"),
 
-  phoneNumber: Yup.string()
-    .required("Phone number is required")
-    .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
+  phoneNumber: Yup.string().required("Phone number is required"),
 });
 
 export const RegisterTwoSchema = Yup.object({
@@ -60,5 +58,5 @@ export const LoginSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required"), // Add this line
+  password: Yup.string().required("Password is required"),
 });
