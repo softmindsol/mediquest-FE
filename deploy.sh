@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/mediquest-FE/_work/mediquest-FE/mediquest-FE/
+
 # Check if the build directory exists
 if [ -d "dist" ]; then
   echo "Build directory exists."
@@ -25,8 +27,6 @@ echo "New build directory copied to /var/www/html/mediquest-FE-build."
 echo "Restarting Nginx service..."
 sudo_pass=$(<~/.sudo_pass)
 echo $sudo_pass | sudo -S systemctl restart nginx || { echo "Failed to restart Nginx"; exit 1; }
-
-echo "Deployment completed successfully!"
 
 # Deployment completed message
 echo "Deployment completed successfully."
