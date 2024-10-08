@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Notification from "../../components/Notification";
 import { checkMail, resendMail } from "../../store/features/auth/auth.service";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const [isEmailSent, setIsEmailSent] = useState(true);
   const [notification, setNotification] = useState(null);
