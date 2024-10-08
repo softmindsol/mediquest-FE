@@ -17,7 +17,7 @@ else
 fi
 
 # Copy the new build directory to the deployment location
-sudo cp -r build /var/www/html/mediquest-FE-build
+sudo cp -r dist /var/www/html/mediquest-FE-build
 echo "New build directory copied to /var/www/html/mediquest-FE-build."
 
 # Restart Nginx to apply changes
@@ -25,7 +25,8 @@ echo "New build directory copied to /var/www/html/mediquest-FE-build."
 echo "Restarting Nginx service..."
 sudo_pass=$(<~/.sudo_pass)
 echo $sudo_pass | sudo -S systemctl restart nginx || { echo "Failed to restart Nginx"; exit 1; }
-echo "Nginx service restarted."
+
+echo "Deployment completed successfully!"
 
 # Deployment completed message
 echo "Deployment completed successfully."
