@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if the build directory exists
-if [ -d "build" ]; then
+if [ -d "dist" ]; then
   echo "Build directory exists."
 else
   echo "Build directory does not exist." >&2
