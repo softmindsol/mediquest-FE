@@ -50,8 +50,8 @@ const SignUpStep1 = () => {
     <>
       <Header />
       <div className="w-[360px] m-auto ">
-        <div className=" mt-15  pb-22  max-w-full">
-          <h1 className=" text-title-xl2  text-black-3 font-semibold text-center mb-5">
+        <div className="max-w-full mt-15 pb-22">
+          <h1 className="mb-5 font-semibold text-center text-title-xl2 text-black-3">
             Create an account
           </h1>
           <p className="text-title-sm text-[#0D6EFD] font-bold text-center mb-6">
@@ -73,12 +73,12 @@ const SignUpStep1 = () => {
           >
             {() => (
               <Form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-6 ">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-1 ">
                   {inputFields?.map((field) => (
                     <div key={field.name}>
                       <label
                         htmlFor={field.name}
-                        className="text-title-p block font-normal text-black-3"
+                        className="block font-normal text-title-p text-black-3"
                       >
                         {field?.label}
                       </label>
@@ -92,7 +92,7 @@ const SignUpStep1 = () => {
                       <ErrorMessage
                         name={field.name}
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="mt-1 text-sm text-red-500"
                       />
                     </div>
                   ))}
@@ -100,7 +100,7 @@ const SignUpStep1 = () => {
 
                 <Link
                   to="/sign-up2"
-                  className="flex justify-center pt-9 w-full"
+                  className="flex justify-center w-full pt-9"
                 >
                   <Button
                     text="Continue"
@@ -111,7 +111,7 @@ const SignUpStep1 = () => {
               </Form>
             )}
           </Formik>
-          <p className="text-center text-title-p font-normal text-secondary mt-8">
+          <p className="mt-8 font-normal text-center text-title-p text-secondary">
             Already have an account?
             <Link to="/log-in" className="text-[#0D6EFD] underline">
               Log in

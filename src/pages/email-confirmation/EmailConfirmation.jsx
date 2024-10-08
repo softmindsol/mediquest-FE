@@ -1,49 +1,74 @@
 import { useState } from "react";
-import Header from "../../components/Header";
+import { useDispatch } from "react-redux";
 import Footer from "../../components/Footer";
-import { IoFlowerOutline } from "react-icons/io5";
+import Header from "../../components/Header";
+import Notification from "../../components/Notification";
+import { checkMail, resendMail } from "../../store/features/auth/auth.service";
+import { useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
- const [isEmailSent, setIsEmailSent] = useState(true); // Email alert visible
- const [isEmailVerified, setIsEmailVerified] = useState(false); // Email verification status
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isEmailSent, setIsEmailSent] = useState(true);
+  const [notification, setNotification] = useState(null);
+  const userId = localStorage.getItem("userId");
 
- const handleResendEmail = () => {
-   // Logic to resend the email
-   console.log("Resending email...");
- };
+  const handleResendEmail = async () => {
+    const response = await dispatch(resendMail(userId));
+    if (response.type === "resendMail/fulfilled") {
+      setNotification({ title: response.payload.message, type: "success" });
+    } else {
+      setNotification({
+        title:
+          response.payload?.response?.data?.error || "Failed to resend email.",
+        type: "error",
+      });
+    }
+  };
 
- const handleConfirmEmail = () => {
-   // Logic to confirm the email
-   setIsEmailVerified(true);
- };
+  const handleConfirmEmail = async () => {
+    const response = await dispatch(checkMail(userId));
+
+    console.log(response);
+
+    if (response.type === "checkMail/fulfilled") {
+      navigate("/log-in");
+    } else {
+      setNotification({
+        title:
+          response.payload?.response?.data?.error || "Failed to confirm email.",
+        type: "error",
+      });
+    }
+  };
+
+  // Determine the notification color based on the type
+  const getNotificationColor = (type) => {
+    switch (type) {
+      case "success":
+        return "bg-green-200 border-green-400"; // Example success color
+      case "error":
+        return "bg-red-200 border-red-400"; // Red color for errors
+      default:
+        return "bg-[#CFF4FC] border-[#6EDFF6]"; // Default color
+    }
+  };
 
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center ">
-        {/* Alert Box for Email Sent */}
-        {isEmailSent && (
-          <div className=" flex justify-between items-center p-4 mt-9 bg-[#CFF4FC] rounded-[6px] border border-[#6EDFF6] w-full max-w-lg">
-            <div className="flex gap-3 items-center">
-              <IoFlowerOutline size={16} className="text-[#055160]" />
-
-              <span className="text-[12px] text-[#055160]">
-                Email Sent! Check your inbox and spam!
-              </span>
-            </div>
-            <button
-              className="ml-4  focus:outline-none"
-              onClick={() => setIsEmailSent(false)}
-            >
-              &times;
-            </button>
-          </div>
+      <div className="flex flex-col items-center justify-center">
+        {isEmailSent && notification && (
+          <Notification
+            title={notification.title}
+            color={getNotificationColor(notification.type)}
+            onClick={() => setNotification(null)}
+          />
         )}
 
-        {/* Modal Box */}
-        <div className="w-full max-w-2xl mt-8  bg-white border border-[#CED4DA] rounded-xl ">
-          <div className="flex justify-between items-center border-b border-[#CED4DA]  p-4 ">
-            <h2 className="text-title-p font-semibold text-black">
+        <div className="w-full max-w-2xl mt-8 bg-white border border-[#CED4DA] rounded-xl">
+          <div className="flex justify-between items-center border-b border-[#CED4DA] p-4">
+            <h2 className="font-semibold text-black text-title-p">
               Email Confirmation
             </h2>
             <button
@@ -54,26 +79,24 @@ const EmailVerification = () => {
             </button>
           </div>
 
-          <p className="text-secondary text-title-p border-b border-[#CED4DA]  p-4">
-            Use Bootstrap’s JavaScript modal plugin to add dialogs to your site
-            for lightboxes, user notifications, or completely custom content.
-            Use Bootstrap’s JavaScript modal plugin to add dialogs to your site
-            for lightboxes, user notifications, or completely custom content.
+          <p className="text-secondary text-title-p border-b border-[#CED4DA] p-4">
+            Please confirm your email to continue using our services. If you
+            haven't received an email, you can resend it.
           </p>
 
-          <div className="flex justify-end gap-5 items-center p-4">
+          <div className="flex items-center justify-end gap-5 p-4">
             <button
               onClick={handleResendEmail}
-              className="px-4 py-2 bg-[#808080] font-semibold text-title-p text-white  rounded-md "
+              className="px-4 py-2 bg-[#808080] font-semibold text-title-p text-white rounded-md"
             >
-              Resend email
+              Resend Email
             </button>
 
             <button
               onClick={handleConfirmEmail}
               className="px-4 py-2 bg-[#007AFF] font-semibold text-title-p text-white rounded-md"
             >
-              I confirmed my email.
+              I Confirmed My Email
             </button>
           </div>
         </div>

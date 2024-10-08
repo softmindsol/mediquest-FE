@@ -1,6 +1,8 @@
 import React from "react";
 
 const Button = ({
+  type,
+  disabled,
   text,
   onClick,
   className: styles,
@@ -9,7 +11,12 @@ const Button = ({
   children,
 }) => {
   return (
-    <button onClick={onClick} className={` ${styles}`}>
+    <button
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
+      className={` ${styles}`}
+    >
       {iconPosition === "left" && Icon && (
         <Icon className="inline-block mr-2" />
       )}
