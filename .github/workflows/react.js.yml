@@ -57,20 +57,8 @@ jobs:
 
     - name: Build project
       run: npm run build --if-present
-
-    # Debug: Check if dist folder exists after build
-    - name: List build directory
-      run: ls -la dist
-
-    # Ensure dist exists before proceeding
-    - name: Check if dist folder exists
-      run: |
-        if [ ! -d "dist" ]; then
-          echo "Error: dist folder does not exist after the build."
-          exit 1
-        fi
-
+      
     - name: Deploy using deploy.sh script
       run: |
-        chmod +x ./deploy.sh
-        ./deploy.sh
+            chmod +x ./deploy.sh
+            ./deploy.sh
