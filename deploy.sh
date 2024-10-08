@@ -10,14 +10,17 @@ fi
 
 # Remove the existing build directory if it exists
 if [ -d "/var/www/html/mediquest-FE-build" ]; then
-  sudo rm -rf /var/www/html/mediquest-FE-build
+  echo "Removing old build directory..."
+  sudo_pass=$(<~/.sudo_pass)
+  echo $sudo_pass | sudo -S rm -rf /var/www/html/mediquest-FE-build
   echo "Old build directory removed."
 else
   echo "No existing build directory to remove."
 fi
 
 # Copy the new build directory to the deployment location
-sudo cp -r dist /var/www/html/mediquest-FE-build
+echo "Copying new build directory..."
+echo $sudo_pass | sudo -S cp -r dist /var/www/html/mediquest-FE-build
 echo "New build directory copied to /var/www/html/mediquest-FE-build."
 
 # Restart Nginx to apply changes
