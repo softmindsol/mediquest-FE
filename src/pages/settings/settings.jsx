@@ -4,7 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewRegisterSchema } from "../../schema/auth.schema"; // Import the validation schema
 import Button from "../../components/Button";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { changePassword, logout } from "../../store/features/auth/auth.service";
 
 const inputFields = [
   {
@@ -13,7 +15,7 @@ const inputFields = [
     label: "Old Password:",
   },
   {
-    name: "password",
+    name: "newPassword",
     type: "password",
     label: "New Password:",
   },
@@ -25,13 +27,21 @@ const inputFields = [
 ];
 
 const Settings = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    const res = await dispatch(logout());
+    console.log("🚀 ~ handleLogout ~ res:", res);
+
+    if (res.type === "logout/fulfilled") navigate("/login");
+  };
   return (
     <DefaultLayout>
       <>
         <Breadcrumb pageName="Settings" />
 
-        <div className=" mt-3">
-          <p className="text-sm text-black-2 font-medium">
+        <div className="mt-3 ">
+          <p className="text-sm font-medium text-black-2">
             If you wish to change your email{" "}
             <span className="text-[#0038FF]">contact</span> us at
             contact@medquest.com
@@ -39,8 +49,9 @@ const Settings = () => {
         </div>
         <div className="flex justify-end mb-10">
           <Button
+            onClick={handleLogout}
             text="Logout"
-            type="submit" // Ensure the button type is submit
+            type="submit"
             className="text-[#DC3545] bg-white font-semibold text-title-p rounded-[4px] px-5 py-1 border border-[#DC3545]    focus:outline-none "
           />
         </div>
@@ -51,17 +62,23 @@ const Settings = () => {
           <Formik
             initialValues={{
               oldPassword: "",
-              password: "",
+              newPassword: "",
               confirmPassword: "",
             }}
             validationSchema={NewRegisterSchema}
-            onSubmit={(values) => {
-              console.log("Form Submitted Values:", values); // Log form values here
+            onSubmit={async (values) => {
+              console.log("Form Submitted Values:", values);
+
+              try {
+                await dispatch(changePassword(values));
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
             {() => (
-              <Form className="space-y-5 p-3">
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
+              <Form className="p-3 space-y-5">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-1">
                   {inputFields?.map((field) => (
                     <div key={field.name}>
                       <label
@@ -80,19 +97,19 @@ const Settings = () => {
                       <ErrorMessage
                         name={field.name}
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="mt-1 text-sm text-red-500"
                       />
                     </div>
                   ))}
                 </div>
-                <p className="text-sm text-secondary font-medium">
+                <p className="text-sm font-medium text-secondary">
                   password should be at least 8 long and contain at least 1
                   lowercase, 1 uppercase and 1 number
                 </p>
 
                 <Button
                   text="Save change to password"
-                  type="submit" // Ensure the button type is submit
+                  type="submit"
                   className="text-[#0D6EFD] font-semibold text-title-p rounded-[4px] px-3 py-1 border border-[#0D6EFD]    focus:outline-none "
                 />
               </Form>
@@ -127,7 +144,7 @@ const Settings = () => {
           <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b border-[#E9ECEF] p-3 ">
             Plan & Billing
           </h2>
-          <div className="p-3 flex justify-center px-11 py-7 ">
+          <div className="flex justify-center p-3 px-11 py-7 ">
             <div className="flex justify-between w-1/2 ">
               <div className="space-y-5 ">
                 <span className="text-[13px] font-semibold text-[#6D6D6D] ">
@@ -155,7 +172,7 @@ const Settings = () => {
                 </div>
               </div>
             </div>
-            <div className="w-1/2 flex justify-end   gap-6 items-start ">
+            <div className="flex items-start justify-end w-1/2 gap-6 ">
               <span className="text-[13px] font-semibold text-[#6D6D6D] item-center">
                 Cancel Subscription
               </span>
@@ -165,12 +182,12 @@ const Settings = () => {
             </div>
           </div>
           <div className="border-t border-[#E6E9EC] mx-8 mt-4 py-4 text-center text-[14px] text-black-2">
-            For any billing questions please 
+            For any billing questions please
             <a
               href="mailto:contact@medquest.ma"
               className="text-[#0038FF] hover:underline ml-1"
             >
-               contact us
+              contact us
             </a>
             <span className="text-black"> at contact@medquest.ma</span>
           </div>

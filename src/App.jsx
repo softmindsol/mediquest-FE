@@ -1,21 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Login from "./pages/authentication/Login";
-import SignUpStep1 from "./pages/authentication/SignUpStep1";
-import SignUpStep2 from "./pages/authentication/SignUpStep2";
+import SignUp from "./pages/authentication/SignUp";
+import EmailConfirmation from "./pages/email-confirmation/EmailConfirmation";
 import Home from "./pages/Home/Home";
-import EmailConfirmation from "./pages/email-confirmation./EmailConfirmation";
+import Question from "./pages/questionstemplate/Questions";
+import Settings from "./pages/settings/settings";
 import Subscription from "./pages/subscription/Subscription";
 import Topic from "./pages/Topic/Topic";
-import Settings from "./pages/settings/settings";
-import Question from "./pages/questionstemplate/Questions";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/log-in" element={<Login />} />
-        <Route path="/sign-up" element={<SignUpStep1 />} />
-        <Route path="/sign-up2" element={<SignUpStep2 />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<Home />} />
         <Route path="/topic" element={<Topic />} />
         <Route path="/settings" element={<Settings />} />

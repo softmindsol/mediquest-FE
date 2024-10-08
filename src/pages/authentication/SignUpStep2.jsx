@@ -34,22 +34,14 @@ const inputFields = [
   },
 ];
 
-// List of cities for the select input
-const cities = [
-  "Rabat",
-  "Casablanca",
-  "Tanger",
-  "Marrakech",
-  "Agadir",
-
-];
+const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
 
 const SignUpStep2 = () => {
   return (
     <>
       <Header />
-      <div className="flex justify-evenly items-center mt-15 mb-10 max-w-full">
-        <Link to="/sign-up" className="flex justify-center items-center ">
+      <div className="flex items-center max-w-full mb-10 justify-evenly mt-15">
+        <Link to="/sign-up" className="flex items-center justify-center ">
           <Button
             text="Prev"
             type="button"
@@ -58,7 +50,7 @@ const SignUpStep2 = () => {
           />
         </Link>
         <div className="flex flex-col items-center">
-          <h1 className="text-title-xl2 text-black font-semibold text-center mb-1">
+          <h1 className="mb-1 font-semibold text-center text-black text-title-xl2">
             Create an account
           </h1>
           <p className="text-title-sm text-[#0D6EFD] font-bold text-center">
@@ -69,7 +61,7 @@ const SignUpStep2 = () => {
       </div>
 
       <div className="w-[360px] m-auto ">
-        <div className="mb-60 pb-22 max-w-full">
+        <div className="max-w-full mb-60 pb-22">
           <Formik
             initialValues={{
               year: "",
@@ -84,12 +76,12 @@ const SignUpStep2 = () => {
           >
             {() => (
               <Form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-6 ">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-1 ">
                   {inputFields?.map((field) => (
                     <div key={field.name}>
                       <label
                         htmlFor={field.name}
-                        className="text-title-p block font-normal text-black-3"
+                        className="block font-normal text-title-p text-black-3"
                       >
                         {field.label}
                       </label>
@@ -117,7 +109,7 @@ const SignUpStep2 = () => {
                       <ErrorMessage
                         name={field.name}
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="mt-1 text-sm text-red-500"
                       />
                     </div>
                   ))}
@@ -125,7 +117,7 @@ const SignUpStep2 = () => {
 
                 <Link
                   to="/sign-up2"
-                  className="flex justify-center pt-9 w-full"
+                  className="flex justify-center w-full pt-9"
                 >
                   <Button
                     text="Continue"
@@ -136,7 +128,7 @@ const SignUpStep2 = () => {
               </Form>
             )}
           </Formik>
-          <p className="text-center text-title-p font-normal text-secondary mt-8">
+          <p className="mt-8 font-normal text-center text-title-p text-secondary">
             Already have an account?
             <Link to="/log-in" className="text-[#0D6EFD] underline">
               Log in
