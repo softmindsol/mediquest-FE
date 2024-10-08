@@ -2,10 +2,10 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
 import Button from "../../components/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/features/auth/auth.service";
 
 const inputFields = [
@@ -26,6 +26,7 @@ const inputFields = [
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   return (
     <>
       <Header />

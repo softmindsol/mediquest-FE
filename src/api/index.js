@@ -1,54 +1,58 @@
 import Axios from "axios";
-const axios = Axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
-});
+// const axios = Axios.create({
+//   baseURL: import.meta.env.VITE_API_URL,
+//   withCredentials: true,
+//   headers: {
+//     "Content-Type": "application/json", // Set Content-Type to application/json
+//   },
+// });
 
-const refreshTokens = async () => {
-  try {
-    const response = await axios.post("/auth/refreshAccessToken", null, {
-      withCredentials: true,
-    });
-    const { accessToken } = response.data;
-    return accessToken;
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-    throw error;
-  }
-};
+// const refreshTokens = async () => {
+//   try {
+//     const response = await axios.post("/auth/refreshAccessToken", null, {
+//       withCredentials: true,
+//     });
+//     const { accessToken } = response.data;
+//     return accessToken;
+//   } catch (error) {
+//     console.error("Error refreshing token:", error);
+//     throw error;
+//   }
+// };
 
-axios.interceptors.request.use(
-  async (config) => {
-    return config;
-  },
-  (error) => {
-    console.error("Request error", error);
-    return Promise.reject(error);
-  }
-);
+// axios.interceptors.request.use(
+//   async (config) => {
+//     return config;
+//   },
+//   (error) => {
+//     console.error("Request error", error);
+//     return Promise.reject(error);
+//   }
+// );
 
-axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// axios.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
 
-      try {
-        await refreshTokens();
-        return axios(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-      }
-    }
+//       try {
+//         await refreshTokens();
+//         return axios(originalRequest);
+//       } catch (refreshError) {
+//         console.error("Token refresh failed:", refreshError);
+//       }
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     return Promise.reject(error);
+//   }
+// );
 
 const axiosWithoutToken = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials:true
 });
 
-export { axios, axiosWithoutToken };
+export {  axiosWithoutToken };
