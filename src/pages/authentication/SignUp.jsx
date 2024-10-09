@@ -9,7 +9,13 @@ import { RegisterSchema } from "../../schema/auth.schema";
 import { registerUser } from "../../store/features/auth/auth.service";
 
 const inputFieldsStep1 = [
-  { name: "name", type: "text", placeholder: "Enter your name", label: "Name" },
+  {
+    name: "name",
+    type: "text",
+    placeholder: "Enter your name",
+    label: "Name",
+  },
+
   {
     name: "email",
     type: "email",
@@ -37,8 +43,17 @@ const inputFieldsStep1 = [
 ];
 
 const inputFieldsStep2 = [
-  { name: "year", type: "tel", placeholder: "Enter your Year", label: "Year" },
-  { name: "city", type: "select", label: "City" },
+  {
+    name: "year",
+    type: "tel",
+    placeholder: "Enter your Year",
+    label: "Year",
+  },
+  {
+    name: "city",
+    type: "select",
+    label: "City",
+  },
   {
     name: "university",
     type: "text",
@@ -52,29 +67,36 @@ const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
 const SignUp = () => {
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  console.log(user);
+  console.log(user?.user?.data?.id);
+
+  localStorage.setItem("userId", user?.user?.data?.id);
 
   const [step, setStep] = useState(1);
+  const dispatch = useDispatch();
 
   return (
     <>
       <Header />
       <div className="w-[360px] m-auto mt-15 pb-22">
-        <h1 className="mb-5 font-semibold text-center text-title-xl2 text-black-3">
-          Create an account
-        </h1>
+        <div>
+          <h1 className="mb-5 font-semibold text-center text-title-xl2 text-black-3">
+            Create an account
+          </h1>
 
-        {step > 1 && (
-          <div className="relative md:right-1/2">
-            <Button
-              text="Prev"
-              type="button"
-              onClick={() => setStep((prev) => prev - 1)}
-              className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100 focus:outline-none"
-            />
-          </div>
-        )}
-
+          {step > 1 && (
+            <div className="relative md:right-1/2">
+              <Button
+                text="Prev"
+                type="button"
+                iconPosition="left"
+                onClick={() => setStep((prev) => prev - 1)}
+                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100 focus:outline-none"
+              />
+            </div>
+          )}
+        </div>
         <p className="text-title-sm text-[#0D6EFD] font-bold text-center mb-6">
           {step}/2
         </p>
@@ -95,6 +117,8 @@ const SignUp = () => {
             setSubmitting(true);
             try {
               const res = await dispatch(registerUser(values));
+              console.log("🚀 ~ onSubmit={ ~ res:", res);
+
               if (res.type === "registerUser/fulfilled") {
                 resetForm();
                 navigate("/email-confirmation");
@@ -106,7 +130,7 @@ const SignUp = () => {
             }
           }}
         >
-          {({ values, isSubmitting, setFieldTouched, errors }) => (
+          {({ values, isSubmitting }) => (
             <Form className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
                 {(step === 1 ? inputFieldsStep1 : inputFieldsStep2).map(
@@ -137,7 +161,6 @@ const SignUp = () => {
                           type={field.type}
                           placeholder={field.placeholder}
                           className="mt-3 p-3 text-secondary text-title-p focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
-                          onBlur={() => setFieldTouched(field.name)}
                         />
                       )}
                       <ErrorMessage
@@ -155,19 +178,9 @@ const SignUp = () => {
                   <button
                     type="button"
                     className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full"
-                    onClick={() => {
-                      // Validate step 1 fields
-                      const errors = RegisterSchema.validateSync(values, {
-                        abortEarly: false,
-                      });
-                      if (Object.keys(errors).length === 0) {
-                        setStep(2);
-                      } else {
-                        // Set touched fields for validation feedback
-                        Object.keys(values).forEach((key) =>
-                          setFieldTouched(key)
-                        );
-                      }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setStep(2);
                     }}
                   >
                     Continue
