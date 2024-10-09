@@ -19,9 +19,10 @@ import { verifyToken } from "./store/features/auth/auth.service";
 import VerifyEmail from "./pages/authentication/VerifyEmail";
 
 function App() {
-  // Access the isLoggedIn state from Redux
+
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state?.user); // Ensure proper path to user state
+  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn); // Ensure proper path to user state
+  console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
 
   useEffect(() => {
     // Dispatch verify token API only if user is not logged in

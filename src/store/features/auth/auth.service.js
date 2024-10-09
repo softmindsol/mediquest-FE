@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { axiosWithoutToken } from "../../../api";
+import axios from "axios";
 
 export const registerUser = createAsyncThunk(
   "registerUser",
@@ -115,6 +116,9 @@ export const verifyToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosWithoutToken.get("/auth/verify-token");
+
+      console.log(response?.data);
+
       return response?.data?.data?.isLoggedIn;
     } catch (error) {
       console.error("Token verification failed:", error);

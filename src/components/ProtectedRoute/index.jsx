@@ -8,16 +8,20 @@ const ProtectedRoute = ({ children }) => {
 
   const { isLoggedIn, isLoading } = useSelector((state) => state?.user);
 
+  // If loading, show the loader
   if (isLoading) return <Loader />;
 
+  // Redirect if not logged in
   if (!isLoggedIn) {
     return <Navigate to="/log-in" state={{ from: location }} replace />;
   }
 
+  // Redirect to home if trying to access login page while logged in
   if (isLoggedIn && pathname === "/log-in") {
     return <Navigate to="/" replace />;
   }
 
+  // If all checks pass, return children
   return children;
 };
 

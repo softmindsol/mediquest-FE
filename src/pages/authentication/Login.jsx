@@ -1,11 +1,11 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { useDispatch, useSelector } from "react-redux";
+import Header from "../../components/Header";
+import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
 import { loginUser } from "../../store/features/auth/auth.service";
 
 const inputFields = [
