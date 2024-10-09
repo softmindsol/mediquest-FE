@@ -52,7 +52,7 @@ import Axios from "axios";
 
 const axiosWithoutToken = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials:true
+  withCredentials: true,
 });
 
 export {  axiosWithoutToken };

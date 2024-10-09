@@ -6,31 +6,25 @@ const VerifyEmail = () => {
   const { verificationToken } = useParams();
   console.log("🚀 ~ VerifyEmail ~ verificationToken:", verificationToken);
 
-  const FRONTEND_URL = "http://93.93.112.135:8081";
+  const FRONTEND_URL = import.meta.env.VITE_FRONTENT_URL;
+  console.log("🚀 ~ VerifyEmail ~ FRONTEND_URL:", FRONTEND_URL);
 
   useEffect(() => {
-    console.log("Hello");
-
     const verifyUser = async () => {
       try {
         const response = await axiosWithoutToken.get(
-          `/verify-email/${verificationToken}`
+          `/auth/verify-email/${verificationToken}`
         );
-
-        if (response.data) {
-          window.location.href = `${FRONTEND_URL}/email-confirmation`;
-        } else {
-          window.location.href = `${FRONTEND_URL}/email-confirmation`;
-        }
+        console.log("🚀 ~ verifyUser ~ response:", response?.data);
+        window.location.replace(`${FRONTEND_URL}/email-confirmation`);
       } catch (error) {
-        window.location.href = `${FRONTEND_URL}/email-confirmation`;
+        console.log(error);
       }
     };
-
     verifyUser();
   }, [verificationToken]);
 
-  return <div className="bg-graydark"></div>;
+  return <div></div>;
 };
 
 export default VerifyEmail;
