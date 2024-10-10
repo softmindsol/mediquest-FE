@@ -56,6 +56,7 @@ const Login = () => {
 
                 if (response.type === "loginUser/fulfilled") {
                   navigate("/");
+
                   resetForm();
                 }
               } catch (error) {
