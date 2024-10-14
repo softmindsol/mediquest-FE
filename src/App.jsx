@@ -17,6 +17,7 @@ import Topic from "./pages/Topic/Topic";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { verifyToken } from "./store/features/auth/auth.service";
 import VerifyEmail from "./pages/authentication/VerifyEmail";
+import SummaryPage from "./pages/summary/Summary";
 
 function App() {
 
@@ -93,6 +94,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/summary" element={<SummaryPage />} />
       </Routes>
     </Router>
   );
