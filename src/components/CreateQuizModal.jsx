@@ -1,5 +1,6 @@
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const CreateQuizModal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
@@ -78,15 +79,20 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
 
         {/* Start Quiz Button */}
         <div className="flex justify-between mt-7">
-          <span className="ml-2 text-[#6B7280] text-[13px] font-bold">
-            Add to my Tests
-          </span>
-          <button
-            className="bg-[#007AFF] text-white font-semibold px-4 py-2 rounded-md"
-            onClick={closeModal}
-          >
-            Start Quiz
-          </button>
+          <Link to="">
+            <span className="ml-2 text-[#6B7280] text-[13px] font-bold">
+              Add to my Tests
+            </span>
+          </Link>
+
+          <Link to="/question">
+            <button
+              className="bg-[#007AFF] text-white font-semibold px-4 py-2 rounded-md"
+              onClick={closeModal}
+            >
+              Start Quiz
+            </button>
+          </Link>
         </div>
       </div>
     </div>

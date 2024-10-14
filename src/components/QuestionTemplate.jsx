@@ -3,6 +3,7 @@ import Button from "./Button";
 import { IoIosThumbsUp } from "react-icons/io";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -183,11 +184,13 @@ const QuestionTemplate = () => {
                   </div>
                 </div>
                 <div className="flex justify-end mt-4">
-                  <Button
-                    text="Submit answer"
-                    type="submit"
-                    className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
-                  />
+                  <Link to="/summary">
+                    <Button
+                      text="Submit answer"
+                      type="submit"
+                      className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="p-6 max-w-4xl">
