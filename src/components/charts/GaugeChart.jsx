@@ -7,8 +7,8 @@ const GaugeChart = ({ heading, series }) => {
     },
     plotOptions: {
       radialBar: {
-        startAngle: -90,
-        endAngle: 90,
+        startAngle: 0,
+        endAngle: 360,
         track: {
           background: '#E7E7E7',
           strokeWidth: '97%',
@@ -42,7 +42,7 @@ const GaugeChart = ({ heading, series }) => {
       <h2>
         {heading}
       </h2>
-      <ReactApexChart options={options} height={500} series={series} type='radialBar' />
+      <ReactApexChart options={options} height={400} series={series} type='radialBar' />
     </div>
   );
 };

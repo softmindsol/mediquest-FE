@@ -1,13 +1,15 @@
 import React from "react";
 
 const Button = ({
-  type,
-  disabled,
+  type = "button",
+  disabled = false,
   text,
   onClick,
   className: styles,
-  icon: Icon,
-  iconPosition = "left",
+  leftIcon: LeftIcon,
+  rightIcon: RightIcon,
+  leftIconStyle = "",
+  rightIconStyle = "",
   children,
 }) => {
   return (
@@ -15,14 +17,14 @@ const Button = ({
       disabled={disabled}
       type={type}
       onClick={onClick}
-      className={` ${styles}`}
+      className={`${styles} `}
     >
-      {iconPosition === "left" && Icon && (
-        <Icon className="inline-block mr-2" />
+      {LeftIcon && (
+        <LeftIcon className={`inline-block ${leftIconStyle} mr-2 items-center`} />
       )}
       {text ? text : children}
-      {iconPosition === "right" && Icon && (
-        <Icon className="inline-block ml-2" />
+      {RightIcon && (
+        <RightIcon className={`inline-block ${rightIconStyle} ml-2`} />
       )}
     </button>
   );
