@@ -93,12 +93,12 @@ const Login = () => {
                   ))}
                 </div>
 
-                <div className="flex justify-center w-full pt-9">
+                <div className="flex justify-center items-center  w-full pt-9">
                   <Button
                     disabled={isSubmitting}
                     text="Sign in"
                     type="submit"
-                    className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2  focus:outline-none w-full"
+                    className="bg-[#0D6EFD] text-title-p mx-auto item-center rounded-[4px] border text-white font-normal py-2  focus:outline-none w-full"
                   />
                 </div>
               </Form>

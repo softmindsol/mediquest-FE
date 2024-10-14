@@ -7,6 +7,8 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { RegisterSchema } from "../../schema/auth.schema";
 import { registerUser } from "../../store/features/auth/auth.service";
+import { FaArrowLeft, FaAsterisk, FaEye, FaEyeSlash } from "react-icons/fa";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 const inputFieldsStep1 = [
   {
@@ -65,6 +67,13 @@ const inputFieldsStep2 = [
 const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
 
 const SignUp = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword(!showConfirmPassword);
+
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
 
@@ -79,9 +88,9 @@ const SignUp = () => {
   return (
     <>
       <Header />
-      <div className="w-[360px] m-auto mt-15 pb-22">
+      <div className="xsm:max-w-[360px] m-auto mt-15 pb-22 lg:px-0 px-4">
         <div>
-          <h1 className="mb-5 font-semibold text-center text-title-xl2 text-black-3">
+          <h1 className="mb-5 font-semibold text-center lg:text-title-xl2 text-title-md text-black-3">
             Create an account
           </h1>
 
@@ -90,9 +99,10 @@ const SignUp = () => {
               <Button
                 text="Prev"
                 type="button"
-                iconPosition="left"
+                leftIcon={MdOutlineKeyboardArrowLeft}
+                leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={() => setStep((prev) => prev - 1)}
-                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100 focus:outline-none"
+                className="bg-white border flex items-center border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-4 hover:bg-gray-100 focus:outline-none"
               />
             </div>
           )}
@@ -141,7 +151,12 @@ const SignUp = () => {
                         className="block font-normal text-title-p text-black-3"
                       >
                         {field.label}
+                        <FaAsterisk
+                          size={6}
+                          className="text-red-500 inline ml-1 mb-3 items-start"
+                        />
                       </label>
+                      {/* Handle select fields separately */}
                       {field.type === "select" ? (
                         <Field
                           as="select"
@@ -155,13 +170,47 @@ const SignUp = () => {
                           ))}
                         </Field>
                       ) : (
-                        <Field
-                          id={field.name}
-                          name={field.name}
-                          type={field.type}
-                          placeholder={field.placeholder}
-                          className="mt-3 p-3 text-secondary text-title-p focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
-                        />
+                        <div className="relative flex items-center">
+                          <Field
+                            id={field.name}
+                            name={field.name}
+                            type={
+                              field.name === "password"
+                                ? showPassword
+                                  ? "text"
+                                  : "password"
+                                : field.name === "confirmPassword"
+                                ? showConfirmPassword
+                                  ? "text"
+                                  : "password"
+                                : field.type
+                            }
+                            placeholder={field.placeholder}
+                            className="mt-3 p-3 text-secondary text-title-p focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                          />
+
+                          {/* Show/hide password and confirm password icons */}
+                          {(field.name === "password" ||
+                            field.name === "confirmPassword") && (
+                            <button
+                              type="button"
+                              onClick={
+                                field.name === "password"
+                                  ? togglePasswordVisibility
+                                  : toggleConfirmPasswordVisibility
+                              }
+                              className="absolute right-3 top-10 transform -translate-y-1/2 text-primary"
+                            >
+                              {(field.name === "password" && showPassword) ||
+                              (field.name === "confirmPassword" &&
+                                showConfirmPassword) ? (
+                                <FaEyeSlash />
+                              ) : (
+                                <FaEye />
+                              )}
+                            </button>
+                          )}
+                        </div>
                       )}
                       <ErrorMessage
                         name={field.name}
