@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { IoIosThumbsUp } from "react-icons/io";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
-import { FaRegCommentDots } from "react-icons/fa";
+import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -12,19 +12,16 @@ const QuestionTemplate = () => {
         "A 54-year-old man has this and that and 49 mg of that, rushing to the ER because of something. Lay yre7mo.",
       details:
         "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condiment≈faucibus.",
-      correctAnswer: 0,
     },
     {
       question: "A 25-year-old female presents with...",
       details:
         "Nulla facilisi. Curabitur dapibus enim sit amet erat fringilla, in ullamcorper quam vestibulum.",
-      correctAnswer: 2,
     },
     {
       question: "A child with fever and rash...",
       details:
         "Etiam porta sem malesuada magna mollis euismod. Sed posuere consectetur est at lobortis.",
-      correctAnswer: 1,
     },
   ]);
 
@@ -34,6 +31,13 @@ const QuestionTemplate = () => {
     { name: "An item" },
     { name: "An item" },
     { name: "An item" },
+  ];
+  const suggestions = [
+    "Not relevant for the exam",
+    "Explanation not adequate",
+    "Wrong category",
+    "Not in keeping with current guidelines",
+    "Spelling/grammar problems",
   ];
 
   // State to track current question index
@@ -91,28 +95,27 @@ const QuestionTemplate = () => {
   };
   return (
     <>
-      <div className="bg-[#ECEFF7]">
-        <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-30 ">
+      <div className="bg-[#ECEFF7] h-fill">
+        <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-40 ">
           {/* Main Flex Container */}
           <div className="flex flex-wrap lg:flex-nowrap justify-between">
             {/* Left Sidebar: Score Box (10%) */}
-            <div className="lg:w-[10%] w-full bg-white border border-[#7749F8] p-4 rounded-md lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-gray-500 text-lg">Score: 50%</div>
-              <div className="mt-4">
-                <ul className="space-y-2">
+            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
+                Score: 50%
+              </div>
+              <div className="mt-4 px-6 text-center mx-auto pb-7">
+                <ul className="space-y-2 mx-auto">
                   {scores.map((score, index) => (
-                    <li key={index} className="flex items-center space-x-2">
+                    <li
+                      key={index}
+                      className="flex items-center gap-4 space-x-2 justify-center "
+                    >
                       <span>{index + 1}</span>
-                      <span
-                        className={
-                          score === 1
-                            ? "text-green-500"
-                            : score === 2
-                            ? "text-red-500"
-                            : "text-gray-500"
-                        }
-                      >
-                        {score === 1 ? "✔️" : score === 2 ? "❌" : "-"}
+                      <span>
+                        <FaCheck className="text-[#95cb7c]" />
+
+                        {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
                       </span>
                     </li>
                   ))}
@@ -158,11 +161,11 @@ const QuestionTemplate = () => {
                 </p>
               </div>
               {/* Categories */}
-              <div className="lg:col-span-2 space-y-6 mt-auto">
+              <div className="lg:col-span-2 space-y-6  mt-auto">
                 <h3 className="text-md font-semibold mb-2">
                   Select one of the following options:
                 </h3>
-                <div className="bg-white rounded-lg border border-[#E6E9EC]">
+                <div className="bg-white mx-6  rounded-lg border border-[#E6E9EC]">
                   <div className="grid gap-3">
                     {categories.map((category, index) => (
                       <div
@@ -187,16 +190,16 @@ const QuestionTemplate = () => {
                   />
                 </div>
               </div>
-              <div className="p-6 max-w-sm">
-                <div className="flex justify-between items-center border border-[#6c757d] rounded-xl px-2">
-                  <div>
+              <div className="p-6 max-w-4xl">
+                <div className="flex gap-4 w-fit items-center border border-[#6c757d] rounded-xl px-2">
+                  <div className="border-r p-2 border-[#6c757d]">
                     <BsHandThumbsUp size={20} className="text-green-600 " />
                   </div>
-                  <div>
+                  <div className="border-r p-2 border-[#6c757d]">
                     <BsHandThumbsDown size={20} className="text-red-500 " />
                   </div>
 
-                  <div className=" text-[#6c757d] flex  items-center gap-2 p-2 rounded-lg">
+                  <div className=" text-[#6c757d] flex  items-center gap-2 p-2 border-r border-[#6c757d] ">
                     <FaRegCommentDots size={20} />
                     Discuss (2)
                   </div>
@@ -209,56 +212,27 @@ const QuestionTemplate = () => {
                 </div>
 
                 {showImproveSection && (
-                  <div className="mt-4 bg-white border border-gray-300 p-4 rounded-lg shadow-md">
-                    <h2 className="text-lg font-semibold mb-3">
+                  <div className="mt-4 bg-white border border-[#E6E9EC] p-4 rounded-lg ">
+                    <h2 className="text-lg font-bold text-yellow-500 mb-3">
                       Improve this question
                     </h2>
-                    <p className="text-sm mb-3">
+                    <p className="text-title-p font-medium mb-3">
                       What is the main problem with this question?
                     </p>
 
                     {/* Problem Options (Tag Buttons) */}
                     <div className="flex flex-wrap gap-3 mb-3">
-                      <button
-                        onClick={() =>
-                          addSuggestion("Not relevant for the exam")
-                        }
-                        className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full"
-                      >
-                        Not relevant for the exam
-                      </button>
-                      <button
-                        onClick={() =>
-                          addSuggestion("Explanation not adequate")
-                        }
-                        className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full"
-                      >
-                        Explanation not adequate
-                      </button>
-                      <button
-                        onClick={() => addSuggestion("Wrong category")}
-                        className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full"
-                      >
-                        Wrong category
-                      </button>
-                      <button
-                        onClick={() =>
-                          addSuggestion(
-                            "Not in keeping with current guidelines"
-                          )
-                        }
-                        className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full"
-                      >
-                        Not in keeping with current guidelines
-                      </button>
-                      <button
-                        onClick={() =>
-                          addSuggestion("Spelling/grammar problems")
-                        }
-                        className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full"
-                      >
-                        Spelling/grammar problems
-                      </button>
+                      {suggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => addSuggestion(suggestion)}
+                          className="bg-white text-[#11caf0] px-4 py-2 border border-[#11caf0] rounded-md"
+                        >
+                          <FaPlus className="inline mr-2" />
+                          {/* Add icon before text */}
+                          {suggestion}
+                        </button>
+                      ))}
                     </div>
 
                     {/* Textarea for Suggestions */}
@@ -266,11 +240,11 @@ const QuestionTemplate = () => {
                       value={suggestionText}
                       onChange={(e) => setSuggestionText(e.target.value)} // To allow manual input as well
                       placeholder="Enter your suggestions here..."
-                      className="w-full h-24 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+                      className="w-full h-24 p-2 border border-[#E6E9EC] rounded-lg focus:outline-none "
                     ></textarea>
 
                     {/* Submit Button */}
-                    <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
+                    <button className="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600">
                       Submit suggestions
                     </button>
                   </div>
@@ -281,7 +255,7 @@ const QuestionTemplate = () => {
             {/* Right Sidebar: Reference Ranges (30%) */}
 
             <div className="lg:w-[20%] w-full   p-4 rounded-md max-h-screen overflow-y-auto self-start">
-              <div className="text-title-p text-[#3A57E8] font-normal py-3 px-4 rounded-md border border-[#3A57E8] mb-4">
+              <div className="text-title-p text-[#3A57E8] font-normal py-3 px-4 w-fit rounded-md border border-[#3A57E8] mb-4">
                 Reference Ranges
               </div>
               {/* <div className="space-y-6">

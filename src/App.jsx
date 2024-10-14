@@ -8,6 +8,7 @@ import Question from "./pages/questionstemplate/Questions";
 import Settings from "./pages/settings/settings";
 import Subscription from "./pages/subscription/Subscription";
 import Topic from "./pages/Topic/Topic";
+import SummaryPage from "./pages/summary/Summary";
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
         <Route path="/email-confirmation" element={<EmailConfirmation />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/question" element={<Question />} />
+        <Route path="/summary" element={<SummaryPage />} />
       </Routes>
     </Router>
   );
