@@ -65,12 +65,13 @@ const inputFieldsStep2 = [
 const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
 
 const SignUp = () => {
-  const { user } = useSelector((state) => state?.user || {});
+  const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
 
-  console.log(user?.data);
+  console.log(user);
+  console.log(user?.user?.data?.id);
 
-  localStorage.setItem("userId", user?.data?.id);
+  localStorage.setItem("userId", user?.user?.data?.id);
 
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
@@ -115,10 +116,13 @@ const SignUp = () => {
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
             try {
-              await dispatch(registerUser(values));
+              const res = await dispatch(registerUser(values));
+              console.log("🚀 ~ onSubmit={ ~ res:", res);
 
-              resetForm();
-              navigate("/email-confirmation");
+              if (res.type === "registerUser/fulfilled") {
+                resetForm();
+                navigate("/email-confirmation");
+              }
             } catch (error) {
               console.error("Submission error: ", error);
             } finally {

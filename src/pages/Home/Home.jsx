@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Welcome home!" />
-      <div className="flex justify-end mb-8 gap-5">
+      <div className="flex justify-end gap-5 mb-8">
         <Link to="/subscription">
           <button className="bg-[#3A57E8] font-semibold text-title-p text-white py-[10px] px-8 rounded-[6px]">
             Get Full Subscription
@@ -25,7 +25,7 @@ const Home = () => {
       </div>
       <RecentTests />
       <Progress />
-    </DefaultLayout >
+    </DefaultLayout>
   );
 };
 

@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { axios, axiosWithoutToken } from "../../../api";
+import { apiClient, axiosWithoutToken } from "../../../api";
 
 export const registerUser = createAsyncThunk(
   "registerUser",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post("/auth/register", data);
+      const response = await apiClient.post("/auth/register", data);
 
       console.log("Hello", response.data);
 
@@ -25,7 +25,7 @@ export const resendMail = createAsyncThunk(
   "resendMail",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post(`/auth/resend-mail/${id}`);
+      const response = await apiClient.post(`/auth/resend-mail/${id}`);
       return response.data;
     } catch (error) {
       if (error) {
@@ -39,7 +39,7 @@ export const checkMail = createAsyncThunk(
   "checkMail",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.get(`/auth/check-email/${id}`);
+      const response = await apiClient.get(`/auth/check-email/${id}`);
 
       console.log(response.data);
 
@@ -56,7 +56,7 @@ export const loginUser = createAsyncThunk(
   "loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post("/auth/login", data);
+      const response = await apiClient.post("/auth/login", data);
 
       console.log("Hello", response.data);
 
@@ -75,7 +75,10 @@ export const changePassword = createAsyncThunk(
   "changePassword",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/users/changePassword", data);
+      const response = await axiosWithoutToken.post(
+        "/users/changePassword",
+        data
+      );
 
       toast.success(response?.data?.message);
       return response.data;
@@ -92,9 +95,7 @@ export const logout = createAsyncThunk(
   "logout",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/auth/logout", null, {
-        withCredentials: true,
-      });
+      const response = await axiosWithoutToken.post("/auth/logout");
 
       console.log(response.data);
 
@@ -113,11 +114,16 @@ export const verifyToken = createAsyncThunk(
   "auth/verifyToken",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/auth/verify-token");
-      return response.data.isLoggedIn;
+      const response = await axiosWithoutToken.get("/auth/verify-token");
+
+      console.log(response?.data);
+
+      return response?.data?.data?.isLoggedIn;
     } catch (error) {
       console.error("Token verification failed:", error);
       return rejectWithValue(error);
     }
   }
 );
+
+

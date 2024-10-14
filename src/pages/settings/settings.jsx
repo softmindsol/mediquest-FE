@@ -31,9 +31,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     const res = await dispatch(logout());
-    console.log("🚀 ~ handleLogout ~ res:", res);
-
-    if (res.type === "logout/fulfilled") navigate("/login");
+    if (res.type === "logout/fulfilled") navigate("/log-in");
   };
   return (
     <DefaultLayout>
@@ -66,11 +64,12 @@ const Settings = () => {
               confirmPassword: "",
             }}
             validationSchema={NewRegisterSchema}
-            onSubmit={async (values) => {
+            onSubmit={async (values, { resetForm }) => {
               console.log("Form Submitted Values:", values);
 
               try {
                 await dispatch(changePassword(values));
+                resetForm();
               } catch (error) {
                 console.log(error);
               }

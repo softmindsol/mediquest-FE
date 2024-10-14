@@ -1,11 +1,11 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
-import Button from "../../components/Button";
-import { Link, useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "../../components/Button";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
 import { loginUser } from "../../store/features/auth/auth.service";
 
 const inputFields = [
@@ -26,6 +26,7 @@ const inputFields = [
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   return (
     <>
       <Header />
@@ -55,6 +56,7 @@ const Login = () => {
 
                 if (response.type === "loginUser/fulfilled") {
                   navigate("/");
+
                   resetForm();
                 }
               } catch (error) {

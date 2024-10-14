@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --host",
+    "build": "GENERATE_SOURCEMAP=false vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
