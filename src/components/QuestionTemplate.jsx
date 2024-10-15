@@ -100,32 +100,8 @@ const QuestionTemplate = () => {
         <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-40 ">
           {/* Main Flex Container */}
           <div className="flex flex-wrap lg:flex-nowrap justify-between">
-            {/* Left Sidebar: Score Box (10%) */}
-            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-                Score: 50%
-              </div>
-              <div className="mt-4 px-6 text-center mx-auto pb-7">
-                <ul className="space-y-2 mx-auto">
-                  {scores.map((score, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center gap-4 space-x-2 justify-center "
-                    >
-                      <span>{index + 1}</span>
-                      <span>
-                        <FaCheck className="text-[#95cb7c]" />
 
-                        {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Center Content: Main Content (60%) */}
-            <div className="lg:w-[60%] w-full bg-white shadow-md p-8 rounded-md">
+            <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
               {/* Navigation Buttons */}
               <div className="flex justify-between mb-10">
                 <button
@@ -255,33 +231,30 @@ const QuestionTemplate = () => {
               </div>
             </div>
 
-            {/* Right Sidebar: Reference Ranges (30%) */}
-
-            <div className="lg:w-[20%] w-full   p-4 rounded-md max-h-screen overflow-y-auto self-start">
-              <div className="text-title-p text-[#3A57E8] font-normal py-3 px-4 w-fit rounded-md border border-[#3A57E8] mb-4">
-                Reference Ranges
+            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
+                Score: 50%
               </div>
-              {/* <div className="space-y-6">
-                <div>
-                  <h4 className="font-bold text-gray-700">Full blood count</h4>
-                  <ul className="text-sm text-gray-500">
-                    <li>Haemoglobin: Men: 135-180 g/L, Women: 115-160 g/L</li>
-                    <li>Mean cell volume: 82-100 fL</li>
-                    <li>Platelets: 150-400 * 10^9/L</li>
-                    <li>White blood cells: 4.0-11.0 * 10^9/L</li>
-                    <li>Neutrophils: 2.0-7.0 * 10^9/L</li>
-                    <li>Lymphocytes: 1.0-3.5 * 10^9/L</li>
-                    <li>Eosinophils: 0.1-0.4 * 10^9/L</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-700">
-                    Urea and electrolytes
-                  </h4>
-                  <ul className="text-sm text-gray-500">
-                  </ul>
-                </div>
-              </div> */}
+                            <div className="overflow-y-auto max-h-32">
+
+              <div className="mt-4 px-6 text-center mx-auto pb-7">
+                <ul className="space-y-2 mx-auto">
+                  {scores.map((score, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center gap-4 space-x-2 justify-center "
+                    >
+                      <span>{index + 1}</span>
+                      <span>
+                        <FaCheck className="text-[#95cb7c]" />
+
+                        {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              </div>
             </div>
           </div>
         </div>

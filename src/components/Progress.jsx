@@ -39,9 +39,9 @@ const Progress = () => {
           <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             {/* Performance (without difficulty) */}
             <div className="text-center">
-              <p className="text-[#343A40] text-title-sm font-semibold">
+              {/* <p className="text-[#343A40] text-title-sm font-semibold">
                 Performance
-              </p>
+              </p> */}
               {/* <p className="text-title-p text-[#343A40] font-semibold">
                 (without difficulty)
               </p> */}

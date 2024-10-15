@@ -4,6 +4,7 @@ import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import { RxCross2 } from "react-icons/rx";
 import { IoSearchSharp } from "react-icons/io5";
 import CreateQuizModal from "../../components/CreateQuizModal";
+import { FaMinus, FaPlus } from "react-icons/fa";
 const categories = [
   {
     name: "Anatomy I",
@@ -91,15 +92,13 @@ const categoryItems = [
 
 
 const Topic = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
 
-const [isModalOpen, setModalOpen] = useState(false);
+  // Function to open modal
+  const openModal = () => setModalOpen(true);
 
-// Function to open modal
-const openModal = () => setModalOpen(true);
-
-// Function to close modal
-const closeModal = () => setModalOpen(false);
-
+  // Function to close modal
+  const closeModal = () => setModalOpen(false);
 
   // State to track which categories are expanded
   const [expandedCategories, setExpandedCategories] = useState([]);
@@ -146,6 +145,35 @@ const closeModal = () => setModalOpen(false);
   // Function to handle accordion item click
   const toggleAccordion = (index) => {
     setOpenIndex(index === openIndex ? null : index); // Toggle accordion, close if already open
+  };
+
+  // **New State for Left Column Categories and Subcategories**
+  const [selectedLeftCategories, setSelectedLeftCategories] = useState([]);
+  const [selectedLeftSubcategories, setSelectedLeftSubcategories] = useState(
+    []
+  );
+
+  // **Handler for Category Checkbox (Left Column)**
+  const handleLeftCategoryCheckbox = (category, index) => {
+    if (selectedLeftCategories.includes(index)) {
+      // Uncheck category and its subcategories
+      setSelectedLeftCategories(
+        selectedLeftCategories.filter((i) => i !== index)
+      );
+      setSelectedLeftSubcategories(
+        selectedLeftSubcategories.filter(
+          (sub) =>
+            !categories[index].subcategories.map((s) => s.name).includes(sub)
+        )
+      );
+    } else {
+      // Check category and its subcategories
+      setSelectedLeftCategories([...selectedLeftCategories, index]);
+      setSelectedLeftSubcategories([
+        ...selectedLeftSubcategories,
+        ...categories[index].subcategories.map((s) => s.name),
+      ]);
+    }
   };
 
   return (
@@ -241,10 +269,24 @@ const closeModal = () => setModalOpen(false);
                         <input
                           type="checkbox"
                           className="mr-3 cursor-pointer"
-                          onClick={() => toggleCategory(index)}
+                          checked={selectedLeftCategories.includes(index)}
+                          onChange={() =>
+                            handleLeftCategoryCheckbox(category, index)
+                          }
                         />
-                        <span className="text-[14px] text-primary">
+                        <span className="text-[14px]  text-primary">
                           {category.name}
+                        </span>
+                        {/* Toggle Icon: Plus or Minus */}
+                        <span
+                          className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8]  border border-[#3A57E8] ml-3"
+                          onClick={() => toggleCategory(index)}
+                        >
+                          {expandedCategories.includes(index) ? (
+                            <FaMinus />
+                          ) : (
+                            <FaPlus />
+                          )}
                         </span>
                       </div>
                       <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
@@ -255,17 +297,25 @@ const closeModal = () => setModalOpen(false);
                     {/* Subcategories (show only if expanded) */}
                     {expandedCategories.includes(index) &&
                       category.subcategories && (
-                        <div className=" ">
+                        <div>
                           {category.subcategories.map(
                             (subcategory, subIndex) => (
                               <div
                                 key={subIndex}
-                                className="flex justify-between items-center  pl-15 py-2 px-4 border-b border-[#DEE2E6]"
+                                className="flex justify-between items-center pl-6 py-2 px-4 border-b border-[#DEE2E6]"
                               >
                                 <div className="flex items-center">
                                   <input
                                     type="checkbox"
                                     className="mr-3 cursor-pointer"
+                                    checked={selectedLeftSubcategories.includes(
+                                      subcategory.name
+                                    )}
+                                    onChange={() =>
+                                      handleLeftSubcategoryCheckbox(
+                                        subcategory.name
+                                      )
+                                    }
                                   />
                                   <span className="text-[14px] text-primary ">
                                     {subcategory.name}
