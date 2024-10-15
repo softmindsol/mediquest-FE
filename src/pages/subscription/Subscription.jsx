@@ -62,9 +62,9 @@ const Subscription = () => {
       <div className="bg-gray-900">
         <main>
           {/* Pricing section */}
-          <div className="mx-auto mt-12 max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto mt-12  max-w-6xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-title-xl font-semibold text-[#3A57E8]">
+              <h1 className="text-title-lg font-semibold text-[#3A57E8]">
                 Choose Your Plan
               </h1>
             </div>
@@ -89,12 +89,12 @@ const Subscription = () => {
               </fieldset>
             </div>
 
-            <div className="isolate mx-auto mt-15 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            <div className="isolate mx-auto my-15 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
               {pricing.tiers.map((tier) => (
                 <div
                   key={tier.id}
                   className={classNames(
-                    "flex flex-col justify-between p-7 xl:p-10 border",
+                    "flex flex-col justify-between p-7 xl:py-10 border ",
                     tier.name === "Advanced"
                       ? "bg-[#3A57E8] text-white border-none"
                       : "border-[#1C89FF]"

@@ -59,7 +59,7 @@ function App() {
           }
         />
         <Route
-          path="/topic"
+          path="/question-bank"
           element={
             <ProtectedRoute>
               <Topic />
