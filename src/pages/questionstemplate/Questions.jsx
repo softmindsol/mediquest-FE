@@ -18,14 +18,13 @@ const Question = () => {
   return (
     <>
       <Header />
-
       <div>
         <QuestionTemplate
           question={currentQuestion}
           onSubmit={handleAnswerSubmit}
         />
       </div>
-<Footer/>
+      <Footer />
     </>
   );
 };

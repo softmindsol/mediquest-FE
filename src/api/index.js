@@ -22,11 +22,7 @@ axiosWithoutToken.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await axiosWithoutToken.post(
-          "/refreshAccessToken",
-          {},
-          { withCredentials: true }
-        );
+        const response = await axiosWithoutToken.post("/refreshAccessToken");
 
         const { accessToken } = response.data;
         // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
