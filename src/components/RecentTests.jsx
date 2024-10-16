@@ -104,10 +104,10 @@ const RecentTests = () => {
                         onClick={handleButtonClick}
                         className="bg-white text-[#007AFF] px-4 py-2 border border-[#007AFF] rounded-md flex items-center justify-center gap-3"
                       >
-                        {test.buttonLabel}
-                        <SlArrowRight className="text-[#007AFF] " />
+                        {/* Conditionally render the button label based on quiz status */}
+                        {test.isAttempted ? "Continue Quiz" : "Start Quiz"}
+                        <SlArrowRight className="text-[#007AFF]" />
                       </button>
-                     
                     </div>
                     {/* Modal */}
                     {isModalOpen && (

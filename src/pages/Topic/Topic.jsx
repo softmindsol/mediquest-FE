@@ -47,15 +47,83 @@ const categories = [
 
 // Array of category items from the design
 const categoryItems = [
-  "Family",
-  "Family in Law",
-  "Co-workers",
-  "Friends",
-  "Basketball Club",
-  "Startup Investor Colleagues",
-  "Swiss Embassy",
-  "Zurich Meetup Group",
+  {
+    city: "Oujda",
+    short_name: "FMPO",
+    name: "Faculté de Médecine et de Pharmacie d’Oujda",
+  },
+  {
+    city: "Fes",
+    short_name: "FMPDF",
+    name: "Faculté de Médecine, de Pharmacie et de Médecine Dentaire de Fès",
+  },
+  {
+    city: "Fes",
+    short_name: "FEM/ EUROMED",
+    name: "Faculté Euromed de Médecine",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMPR",
+    name: "Faculté de médecine et de pharmacie de Rabat",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMAB/UIASS",
+    name: "Faculté de Médecine Abulcasis",
+  },
+  {
+    city: "Rabat",
+    short_name: "FIM/UIR",
+    name: "Faculté internationale de Médecine",
+  },
+  {
+    city: "Marrakech",
+    short_name: "FMPM",
+    name: "Faculté de Médecine et de Pharmacie de Marrakech",
+  },
+  {
+    city: "Casablanca",
+    short_name: "FMPC",
+    name: "Faculté de Médecine et de Pharmacie de Casablanca",
+  },
+  {
+    city: "Tanger",
+    short_name: "FMPT",
+    name: "Faculté de Médecine et de Pharmacie de Tanger",
+  },
+  {
+    city: "Agadir",
+    short_name: "FMPA",
+    name: "Faculté de Médecine et de Pharmacie d'Agadir",
+  },
+  {
+    city: "Béni Mellal",
+    short_name: "FMPBM",
+    name: "Faculté de Médecine et de Pharmacie Beni Mellal",
+  },
+  {
+    city: "Dakhla",
+    short_name: "UM6SS Dakhla",
+    name: "Faculté Mohammed VI de Médecine de Dakhla",
+  },
+  {
+    city: "Benguerir",
+    short_name: "UM6P-FMS",
+    name: "Faculty of Medical Sciences",
+  },
+  {
+    city: "Guelmim",
+    short_name: "FMPG",
+    name: "Faculté de Médecine et de Pharmacie de Guelmim",
+  },
 ];
+
+// Filter university names
+const universityNames = categoryItems.map((item) => item.name);
+
+console.log(universityNames);
+
 
  const recentTests = [
    {
@@ -135,7 +203,7 @@ const Topic = () => {
   };
 
   // Handle search functionality
-  const filteredCategories = categoryItems.filter((category) =>
+  const filteredCategories = universityNames.filter((category) =>
     category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -175,7 +243,12 @@ const Topic = () => {
       ]);
     }
   };
-
+  // State to handle the visibility of the "Improve this question" section
+  const [showUniversities, setShowUniversities] = useState(false);
+  // Toggle the Improve Section
+  const handleToggle = () => {
+    setShowUniversities(!showUniversities);
+  };
   return (
     <DefaultLayout>
       <div className="">
@@ -382,11 +455,12 @@ const Topic = () => {
               </div>
 
               {/* Search bar */}
-              <div className="relative mb-4 ">
+              <div className="relative mb-4  cursor-pointer">
                 <input
                   type="text"
+                  onClick={handleToggle}
                   placeholder="Search"
-                  className="w-full px-7 py-2 border-b border-[#DEE2E6] rounded-md focus:outline-none  placeholder-secondary"
+                  className="w-full px-7 cursor-pointer py-2 border-b border-[#DEE2E6] rounded-md focus:outline-none  placeholder-secondary"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -396,24 +470,27 @@ const Topic = () => {
               </div>
 
               {/* Category Items List */}
-              <div className="space-y-2">
-                {filteredCategories.map((category, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center px-4 py-3 border-b border-[#DEE2E6]"
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => togleCategory(category)}
-                    />
-                    <label className="text-[14px] text-primary">
-                      {category}
-                    </label>
-                  </div>
-                ))}
-              </div>
+
+              {showUniversities && (
+                <div className="space-y-2">
+                  {filteredCategories.map((category, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center px-4 py-3 border-b border-[#DEE2E6]"
+                    >
+                      <input
+                        type="checkbox"
+                        className="mr-2"
+                        checked={selectedCategories.includes(category)}
+                        onChange={() => togleCategory(category)}
+                      />
+                      <label className="text-[14px] text-primary">
+                        {category}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Recent Tests */}
