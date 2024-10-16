@@ -6,8 +6,10 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const { isLoggedIn, isLoading } = useSelector((state) => state?.user);
+  // const { isLoggedIn, isLoading } = useSelector((state) => state?.user);
 
+  const isLoggedIn = true;
+  const isLoading = false;
   // If loading, show the loader
   if (isLoading) return <Loader />;
 
