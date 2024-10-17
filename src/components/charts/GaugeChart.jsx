@@ -1,17 +1,25 @@
-import ReactApexChart from 'react-apexcharts';
+import ReactApexChart from "react-apexcharts";
+
 const GaugeChart = ({ heading, series }) => {
+  // Function to determine the color based on the series percentage
+  const getColor = (value) => {
+    if (value < 40) return "#FF0000"; // Red for values below 40%
+    if (value < 70) return "#CCD000"; // Orange for values between 40% and 70%
+    return "#32CD32"; // Green for values 70% and above
+  };
+
   const options = {
     chart: {
-      type: 'radialBar',
+      type: "radialBar",
       offsetY: -20,
     },
     plotOptions: {
       radialBar: {
-        startAngle: -90,
-        endAngle: 90,
+        startAngle: 0,
+        endAngle: 360,
         track: {
-          background: '#E7E7E7',
-          strokeWidth: '97%',
+          background: "#E7E7E7",
+          strokeWidth: "97%",
           margin: 5,
           dropShadow: {
             enabled: true,
@@ -26,24 +34,30 @@ const GaugeChart = ({ heading, series }) => {
             show: false,
           },
           value: {
-            offsetY: -2,
-            fontSize: '22px',
+            offsetY: 9,
+            fontSize: "52px",
+            color: "#000", // Optional: set color for better visibility
           },
         },
       },
     },
     fill: {
-      colors: ['#CCD000'],
+      colors: [getColor(series[0])], // Use the color based on the series value
     },
-    labels: ['Average Results'],
+    labels: ["Average Results"],
   };
+
   return (
-    <div className=' '>
-      <h2>
-        {heading}
-      </h2>
-      <ReactApexChart options={options} height={500} series={series} type='radialBar' />
+    <div>
+      <h2>{heading}</h2>
+      <ReactApexChart
+        options={options}
+        height={400}
+        series={series}
+        type="radialBar"
+      />
     </div>
   );
 };
+
 export default GaugeChart;

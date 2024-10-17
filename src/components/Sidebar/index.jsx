@@ -8,6 +8,7 @@ import { CgUserList } from 'react-icons/cg';
 import { GrLanguage } from 'react-icons/gr';
 import { IoMdHome } from 'react-icons/io';
 import { IoSettingsSharp } from 'react-icons/io5';
+import { FaLayerGroup } from 'react-icons/fa';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const location = useLocation();
@@ -96,7 +97,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </ul>
             <ul className="mb-6 flex flex-col gap-1.5">
               <NavLink
-                to="/topic"
+                to="/question-bank"
                 className={({ isActive }) =>
                   `group relative flex items-center gap-2.5 px-4 py-2 font-semibold rounded-lg duration-300 ease-in-out ${
                     isActive
@@ -105,8 +106,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   }`
                 }
               >
-                <CgUserList size={22} />
-                Topics
+                <FaLayerGroup size={19} />
+                Question Bank
               </NavLink>
             </ul>
             <ul className="mb-6 flex flex-col gap-1.5">

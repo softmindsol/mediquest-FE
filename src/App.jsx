@@ -18,11 +18,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { verifyToken } from "./store/features/auth/auth.service";
 import VerifyEmail from "./pages/authentication/VerifyEmail";
 import NonProtectedRoute from "./components/NonProtectedRoute";
+import SummaryPage from "./pages/summary/Summary";
 
 function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
-
 
   console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
 
@@ -69,7 +69,7 @@ function App() {
           }
         />
         <Route
-          path="/topic"
+          path="/question-bank"
           element={
             <ProtectedRoute>
               <Topic />
@@ -104,6 +104,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/summary" element={<SummaryPage />} />
       </Routes>
     </Router>
   );
