@@ -1,50 +1,134 @@
 import { useState } from "react";
-import { Dialog, DialogPanel, Radio, RadioGroup } from "@headlessui/react";
+import { Description, Dialog, Radio, RadioGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { HiMiniCheckBadge } from "react-icons/hi2";
+import CancellationPolicy from "../../components/CancellationPolicy";
 
 const pricing = {
   frequencies: [
     { value: "monthly", label: "Monthly", priceSuffix: "/month" },
-    { value: "yearly", label: "Yearly", priceSuffix: "" }, // We'll override this for each tier
+    { value: "yearly", label: "Yearly", priceSuffix: "/year" },
   ],
   tiers: [
     {
+      name: "Compare plans",
+      Description: "Choose your plan according to your needs",
+      id: "tier-comparison",
+      features: [
+        { name: "Number of Questions" },
+        { name: "Monthly Test Creation" },
+        { name: "Performance Analytics" },
+        { name: "Timed Test Mode" },
+        { name: "University-Specific Questions" },
+        { name: "24/7 customer support" },
+      ],
+      isComparison: true,
+    },
+    {
       name: "Free",
       id: "tier-free",
-      href: "#",
       price: { monthly: "0", yearly: "0" },
-      yearlyPriceSuffix: "Billed as 948 MAD ", // Custom suffix
-      features: ["4000+ MCQs from S1 to S10", "Unlimited Tests Creations"],
+      yearlyPriceSuffix: "MAD",
+      features: [
+        { name: "4000+ Questions" },
+        { name: "Up to 10 (100 Qs max per test)" },
+        { name: "—" },
+        { name: "—" },
+        { name: "—" },
+        { name: "—" },
+      ],
+      buttonText: "Already on this plan",
+      buttonDisabled: true,
     },
     {
-      name: "Advanced",
-      id: "tier-advanced",
-      href: "#",
-      price: { monthly: "99", yearly: "79" },
-      yearlyPriceSuffix: "Billed as 948 MAD ", // Custom suffix
+      name: "Basic",
+      id: "tier-basic",
+      price: { monthly: "169", yearly: "99" },
+      yearlyPriceSuffix: "MAD",
       features: [
-        "All Free Features",
-        "40,000+ Questions",
-        "Custom Analytics ",
-        "Unlimited Tests",
+        {
+          name: (
+            <>
+              <div>40,000+ Questions</div>
+              <div style={{ color: "#858BA0" }}>Pages Add-ons on Demand</div>
+            </>
+          ),
+        },
+        { name: "Unlimited" },
+        {
+          name: (
+            <>
+              <div>General rankings</div>
+              <div>Weekly, Monthly, Semester</div>
+            </>
+          ),
+        },
+        {
+          name: (
+            <HiMiniCheckBadge
+              size={22}
+              style={{ color: "#3A57E8", margin: "auto" }}
+            />
+          ),
+        },
+        { name: "—" },
+        { name: "—" },
       ],
+      buttonText: "Choose This Plan",
+      buttonDisabled: false,
     },
     {
-      name: "Premium",
-      id: "tier-premium",
-      href: "#",
-      price: { monthly: "149", yearly: "119" },
-      yearlyPriceSuffix: "Billed as 1428 MAD ", // Custom suffix
+      name: "Pro",
+      id: "tier-pro",
+      price: { monthly: "319", yearly: "199" },
+      yearlyPriceSuffix: "MAD",
       features: [
-        "All Advanced Features",
-        "80,000+ Questions",
-        "Timed Tests",
-        "Questions from your University",
-        "Priority Support",
+        {
+          name: (
+            <>
+              <div>80,000+ Questions</div>
+              <div style={{ color: "#858BA0" }}>Pages Add-ons on Demand</div>
+            </>
+          ),
+        },
+        { name: "Unlimited" },
+        {
+          name: (
+            <>
+              <div>Rankings by school and topic</div>
+              <div>Weekly, Monthly, Semester</div>
+            </>
+          ),
+        },
+        {
+          name: (
+            <HiMiniCheckBadge
+              size={22}
+              style={{ color: "#3A57E8", margin: "auto" }}
+            />
+          ),
+        },
+        {
+          name: (
+            <HiMiniCheckBadge
+              size={22}
+              style={{ color: "#3A57E8", margin: "auto" }}
+            />
+          ),
+        },
+        {
+          name: (
+            <HiMiniCheckBadge
+              size={22}
+              style={{ color: "#3A57E8", margin: "auto" }}
+            />
+          ),
+        },
       ],
+      buttonText: "Choose This Plan",
+      buttonDisabled: false,
     },
   ],
 };
@@ -62,7 +146,7 @@ const Subscription = () => {
       <div className="bg-gray-900">
         <main>
           {/* Pricing section */}
-          <div className="mx-auto mt-12  max-w-6xl px-6 lg:px-8">
+          <div className="mx-auto mt-12 max-w-screen-xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
               <h1 className="text-title-lg font-semibold text-[#3A57E8]">
                 Choose Your Plan
@@ -74,7 +158,7 @@ const Subscription = () => {
                 <RadioGroup
                   value={frequency}
                   onChange={setFrequency}
-                  className="grid grid-cols-2 gap-x-1 border rounded-md border-[#3A57E8] "
+                  className="grid grid-cols-2 gap-x-1 border rounded-md border-[#3A57E8]"
                 >
                   {pricing.frequencies.map((option) => (
                     <Radio
@@ -89,104 +173,94 @@ const Subscription = () => {
               </fieldset>
             </div>
 
-            <div className="isolate mx-auto my-15 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-              {pricing.tiers.map((tier) => (
-                <div
-                  key={tier.id}
-                  className={classNames(
-                    "flex flex-col justify-between p-7 xl:py-10 border ",
-                    tier.name === "Advanced"
-                      ? "bg-[#3A57E8] text-white border-none"
-                      : "border-[#1C89FF]"
-                  )}
-                >
-                  <div>
-                    <div
-                      className={classNames(
-                        "flex w-30 mx-auto items-center justify-center gap-x-4 border",
-                        tier.name === "Advanced"
-                          ? "border-white"
-                          : "border-[#3A57E8]"
-                      )}
-                    >
-                      <h2
-                        id={tier.id}
-                        className={classNames(
-                          "text-base font-semibold leading-8",
-                          tier.name === "Advanced"
-                            ? "text-white"
-                            : "text-[#3A57E8]"
-                        )}
+            <div className="max-w-screen-xl mx-auto py-6 my-10 overflow-x-auto">
+              <table className="min-w-full border-collapse border border-[#E6E9F5]">
+                <thead>
+                  <tr>
+                    {pricing?.tiers?.map((tier) => (
+                      <th
+                        key={tier.id}
+                        className="bg-gray-200 border border-[#E6E9F5]"
+                        style={{
+                          width: "calc(100% / " + pricing.tiers.length + ")",
+                        }}
                       >
-                        {tier.name}
-                      </h2>
-                    </div>
+                        <div className="p-8">
+                          <div
+                            className={classNames(
+                              tier.name === "Compare plans"
+                                ? "font-bold text-[#3A57E8] lg:text-title-md text-left"
+                                : "text-[#3A57E8] font-bold lg:text-[40px] text-center"
+                            )}
+                          >
+                            {tier.name}
+                          </div>
+                          <div className="text-[#858BA0] text-[14px] font-medium text-left">
+                            {tier.Description}
+                          </div>
+                          {tier.isComparison ? null : (
+                            <div>
+                              <p className="flex justify-center text-[#858BA0] font-medium items-center gap-2 my-4">
+                                <span className="text-[14px]">
+                                  {tier.yearlyPriceSuffix}
+                                </span>
+                                <span className="flex items-start justify-start lg:text-[32px]">
+                                  {tier.price[frequency.value]}
+                                </span>
 
-                    <p className="flex flex-col justify-center items-center mt-7 gap-x-1">
-                      <p
-                        className={classNames(
-                          "text-[69px] font-semibold",
-                          tier.name === "Advanced"
-                            ? "text-white"
-                            : "text-[#3A57E8]"
-                        )}
-                      >
-                        {tier.price[frequency.value]}{" "}
-                        <span className="text-title-p ml-[-15px]"> MAD</span>
-                      </p>
-                      <span
-                        className={classNames(
-                          "text-[12px] font-semibold mt-[-15px]",
-                          tier.name === "Advanced"
-                            ? "text-white"
-                            : "text-[#9D9D9D]"
-                        )}
-                      >
-                        {frequency.value === "yearly"
-                          ? tier.yearlyPriceSuffix
-                          : frequency.priceSuffix}
-                      </span>
-                    </p>
+                                <span>
+                                  {pricing.frequencies[0].priceSuffix}
+                                </span>
+                              </p>
 
-                    <ul
-                      className={classNames(
-                        "mt-8 space-y-3 text-sm leading-6",
-                        tier.name === "Advanced"
-                          ? "text-white"
-                          : "text-gray-300",
-                        "xl:mt-10"
-                      )}
-                    >
-                      {tier.features.map((feature) => (
-                        <li
-                          key={feature}
-                          className="gap-x-3 text-[12px] flex justify-center  font-semibold  "
+                              <button
+                                className={`mt-2 py-2 px-4 rounded ${
+                                  tier.buttonDisabled
+                                    ? "bg-[#939393] text-white cursor-not-allowed"
+                                    : "bg-[#3A57E8] text-white "
+                                }`}
+                                disabled={tier.buttonDisabled}
+                              >
+                                {tier.buttonText}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {pricing.tiers[0].features.map((feature, index) => (
+                    <tr key={index} className="border border-[#E6E9F5]">
+                      {pricing.tiers.map((tier) => (
+                        <td
+                          key={tier.id}
+                          className={classNames(
+                            "border font-medium text-[#3A57E8] text border-[#E6E9F5] p-7",
+                            tier.name === "Compare plans"
+                              ? "font-medium text-[#3A57E8] text-title-xsm text-lest"
+                              : "text-[#3A57E8] font-medium text-[14px] text-center"
+                          )}
+                          style={{
+                            width: "calc(100% / " + pricing.tiers.length + ")",
+                          }}
                         >
-                          {feature}
-                        </li>
+                          {tier.isComparison
+                            ? feature.name
+                            : tier.features[index].name}
+                        </td>
                       ))}
-                    </ul>
-                  </div>
-
-                  {/* Button aligned to bottom */}
-                  <a
-                    href={tier.href}
-                    aria-describedby={tier.id}
-                    className={classNames(
-                      "mt-8 block border border-transparent px-4 py-3 text-title-p mx-17 font-semibold text-center justify-stretch",
-                      tier.name === "Advanced"
-                        ? "bg-[#007AFF] text-white "
-                        : "bg-[#3A57E8] text-white"
-                    )}
-                  >
-                    Choose Plan
-                  </a>
-                </div>
-              ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
       </div>
+      <CancellationPolicy />
       <Footer />
     </>
   );
