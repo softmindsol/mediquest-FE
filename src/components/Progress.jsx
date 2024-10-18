@@ -1,6 +1,9 @@
 import React from "react";
 import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
 import SplineChart from "../components/charts/Splinechart"; // Import the SplineChart component
+import { SlArrowRight } from "react-icons/sl";
+import { FaAngleDown } from "react-icons/fa";
+import { GoChevronDown } from "react-icons/go";
 
 const Progress = () => {
   // Dummy data for the SplineChart
@@ -25,11 +28,12 @@ const Progress = () => {
         Progress
       </h2>
 
-      <div className="bg-white rounded-xl p-6 mb-30">
+      <div className="bg-white rounded-xl p-5 mb-30">
         {/* Time Filter Dropdown */}
-        <div className="mt-6 flex justify-end">
-          <button className="bg-white border border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 py-2 rounded-md">
+        <div className="pr-3 flex justify-end">
+          <button className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md">
             This week
+            <GoChevronDown size={20} className="text-[#007AFF]" />
           </button>
         </div>
 
