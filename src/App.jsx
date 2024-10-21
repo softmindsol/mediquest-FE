@@ -25,8 +25,6 @@ function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
 
-  console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
-
   useEffect(() => {
     if (!isLoggedIn) {
       dispatch(verifyToken());

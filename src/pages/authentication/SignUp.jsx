@@ -227,7 +227,7 @@ const SignUp = () => {
             }
           }}
         >
-          {({ setFieldValue, values, isSubmitting }) => (
+          {({ setFieldValue, values, isSubmitting, errors }) => (
             <Form className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
                 {(step === 1 ? inputFieldsStep1 : inputFieldsStep2).map(
@@ -351,6 +351,21 @@ const SignUp = () => {
                     className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full"
                     onClick={(e) => {
                       e.preventDefault();
+
+                      console.log(errors);
+
+                      if (
+                        errors.name ||
+                        errors.email ||
+                        errors.password ||
+                        errors.confirmPassword ||
+                        errors.phoneNumber ||
+                        !errors.city ||
+                        !errors.year ||
+                        !errors.university
+                      ) {
+                        return;
+                      }
                       setStep(2);
                     }}
                   >
