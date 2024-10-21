@@ -14,12 +14,8 @@ const ProtectedRoute = ({ children }) => {
   if (isLoggedIn && pathname === "/log-in") {
     return <Navigate to="/" replace />;
   }
-
   if (!isUserLoggedIn) return <Navigate to="/log-in" />;
   return children;
-  
-
-
 };
 
 export default ProtectedRoute;
