@@ -173,13 +173,14 @@ const Topic = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
 
   // Handle expanding and collapsing categories
-  const toggleCategory = (index) => {
-    if (expandedCategories.includes(index)) {
-      setExpandedCategories(expandedCategories.filter((i) => i !== index));
-    } else {
-      setExpandedCategories([...expandedCategories, index]);
-    }
-  };
+ const toggleCategory = (index) => {
+   if (expandedCategories.includes(index)) {
+     setExpandedCategories(expandedCategories.filter((i) => i !== index));
+   } else {
+     setExpandedCategories([...expandedCategories, index]);
+   }
+ };
+
 
   // State for selected categories and search term
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -194,6 +195,14 @@ const Topic = () => {
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
+  };
+
+  // Set initial number of items to display (4 initially)
+  const [visibleItems, setVisibleItems] = useState(4);
+
+  // Function to load more items (increase by 2 on each click)
+  const loadMoreItems = () => {
+    setVisibleItems((prevVisibleItems) => prevVisibleItems + 2);
   };
 
   // Handle removing selected category
@@ -223,27 +232,47 @@ const Topic = () => {
   );
 
   // **Handler for Category Checkbox (Left Column)**
-  const handleLeftCategoryCheckbox = (category, index) => {
-    if (selectedLeftCategories.includes(index)) {
-      // Uncheck category and its subcategories
-      setSelectedLeftCategories(
-        selectedLeftCategories.filter((i) => i !== index)
-      );
-      setSelectedLeftSubcategories(
-        selectedLeftSubcategories.filter(
-          (sub) =>
-            !categories[index].subcategories.map((s) => s.name).includes(sub)
-        )
-      );
-    } else {
-      // Check category and its subcategories
-      setSelectedLeftCategories([...selectedLeftCategories, index]);
-      setSelectedLeftSubcategories([
-        ...selectedLeftSubcategories,
-        ...categories[index].subcategories.map((s) => s.name),
-      ]);
-    }
-  };
+ const handleLeftCategoryCheckbox = (category, index) => {
+   if (selectedLeftCategories.includes(index)) {
+     // Uncheck the category and all its subcategories
+     setSelectedLeftCategories(
+       selectedLeftCategories.filter((i) => i !== index)
+     );
+     const updatedSubcategories = { ...selectedLeftSubcategories };
+     delete updatedSubcategories[index];
+     setSelectedLeftSubcategories(updatedSubcategories);
+   } else {
+     // Check the category and all its subcategories
+     setSelectedLeftCategories([...selectedLeftCategories, index]);
+     setSelectedLeftSubcategories({
+       ...selectedLeftSubcategories,
+       [index]: category.subcategories.map((sub) => sub.name),
+     });
+   }
+ };
+  // Handle subcategory checkbox change (Independent of parent category)
+ const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
+   const updatedSubcategories = { ...selectedLeftSubcategories };
+
+   if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
+     // Unselect the subcategory
+     updatedSubcategories[categoryIndex] = updatedSubcategories[
+       categoryIndex
+     ].filter((name) => name !== subcategoryName);
+   } else {
+     // Select the subcategory
+     if (!updatedSubcategories[categoryIndex]) {
+       updatedSubcategories[categoryIndex] = [];
+     }
+     updatedSubcategories[categoryIndex] = [
+       ...updatedSubcategories[categoryIndex],
+       subcategoryName,
+     ];
+   }
+
+   setSelectedLeftSubcategories(updatedSubcategories);
+ };
+
   // State to handle the visibility of the "Improve this question" section
   const [showUniversities, setShowUniversities] = useState(false);
   // Toggle the Improve Section
@@ -326,7 +355,7 @@ const Topic = () => {
             </div>
 
             {/* Categories Section */}
-            <div className="bg-white rounded-lg border border-[#E6E9EC] ">
+            <div className="bg-white rounded-lg border border-[#E6E9EC]">
               <div className="flex justify-between items-center p-4 border-b border-[#DEE2E6]">
                 <h2 className="text-title-sm text-primary font-semibold">
                   Categories - S1
@@ -335,11 +364,12 @@ const Topic = () => {
                   Attempted
                 </h2>
               </div>
+
               <div className="grid gap-3">
                 {categories.map((category, index) => (
                   <div key={index}>
                     {/* Main Category */}
-                    <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4 ">
+                    <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -349,12 +379,13 @@ const Topic = () => {
                             handleLeftCategoryCheckbox(category, index)
                           }
                         />
-                        <span className="text-[14px]  text-primary">
+                        <span className="text-[14px] text-primary">
                           {category.name}
                         </span>
+
                         {/* Toggle Icon: Plus or Minus */}
                         <span
-                          className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8]  border border-[#3A57E8] ml-3"
+                          className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8] border border-[#3A57E8] ml-3"
                           onClick={() => toggleCategory(index)}
                         >
                           {expandedCategories.includes(index) ? (
@@ -377,26 +408,29 @@ const Topic = () => {
                             (subcategory, subIndex) => (
                               <div
                                 key={subIndex}
-                                className="flex justify-between items-center pl-6 py-2 px-4 border-b border-[#DEE2E6]"
+                                className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
                               >
                                 <div className="flex items-center">
                                   <input
                                     type="checkbox"
                                     className="mr-3 cursor-pointer"
-                                    checked={selectedLeftSubcategories.includes(
-                                      subcategory.name
-                                    )}
+                                    checked={
+                                      selectedLeftSubcategories[
+                                        index
+                                      ]?.includes(subcategory.name) || false
+                                    }
                                     onChange={() =>
                                       handleLeftSubcategoryCheckbox(
+                                        index,
                                         subcategory.name
                                       )
                                     }
                                   />
-                                  <span className="text-[14px] text-primary ">
+                                  <span className="text-[14px] text-primary">
                                     {subcategory.name}
                                   </span>
                                 </div>
-                                <span className="text-white text-[10px] font-semibold bg-[#007AFF]  px-2 py-1 rounded-md">
+                                <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
                                   {subcategory.progress}
                                 </span>
                               </div>
@@ -435,19 +469,20 @@ const Topic = () => {
 
             {/* Level of Difficulty */}
             <div className="bg-white rounded-lg border border-[#E6E9EC]">
-              <h2 className="text-title-sm text-primary font-semibold  border-b border-[#DEE2E6] px-6 py-4">
+              <h2 className="text-title-sm text-primary font-semibold border-b border-[#DEE2E6] px-6 py-4">
                 University
               </h2>
+
               {/* Top bar showing selected categories */}
-              <div className="flex items-center flex-wrap  border-b border-[#DEE2E6] px-7 ">
+              <div className="flex items-center flex-wrap border-b border-[#DEE2E6] px-7 ">
                 {selectedCategories.map((category, index) => (
                   <div
                     key={index}
-                    className="bg-[#E5E6E6] flex items-center px-3 py-1 rounded-lg mr-6 my-2 "
+                    className="bg-[#E5E6E6] flex items-center px-3 py-1 rounded-lg mr-6 my-2"
                   >
                     <span className="text-[14px]">{category}</span>
                     <button
-                      className="ml-2 "
+                      className="ml-2"
                       onClick={() => removeCategory(category)}
                     >
                       <RxCross2 />
@@ -457,40 +492,54 @@ const Topic = () => {
               </div>
 
               {/* Search bar */}
-              <div className="relative mb-4  cursor-pointer">
+              <div className="relative mb-4 cursor-pointer">
                 <input
                   type="text"
                   onClick={handleToggle}
                   placeholder="Search"
-                  className="w-full px-7 cursor-pointer py-2 border-b border-[#DEE2E6] rounded-md focus:outline-none  placeholder-secondary"
+                  className="w-full px-7 cursor-pointer py-2 border-b border-[#DEE2E6] rounded-md focus:outline-none placeholder-secondary"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2  text-secondary">
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary">
                   <IoSearchSharp size={17} className="text-secondary" />
                 </span>
               </div>
 
               {/* Category Items List */}
-
               {showUniversities && (
                 <div className="space-y-2">
-                  {filteredCategories.map((category, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center px-4 py-3 border-b border-[#DEE2E6]"
-                    >
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={selectedCategories.includes(category)}
-                        onChange={() => togleCategory(category)}
-                      />
-                      <label className="text-[14px] text-primary">
-                        {category}
-                      </label>
+                  {/* Display only the visible items */}
+                  {filteredCategories
+                    .slice(0, visibleItems)
+                    .map((category, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center px-4 py-3 border-b border-[#DEE2E6]"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={selectedCategories.includes(category)}
+                          onChange={() => toggleCategory(category)}
+                        />
+                        <label className="text-[14px] text-primary">
+                          {category}
+                        </label>
+                      </div>
+                    ))}
+
+                  {/* Load More Button */}
+                  {visibleItems < filteredCategories.length && (
+                    <div className="text-left py-3 pl-4">
+                      <button
+                        onClick={loadMoreItems}
+                        className="bg-[#007AFF] text-[14px]  font-semibold text-white px-4 py-2 rounded-md"
+                      >
+                        Load More
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
             </div>
