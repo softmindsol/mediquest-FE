@@ -1,36 +1,20 @@
-import React, { useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"; // Import useSelector
+import React from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import NonProtectedRoute from "./components/NonProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/authentication/Login";
 import SignUp from "./pages/authentication/SignUp";
+import VerifyEmail from "./pages/authentication/VerifyEmail";
 import EmailConfirmation from "./pages/email-confirmation/EmailConfirmation";
+import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home/Home";
 import Question from "./pages/questionstemplate/Questions";
 import Settings from "./pages/settings/settings";
 import Subscription from "./pages/subscription/Subscription";
-import Topic from "./pages/Topic/Topic";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { verifyToken } from "./store/features/auth/auth.service";
-import VerifyEmail from "./pages/authentication/VerifyEmail";
-import NonProtectedRoute from "./components/NonProtectedRoute";
 import SummaryPage from "./pages/summary/Summary";
-import ErrorPage from "./pages/ErrorPage";
+import Topic from "./pages/Topic/Topic";
 
 function App() {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      dispatch(verifyToken());
-    }
-  }, [dispatch, isLoggedIn]);
-
   return (
     <Router>
       <Routes>

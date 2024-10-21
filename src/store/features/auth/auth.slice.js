@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logout, registerUser, verifyToken } from "./auth.service";
+import {
+  changePassword,
+  getCurrentUser,
+  loginUser,
+  logout,
+  registerUser,
+  verifyToken,
+} from "./auth.service";
 const initialState = {
   user: null,
   isLoading: false,
@@ -33,7 +40,7 @@ const authSlice = createSlice({
       })
       .addCase(verifyToken.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
-        localStorage.setItem("isLoggedIn",action.payload)
+        localStorage.setItem("isLoggedIn", action.payload);
         state.isLoading = false;
       })
       .addCase(verifyToken.rejected, (state, action) => {
@@ -46,7 +53,6 @@ const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
-        
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.user = null;
@@ -70,6 +76,16 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(getCurrentUser.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.selectedUser = action.payload;
+      })
+      .addCase(getCurrentUser.rejected, (state, action) => {
         state.error = action.payload;
       });
   },

@@ -6,7 +6,11 @@ import Button from "../../components/Button";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { changePassword, logout } from "../../store/features/auth/auth.service";
+import {
+  changePassword,
+  logout,
+  verifyToken,
+} from "../../store/features/auth/auth.service";
 
 const inputFields = [
   {
@@ -68,7 +72,9 @@ const Settings = () => {
               console.log("Form Submitted Values:", values);
 
               try {
-                await dispatch(changePassword(values));
+                const res = await dispatch(changePassword(values));
+                console.log("🚀 ~ onSubmit={ ~ res:", res);
+
                 resetForm();
               } catch (error) {
                 console.log(error);
@@ -143,9 +149,9 @@ const Settings = () => {
           <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b border-[#E9ECEF] p-3 ">
             Plan & Billing
           </h2>
-          <div className="flex flex-col lg:flex-row justify-center p-3 lg:px-11 py-7 space-y-6 lg:space-y-0">
-            <div className="flex justify-between flex-wrap lg:w-1/2 w-full space-y-5 lg:space-y-0">
-              <div className="space-y-2 lg:space-y-5 w-full lg:w-auto">
+          <div className="flex flex-col justify-center p-3 space-y-6 lg:flex-row lg:px-11 py-7 lg:space-y-0">
+            <div className="flex flex-wrap justify-between w-full space-y-5 lg:w-1/2 lg:space-y-0">
+              <div className="w-full space-y-2 lg:space-y-5 lg:w-auto">
                 <span className="text-[13px] font-semibold text-[#6D6D6D]">
                   Plan
                 </span>
@@ -153,7 +159,7 @@ const Settings = () => {
                   PLAN NAME HERE
                 </div>
               </div>
-              <div className="space-y-2 lg:space-y-5 w-full lg:w-auto">
+              <div className="w-full space-y-2 lg:space-y-5 lg:w-auto">
                 <span className="text-[13px] lg:font-semibold text-[#6D6D6D]">
                   Payment
                 </span>
@@ -161,7 +167,7 @@ const Settings = () => {
                   99 MAD
                 </div>
               </div>
-              <div className="space-y-2 lg:space-y-5 w-full lg:w-auto">
+              <div className="w-full space-y-2 lg:space-y-5 lg:w-auto">
                 <span className="text-[13px] font-semibold text-[#6D6D6D]">
                   Next Billing Cycle
                 </span>
@@ -171,7 +177,7 @@ const Settings = () => {
               </div>
             </div>
 
-            <div className="flex flex-col items-end lg:flex-row lg:w-1/2 w-full justify-between lg:justify-end gap-6">
+            <div className="flex flex-col items-end justify-between w-full gap-6 lg:flex-row lg:w-1/2 lg:justify-end">
               <span className="text-[13px] font-semibold text-[#6D6D6D] text-center lg:text-left">
                 Cancel Subscription
               </span>

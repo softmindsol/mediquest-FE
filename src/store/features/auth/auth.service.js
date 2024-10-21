@@ -103,7 +103,7 @@ export const logout = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (error) {
-        toast.error(error?.response?.data?.error);
+        toast.error(error?.response?.data?.error || "Error occured");
         return rejectWithValue(error);
       }
     }
@@ -126,4 +126,17 @@ export const verifyToken = createAsyncThunk(
   }
 );
 
+export const getCurrentUser = createAsyncThunk(
+  "getCurrentUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosWithoutToken("/auth/getCurrentUser");
 
+      console.log(res.data);
+      return res.data.data;
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      return rejectWithValue(error);
+    }
+  }
+);

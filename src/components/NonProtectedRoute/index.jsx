@@ -3,11 +3,12 @@ import { useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
 
 const NonProtectedRoute = ({ children }) => {
+  const isUserLoggedIn = localStorage.getItem("isLoggedIn");
   const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
   console.log("🚀 ~ NonProtectedRoute ~ isLoggedIn:", isLoggedIn);
   const location = useLocation();
 
-  if (isLoggedIn) {
+  if (isUserLoggedIn || isLoggedIn) {
     return <Navigate to={location.state?.from || "/"} replace />;
   }
 
@@ -15,3 +16,4 @@ const NonProtectedRoute = ({ children }) => {
 };
 
 export default NonProtectedRoute;
+
