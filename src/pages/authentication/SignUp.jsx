@@ -47,8 +47,7 @@ const inputFieldsStep1 = [
 const inputFieldsStep2 = [
   {
     name: "year",
-    type: "tel",
-    placeholder: "Enter your Year",
+    type: "select", // Change type to 'select'
     label: "Year",
   },
   {
@@ -58,13 +57,85 @@ const inputFieldsStep2 = [
   },
   {
     name: "university",
-    type: "text",
-    placeholder: "Enter your University",
+    type: "select",
     label: "University",
   },
 ];
 
-const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
+// Universities data
+const universitiesData = [
+  {
+    city: "Oujda",
+    short_name: "FMPO",
+    name: "Faculté de Médecine et de Pharmacie d’Oujda",
+  },
+  {
+    city: "Fes",
+    short_name: "FMPDF",
+    name: "Faculté de Médecine, de Pharmacie et de Médecine Dentaire de Fès",
+  },
+  {
+    city: "Fes",
+    short_name: "FEM/ EUROMED",
+    name: "Faculté Euromed de Médecine",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMPR",
+    name: "Faculté de médecine et de pharmacie de Rabat",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMAB/UIASS",
+    name: "Faculté de Médecine Abulcasis",
+  },
+  {
+    city: "Rabat",
+    short_name: "FIM/UIR",
+    name: "Faculté internationale de Médecine",
+  },
+  {
+    city: "Marrakech",
+    short_name: "FMPM",
+    name: "Faculté de Médecine et de Pharmacie de Marrakech",
+  },
+  {
+    city: "Casablanca",
+    short_name: "FMPC",
+    name: "Faculté de Médecine et de Pharmacie de Casablanca",
+  },
+  {
+    city: "Tanger",
+    short_name: "FMPT",
+    name: "Faculté de Médecine et de Pharmacie de Tanger",
+  },
+  {
+    city: "Agadir",
+    short_name: "FMPA",
+    name: "Faculté de Médecine et de Pharmacie d'Agadir",
+  },
+  {
+    city: "Béni Mellal",
+    short_name: "FMPBM",
+    name: "Faculté de Médecine et de Pharmacie Beni Mellal",
+  },
+  {
+    city: "Dakhla",
+    short_name: "UM6SS Dakhla",
+    name: "Faculté Mohammed VI de Médecine de Dakhla",
+  },
+  {
+    city: "Benguerir",
+    short_name: "UM6P-FMS",
+    name: "Faculty of Medical Sciences",
+  },
+  {
+    city: "Guelmim",
+    short_name: "FMPG",
+    name: "Faculté de Médecine et de Pharmacie de Guelmim",
+  },
+];
+
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -85,6 +156,27 @@ const SignUp = () => {
   const [step, setStep] = useState(1);
   const dispatch = useDispatch();
 
+  const [universities, setUniversities] = useState([]);
+
+  const handleCityChange = (e, setFieldValue) => {
+    const selectedCity = e.target.value;
+    const filteredUniversities = universitiesData
+      .filter((university) => university.city === selectedCity)
+      .map((university) => university.name);
+    setUniversities(filteredUniversities);
+    setFieldValue("city", selectedCity); // Set city value in Formik
+    setFieldValue("university", ""); // Reset university field
+  };
+
+  // Generate year options
+ const years = [];
+ for (let i = 1; i <= 5; i++) {
+   for (let j = 1; j <= 2; j++) {
+     // Calculate the corresponding semester for each year
+     const semester = (i - 1) * 2 + j; // S1, S2, S3, ..., S10
+     years.push(`Year ${i} - S${semester}`);
+   }
+ }
   return (
     <>
       <Header />
@@ -140,7 +232,7 @@ const SignUp = () => {
             }
           }}
         >
-          {({ values, isSubmitting }) => (
+          {({ setFieldValue, values, isSubmitting }) => (
             <Form className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
                 {(step === 1 ? inputFieldsStep1 : inputFieldsStep2).map(
@@ -158,17 +250,52 @@ const SignUp = () => {
                       </label>
                       {/* Handle select fields separately */}
                       {field.type === "select" ? (
-                        <Field
-                          as="select"
-                          id={field.name}
-                          name={field.name}
-                          className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
-                        >
-                          <option value="" label="Select your city" />
-                          {cities.map((city) => (
-                            <option key={city} value={city} label={city} />
-                          ))}
-                        </Field>
+                        field.name === "year" ? (
+                          <Field
+                            as="select"
+                            id={field.name}
+                            name={field.name}
+                            className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                          >
+                            <option value="" label="Select your year" />
+                            {years.map((year) => (
+                              <option key={year} value={year}>
+                                {year}
+                              </option>
+                            ))}
+                          </Field>
+                        ) : field.name === "city" ? (
+                          <Field
+                            as="select"
+                            id={field.name}
+                            name={field.name}
+                            className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                            onChange={(e) => handleCityChange(e, setFieldValue)}
+                          >
+                            <option value="" label="Select your city" />
+                            {Array.from(
+                              new Set(universitiesData.map((data) => data.city))
+                            ).map((city) => (
+                              <option key={city} value={city}>
+                                {city}
+                              </option>
+                            ))}
+                          </Field>
+                        ) : field.name === "university" ? (
+                          <Field
+                            as="select"
+                            id={field.name}
+                            name={field.name}
+                            className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                          >
+                            <option value="" label="Select your university" />
+                            {universities.map((university, index) => (
+                              <option key={index} value={university}>
+                                {university}
+                              </option>
+                            ))}
+                          </Field>
+                        ) : null
                       ) : (
                         <div className="relative flex items-center">
                           <Field

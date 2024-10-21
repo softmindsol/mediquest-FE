@@ -22,7 +22,7 @@ export const RegisterSchema = Yup.object().shape({
 
   year: Yup.string()
     .required("Year is required")
-    .matches(/^S([1-9]|10)$/, "Year must be S1 to S10"),
+    ,
 
   city: Yup.string().required("City is required"),
 

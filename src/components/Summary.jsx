@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import ResultsBar from "../components/ResultBar"; // Import the updated ResultsBar component
+import { SlArrowRight } from "react-icons/sl";
 
 const Summary = () => {
   const [questions] = useState([
@@ -20,11 +21,10 @@ const Summary = () => {
   ]);
 
   const categories = [
-    { name: "All", progress: "1 of 4203" },
-    { name: "Cat 1", progress: "1 of 4203" },
-    { name: "Cat 2", progress: "1 of 4203" },
-    { name: "Cat 3", progress: "1 of 4203" },
-    { name: "Cat 4", progress: "1 of 4203" },
+    { name: "All", progress: "132 of 265", progressPercentage: 50 },
+    { name: "Cat 1", progress: "23 of 23", progressPercentage: 35 },
+    { name: "Cat 2", progress: "23 of 23", progressPercentage: 65 },
+    { name: "Cat 3", progress: "23 of 23", progressPercentage: 65 },
   ];
 
   // Array representing the user's scores (correct = true, incorrect = false)
@@ -39,7 +39,6 @@ const Summary = () => {
     { correct: true },
     { correct: false },
     { correct: true },
-
   ];
 
   return (
@@ -54,8 +53,8 @@ const Summary = () => {
             {/* ResultsBar Component */}
             <ResultsBar score={61.5} percentile={85} />{" "}
             {/* Pass score and percentile dynamically */}
-            <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC]">
-              <div className="flex justify-between items-center p-4 border-b border-[#DEE2E6]">
+            <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC] p-9">
+              <div className="flex justify-between items-center mb-4">
                 <h2 className="text-title-sm text-primary font-semibold">
                   Categories
                 </h2>
@@ -63,12 +62,22 @@ const Summary = () => {
                   Question Attempted
                 </h2>
               </div>
-              <div className="bg-white">
-                <div className="grid gap-3">
+              <div className="bg-white ">
+                <div className="grid ">
                   {categories.map((category, index) => (
-                    <div key={index}>
-                      <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
-                        <div className="flex items-center">
+                    <div
+                      key={index}
+                      className="flex justify-between items-center border-b border-[#DEE2E6]"
+                    >
+                      {/* Parent div with background color based on progress */}
+                      <div
+                        className="flex items-center justify-between w-full"
+                        style={{
+                          background: `linear-gradient(to right, #E1FFBA ${category.progressPercentage}%, #FFE8E8 ${category.progressPercentage}%)`,
+                        }}
+                      >
+                        {/* Left div: Checkbox and Category Name (50% width) */}
+                        <div className="flex items-center py-3 px-4 w-1/2">
                           <input
                             type="checkbox"
                             className="mr-3 cursor-pointer"
@@ -77,19 +86,25 @@ const Summary = () => {
                             {category.name}
                           </span>
                         </div>
-                        <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                          {category.progress}
-                        </span>
+
+                        {/* Right div: Progress display (50% width) */}
+                        <div className="py-3 px-4 w-1/2 flex justify-end">
+                          <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
+                            {category.progress}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-7">
               <Button
                 text="Continue"
                 type="submit"
+                rightIcon={SlArrowRight}
+                rightIconStyle="text-white "
                 className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
               />
             </div>
@@ -102,7 +117,6 @@ const Summary = () => {
             </div>
             <div className="mt-4 px-6 text-center mx-auto pb-7">
               <div className="overflow-y-auto max-h-32">
-              
                 {/* Set a max height */}
                 <ul className="space-y-2 mx-auto">
                   {scores.map((score, index) => (

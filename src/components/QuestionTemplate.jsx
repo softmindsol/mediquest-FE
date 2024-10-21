@@ -4,6 +4,8 @@ import { IoIosThumbsUp } from "react-icons/io";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { SlArrowRight } from "react-icons/sl";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -100,7 +102,6 @@ const QuestionTemplate = () => {
         <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-40 ">
           {/* Main Flex Container */}
           <div className="flex flex-wrap lg:flex-nowrap justify-between">
-
             <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
               {/* Navigation Buttons */}
               <div className="flex justify-between mb-10">
@@ -164,6 +165,8 @@ const QuestionTemplate = () => {
                     <Button
                       text="Submit answer"
                       type="submit"
+                      rightIcon={SlArrowRight}
+                      rightIconStyle="text-white "
                       className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
                     />
                   </Link>
@@ -235,25 +238,24 @@ const QuestionTemplate = () => {
               <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
                 Score: 50%
               </div>
-                            <div className="overflow-y-auto max-h-32">
+              <div className="overflow-y-auto max-h-32">
+                <div className="mt-4 px-6 text-center mx-auto pb-7">
+                  <ul className="space-y-2 mx-auto">
+                    {scores.map((score, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center gap-4 space-x-2 justify-center "
+                      >
+                        <span>{index + 1}</span>
+                        <span>
+                          <FaCheck className="text-[#95cb7c]" />
 
-              <div className="mt-4 px-6 text-center mx-auto pb-7">
-                <ul className="space-y-2 mx-auto">
-                  {scores.map((score, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center gap-4 space-x-2 justify-center "
-                    >
-                      <span>{index + 1}</span>
-                      <span>
-                        <FaCheck className="text-[#95cb7c]" />
-
-                        {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                          {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

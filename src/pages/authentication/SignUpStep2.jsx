@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { RegisterTwoSchema } from "../../schema/auth.schema"; // Import the validation schema
 import Button from "../../components/Button";
@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { FiChevronLeft } from "react-icons/fi";
 
-// Updated input fields with city as a select input
+// Updated input fields
 const inputFields = [
   {
     name: "year",
@@ -22,21 +22,98 @@ const inputFields = [
   },
   {
     name: "university",
-    type: "email",
-    placeholder: "Enter your University",
+    type: "select",
     label: "University",
-  },
-  {
-    name: "phoneNumber",
-    type: "tel",
-    placeholder: "Enter your number",
-    label: "Phone Number",
   },
 ];
 
-const cities = ["Rabat", "Casablanca", "Tanger", "Marrakech", "Agadir"];
+// Universities data
+const universitiesData = [
+  {
+    city: "Oujda",
+    short_name: "FMPO",
+    name: "Faculté de Médecine et de Pharmacie d’Oujda",
+  },
+  {
+    city: "Fes",
+    short_name: "FMPDF",
+    name: "Faculté de Médecine, de Pharmacie et de Médecine Dentaire de Fès",
+  },
+  {
+    city: "Fes",
+    short_name: "FEM/ EUROMED",
+    name: "Faculté Euromed de Médecine",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMPR",
+    name: "Faculté de médecine et de pharmacie de Rabat",
+  },
+  {
+    city: "Rabat",
+    short_name: "FMAB/UIASS",
+    name: "Faculté de Médecine Abulcasis",
+  },
+  {
+    city: "Rabat",
+    short_name: "FIM/UIR",
+    name: "Faculté internationale de Médecine",
+  },
+  {
+    city: "Marrakech",
+    short_name: "FMPM",
+    name: "Faculté de Médecine et de Pharmacie de Marrakech",
+  },
+  {
+    city: "Casablanca",
+    short_name: "FMPC",
+    name: "Faculté de Médecine et de Pharmacie de Casablanca",
+  },
+  {
+    city: "Tanger",
+    short_name: "FMPT",
+    name: "Faculté de Médecine et de Pharmacie de Tanger",
+  },
+  {
+    city: "Agadir",
+    short_name: "FMPA",
+    name: "Faculté de Médecine et de Pharmacie d'Agadir",
+  },
+  {
+    city: "Béni Mellal",
+    short_name: "FMPBM",
+    name: "Faculté de Médecine et de Pharmacie Beni Mellal",
+  },
+  {
+    city: "Dakhla",
+    short_name: "UM6SS Dakhla",
+    name: "Faculté Mohammed VI de Médecine de Dakhla",
+  },
+  {
+    city: "Benguerir",
+    short_name: "UM6P-FMS",
+    name: "Faculty of Medical Sciences",
+  },
+  {
+    city: "Guelmim",
+    short_name: "FMPG",
+    name: "Faculté de Médecine et de Pharmacie de Guelmim",
+  },
+];
 
 const SignUpStep2 = () => {
+  const [universities, setUniversities] = useState([]);
+
+  const handleCityChange = (e, setFieldValue) => {
+    const selectedCity = e.target.value;
+    const filteredUniversities = universitiesData
+      .filter((university) => university.city === selectedCity)
+      .map((university) => university.name);
+    setUniversities(filteredUniversities);
+    setFieldValue("city", selectedCity); // Set city value in Formik
+    setFieldValue("university", ""); // Reset university field
+  };
+
   return (
     <>
       <Header />
@@ -67,17 +144,16 @@ const SignUpStep2 = () => {
               year: "",
               city: "",
               university: "",
-              phoneNumber: "",
             }}
             validationSchema={RegisterTwoSchema}
             onSubmit={(values) => {
               console.log("Form Submitted Values:", values); // Log form values here
             }}
           >
-            {() => (
+            {({ setFieldValue }) => (
               <Form className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-1 ">
-                  {inputFields?.map((field) => (
+                  {inputFields.map((field) => (
                     <div key={field.name}>
                       <label
                         htmlFor={field.name}
@@ -86,17 +162,38 @@ const SignUpStep2 = () => {
                         {field.label}
                       </label>
                       {field.type === "select" ? (
-                        <Field
-                          as="select"
-                          id={field.name}
-                          name={field.name}
-                          className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
-                        >
-                          <option value="" label="Select your city" />
-                          {cities.map((city) => (
-                            <option key={city} value={city} label={city} />
-                          ))}
-                        </Field>
+                        field.name === "city" ? (
+                          <Field
+                            as="select"
+                            id={field.name}
+                            name={field.name}
+                            className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                            onChange={(e) => handleCityChange(e, setFieldValue)}
+                          >
+                            <option value="" label="Select your city" />
+                            {Array.from(
+                              new Set(universitiesData.map((data) => data.city))
+                            ).map((city) => (
+                              <option key={city} value={city}>
+                                {city}
+                              </option>
+                            ))}
+                          </Field>
+                        ) : field.name === "university" ? (
+                          <Field
+                            as="select"
+                            id={field.name}
+                            name={field.name}
+                            className="mt-3 p-3 text-secondary text-title-p bg-white focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
+                          >
+                            <option value="" label="Select your university" />
+                            {universities.map((university, index) => (
+                              <option key={index} value={university}>
+                                {university}
+                              </option>
+                            ))}
+                          </Field>
+                        ) : null
                       ) : (
                         <Field
                           id={field.name}
