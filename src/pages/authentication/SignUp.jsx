@@ -359,10 +359,7 @@ const SignUp = () => {
                         errors.email ||
                         errors.password ||
                         errors.confirmPassword ||
-                        errors.phoneNumber ||
-                        !errors.city ||
-                        !errors.year ||
-                        !errors.university
+                        errors.phoneNumber
                       ) {
                         return;
                       }
