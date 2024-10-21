@@ -25,7 +25,7 @@ axiosWithoutToken.interceptors.response.use(
       await toast.error("Session expired. Please log in again.");
       // localStorage.removeItem("isLoggedIn");
       // Redirect to the login page
-      window.location.href = "http://localhost:5173/log-in";
+      window.location.href = `${import.meta.env.VITE_FRONTENT_URL}/log-in`;
     }
 
     return Promise.reject(error);
