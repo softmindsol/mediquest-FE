@@ -19,6 +19,7 @@ import { verifyToken } from "./store/features/auth/auth.service";
 import VerifyEmail from "./pages/authentication/VerifyEmail";
 import NonProtectedRoute from "./components/NonProtectedRoute";
 import SummaryPage from "./pages/summary/Summary";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -105,6 +106,8 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
+
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
   );
