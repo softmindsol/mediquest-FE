@@ -23,9 +23,11 @@ axiosWithoutToken.interceptors.response.use(
     if (response && response.data.error === "jwt expired") {
       // Dispatch verifyToken action when a 401 status is received
       await toast.error("Session expired. Please log in again.");
-      // localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("isLoggedIn");
       // Redirect to the login page
-      window.location.href = `${import.meta.env.VITE_FRONTENT_URL}/log-in`;
+      setTimeout(() => {
+        window.location.href = `${import.meta.env.VITE_FRONTENT_URL}/log-in`;
+      }, 1000);
     }
 
     return Promise.reject(error);

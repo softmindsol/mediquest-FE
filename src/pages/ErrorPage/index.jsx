@@ -2,7 +2,7 @@ import React from "react";
 
 const ErrorPage = () => {
   return (
-    <div className="flex items-center justify-center h-screen bg-blue-100">
+    <div className="flex items-center justify-center h-screen ">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-blue-600">404</h1>
         <p className="mt-4 text-xl text-blue-500">
