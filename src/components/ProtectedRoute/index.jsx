@@ -5,25 +5,16 @@ import Loader from "../Loader";
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const pathname = location.pathname;
+  const isUserLoggedIn = localStorage.getItem("isLoggedIn");
+  const { isLoggedIn, isLoading } = useSelector((state) => state?.user);
+  console.log("🚀 ~ ProtectedRoute ~ isLoggedIn:", isLoggedIn);
 
-  // const { isLoggedIn, isLoading } = useSelector((state) => state?.user);
-
-  const isLoggedIn = true;
-  const isLoading = false;
-  // If loading, show the loader
   if (isLoading) return <Loader />;
 
-  // Redirect if not logged in
-  if (!isLoggedIn) {
-    return <Navigate to="/log-in" state={{ from: location }} replace />;
-  }
-
-  // Redirect to home if trying to access login page while logged in
   if (isLoggedIn && pathname === "/log-in") {
     return <Navigate to="/" replace />;
   }
-
-  // If all checks pass, return children
+  if (!isUserLoggedIn) return <Navigate to="/log-in" />;
   return children;
 };
 

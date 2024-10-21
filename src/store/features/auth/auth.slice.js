@@ -33,26 +33,30 @@ const authSlice = createSlice({
       })
       .addCase(verifyToken.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
+        localStorage.setItem("isLoggedIn",action.payload)
         state.isLoading = false;
       })
       .addCase(verifyToken.rejected, (state, action) => {
         state.isLoading = false;
         state.isLoggedIn = false;
+        localStorage.removeItem("isLoggedIn");
         state.error = action.payload;
       })
 
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.user = null;
+        localStorage.removeItem("isLoggedIn");
         state.isLoggedIn = false;
-
         state.isLoading = false;
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
+        state.isLoggedIn = false;
         state.error = action.payload;
       })
       .addCase(loginUser.pending, (state) => {
@@ -61,6 +65,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoggedIn = true;
+        localStorage.setItem("isLoggedIn", true);
         state.isLoading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {

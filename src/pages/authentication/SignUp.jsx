@@ -168,15 +168,10 @@ const SignUp = () => {
     setFieldValue("university", ""); // Reset university field
   };
 
-  // Generate year options
- const years = [];
- for (let i = 1; i <= 5; i++) {
-   for (let j = 1; j <= 2; j++) {
-     // Calculate the corresponding semester for each year
-     const semester = (i - 1) * 2 + j; // S1, S2, S3, ..., S10
-     years.push(`Year ${i} - S${semester}`);
-   }
- }
+  const years = Array.from({ length: 5 }, (_, i) => ({
+    label: `Year ${i + 1}`,
+    value: `Year${i + 1}`,
+  }));
   return (
     <>
       <Header />
@@ -232,7 +227,7 @@ const SignUp = () => {
             }
           }}
         >
-          {({ setFieldValue, values, isSubmitting }) => (
+          {({ setFieldValue, values, isSubmitting, errors }) => (
             <Form className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
                 {(step === 1 ? inputFieldsStep1 : inputFieldsStep2).map(
@@ -245,7 +240,7 @@ const SignUp = () => {
                         {field.label}
                         <FaAsterisk
                           size={6}
-                          className="text-red-500 inline ml-1 mb-3 items-start"
+                          className="items-start inline mb-3 ml-1 text-red-500"
                         />
                       </label>
                       {/* Handle select fields separately */}
@@ -259,8 +254,8 @@ const SignUp = () => {
                           >
                             <option value="" label="Select your year" />
                             {years.map((year) => (
-                              <option key={year} value={year}>
-                                {year}
+                              <option key={year.value} value={year.value}>
+                                {year.label}
                               </option>
                             ))}
                           </Field>
@@ -326,7 +321,7 @@ const SignUp = () => {
                                   ? togglePasswordVisibility
                                   : toggleConfirmPasswordVisibility
                               }
-                              className="absolute right-3 top-10 transform -translate-y-1/2 text-primary"
+                              className="absolute transform -translate-y-1/2 right-3 top-10 text-primary"
                             >
                               {(field.name === "password" && showPassword) ||
                               (field.name === "confirmPassword" &&
@@ -356,6 +351,18 @@ const SignUp = () => {
                     className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full"
                     onClick={(e) => {
                       e.preventDefault();
+
+                      console.log(errors);
+
+                      if (
+                        errors.name ||
+                        errors.email ||
+                        errors.password ||
+                        errors.confirmPassword ||
+                        errors.phoneNumber
+                      ) {
+                        return;
+                      }
                       setStep(2);
                     }}
                   >

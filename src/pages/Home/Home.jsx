@@ -4,10 +4,12 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import { Link } from "react-router-dom";
 import RecentTests from "../../components/RecentTests";
 import Progress from "../../components/Progress";
-
-
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn); // Ensure proper path to user state
+  console.log("🚀 ~ Home ~ isLoggedIn:", isLoggedIn);
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Welcome home!" />

@@ -17,16 +17,15 @@ import Topic from "./pages/Topic/Topic";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { verifyToken } from "./store/features/auth/auth.service";
 import VerifyEmail from "./pages/authentication/VerifyEmail";
+import NonProtectedRoute from "./components/NonProtectedRoute";
 import SummaryPage from "./pages/summary/Summary";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
-
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn); // Ensure proper path to user state
-  console.log("🚀 ~ App ~ isLoggedIn:", isLoggedIn);
+  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
 
   useEffect(() => {
-    // Dispatch verify token API only if user is not logged in
     if (!isLoggedIn) {
       dispatch(verifyToken());
     }
@@ -37,16 +36,26 @@ function App() {
       <Routes>
         <Route
           path="/log-in"
-          element={isLoggedIn ? <Navigate to="/" replace /> : <Login />}
+          element={
+            <NonProtectedRoute>
+              <Login />
+            </NonProtectedRoute>
+          }
         />
         <Route
           path="/sign-up"
-          element={isLoggedIn ? <Navigate to="/" replace /> : <SignUp />}
+          element={
+            <NonProtectedRoute>
+              <SignUp />
+            </NonProtectedRoute>
+          }
         />
         <Route
           path="/email-confirmation"
           element={
-            isLoggedIn ? <Navigate to="/" replace /> : <EmailConfirmation />
+            <NonProtectedRoute>
+              <EmailConfirmation />
+            </NonProtectedRoute>
           }
         />
 
@@ -95,6 +104,8 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
+
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
   );

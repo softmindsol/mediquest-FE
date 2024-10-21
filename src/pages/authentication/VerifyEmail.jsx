@@ -6,7 +6,8 @@ const VerifyEmail = () => {
   const { verificationToken } = useParams();
   console.log("🚀 ~ VerifyEmail ~ verificationToken:", verificationToken);
 
-  const FRONTEND_URL = import.meta.env.VITE_FRONTENT_URL;
+
+  const FRONTEND_URL = "https://www.medquest.ma";
   console.log("🚀 ~ VerifyEmail ~ FRONTEND_URL:", FRONTEND_URL);
 
   useEffect(() => {
