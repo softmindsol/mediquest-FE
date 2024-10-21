@@ -5,6 +5,7 @@ import { RxCross2 } from "react-icons/rx";
 import { IoSearchSharp } from "react-icons/io5";
 import CreateQuizModal from "../../components/CreateQuizModal";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { SlArrowRight } from "react-icons/sl";
 const categories = [
   {
     name: "Anatomy I",
@@ -255,8 +256,8 @@ const Topic = () => {
         {/* Header */}
         <Breadcrumb pageName="Topics" />
 
-        <div className="mb-6">
-          <p className="text-sm text-black-2 font-medium">
+        <div className="mb-13">
+          <p className="text-[14px] text-black-2 font-medium">
             Welcome to the Question Bank.
           </p>
         </div>
@@ -264,33 +265,33 @@ const Topic = () => {
         {/* Main content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Categories */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-9">
             {/* Create Quiz Section */}
             <div className="p-4 bg-white rounded-lg ">
               <div className="flex flex-wrap justify-start lg:gap-15 gap-3">
                 <div>
                   <label
                     htmlFor="noOfQuestions"
-                    className="block text-sm font-semibold text-[#111827] mb-1"
+                    className="block text-[14px] font-semibold text-[#111827] "
                   >
                     Quiz Name
                   </label>
                   <input
                     type="text"
                     placeholder="Create a test name"
-                    className="mt-3 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary"
+                    className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="noOfQuestions"
-                    className="block text-sm font-semibold text-[#111827] mb-1"
+                    className="block text-[14px] font-semibold text-[#111827] "
                   >
                     No. of questions
                   </label>
                   <select
                     type="select"
-                    className="mt-3 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white w-50"
+                    className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white w-50"
                   >
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -301,17 +302,18 @@ const Topic = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex mt-3 mb-2 justify-end items-center">
+              <div className="flex mb-2 justify-end items-center">
                 {/* <p className=" text-[13px] font-bold text-secondary">
                   Test contains 493 questions and 4 topics
                 </p> */}
                 <div>
                   {/* Create New Quiz Button */}
                   <button
-                    className="bg-[#007AFF] text-[12px] font-semibold text-white px-4 py-3 rounded-md"
+                    className="bg-[#007AFF] text-[12px] flex items-center gap-3 font-semibold text-white px-4 py-3 rounded-md"
                     onClick={openModal}
                   >
                     Create New Quiz
+                    <SlArrowRight className="text-white" />
                   </button>
 
                   {/* Modal Component */}
@@ -324,7 +326,7 @@ const Topic = () => {
             </div>
 
             {/* Categories Section */}
-            <div className="bg-white rounded-lg border border-[#E6E9EC]">
+            <div className="bg-white rounded-lg border border-[#E6E9EC] ">
               <div className="flex justify-between items-center p-4 border-b border-[#DEE2E6]">
                 <h2 className="text-title-sm text-primary font-semibold">
                   Categories - S1
@@ -341,7 +343,7 @@ const Topic = () => {
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          className="mr-3 cursor-pointer"
+                          className="mr-3 w-4 h-4 cursor-pointer"
                           checked={selectedLeftCategories.includes(index)}
                           onChange={() =>
                             handleLeftCategoryCheckbox(category, index)
@@ -412,18 +414,18 @@ const Topic = () => {
           <div className="space-y-6">
             {/* Test Mode */}
             <div className=" bg-white rounded-lg border border-[#E6E9EC] ">
-              <h2 className="text-title-sm text-primary font-semibold  border-b border-[#E9ECEF] px-6 py-6 ">
+              <h2 className="text-title-sm text-primary font-semibold  border-b border-[#E9ECEF] px-6 py-5 ">
                 Test Mode
               </h2>
               <div className="px-4 py-6 grid grid-cols-2 ">
                 <div className="flex items-center">
-                  <input type="radio" name="mode" className="mr-2" />
+                  <input type="radio" name="mode" className="mr-2 h-4 w-4" />
                   <label className="text-[15px] font-medium text-primary">
                     Timed
                   </label>
                 </div>
                 <div className="flex items-center">
-                  <input type="radio" name="mode" className="mr-2" />
+                  <input type="radio" name="mode" className="mr-2 " />
                   <label className="text-[15px] font-medium text-primary">
                     Tutor
                   </label>
@@ -443,7 +445,7 @@ const Topic = () => {
                     key={index}
                     className="bg-[#E5E6E6] flex items-center px-3 py-1 rounded-lg mr-6 my-2 "
                   >
-                    <span className="text-sm">{category}</span>
+                    <span className="text-[14px]">{category}</span>
                     <button
                       className="ml-2 "
                       onClick={() => removeCategory(category)}
@@ -516,7 +518,7 @@ const Topic = () => {
                         {test.description && (
                           <>
                             <div className="flex justify-between">
-                              <div className="flex flex-col gap-4">
+                              <div className="flex flex-col gap-3">
                                 <div className="text-[13px] text-secondary">
                                   {test.description}
                                 </div>
@@ -525,8 +527,9 @@ const Topic = () => {
                                 </div>
                               </div>
                               <div className="flex items-end">
-                                <button className="bg-white text-[#007AFF] px-4 py-2 border border-[#007AFF] rounded-md ">
+                                <button className="bg-white text-[#007AFF] flex gap-2 items-center px-4 py-2 border border-[#007AFF] rounded-md ">
                                   {test.buttonLabel}
+                                  <SlArrowRight className="text-[#007AFF]" />
                                 </button>
                               </div>
                             </div>

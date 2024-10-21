@@ -88,10 +88,10 @@ const RecentTests = () => {
 
             {/* Accordion Content (Description, Date, Button) */}
             {openIndex === index && (
-              <div className="mt-2 p-4 border-t border-[#CED4DA]">
+              <div className="mt- p-5 border-t border-[#CED4DA]">
                 {test.description && (
                   <div className="flex justify-between">
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-5">
                       <div className="text-[13px] text-secondary">
                         {test.description}
                       </div>
