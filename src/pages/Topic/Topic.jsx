@@ -6,6 +6,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import CreateQuizModal from "../../components/CreateQuizModal";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
+import { useSelector } from "react-redux";
 const categories = [
   {
     name: "Anatomy I",
@@ -43,7 +44,6 @@ const categories = [
       { name: "Casablanca", progress: "1 of 403" },
     ],
   },
-
 ];
 
 // Array of category items from the design
@@ -125,42 +125,46 @@ const universityNames = categoryItems.map((item) => item.name);
 
 console.log(universityNames);
 
-
- const recentTests = [
-   {
-     name: "Test Name",
-     description: "Topic one, two and three.",
-     createdDate: "26/08/2024",
-     buttonLabel: "Continue Quiz",
-   },
-   {
-     name: "Test name 1",
-     description: "Topic for test 1.",
-     createdDate: "25/08/2024",
-     buttonLabel: "Continue Quiz",
-   },
-   {
-     name: "Test name 2",
-     description: "Topic for test 2.",
-     createdDate: "24/08/2024",
-     buttonLabel: "Continue Quiz",
-   },
-   {
-     name: "Test name 3",
-     description: "Topic for test 3.",
-     createdDate: "23/08/2024",
-     buttonLabel: "Continue Quiz",
-   },
-   {
-     name: "Test name 4",
-     description: "Topic for test 4.",
-     createdDate: "22/08/2024",
-     buttonLabel: "Continue Quiz",
-   },
- ];
-
+const recentTests = [
+  {
+    name: "Test Name",
+    description: "Topic one, two and three.",
+    createdDate: "26/08/2024",
+    buttonLabel: "Continue Quiz",
+  },
+  {
+    name: "Test name 1",
+    description: "Topic for test 1.",
+    createdDate: "25/08/2024",
+    buttonLabel: "Continue Quiz",
+  },
+  {
+    name: "Test name 2",
+    description: "Topic for test 2.",
+    createdDate: "24/08/2024",
+    buttonLabel: "Continue Quiz",
+  },
+  {
+    name: "Test name 3",
+    description: "Topic for test 3.",
+    createdDate: "23/08/2024",
+    buttonLabel: "Continue Quiz",
+  },
+  {
+    name: "Test name 4",
+    description: "Topic for test 4.",
+    createdDate: "22/08/2024",
+    buttonLabel: "Continue Quiz",
+  },
+];
 
 const Topic = () => {
+  const { subjectQuestions = [], user = {} } = useSelector(
+    (state) => state?.user?.selectedUser
+  );
+
+  console.log("🚀 ~ Topic ~ user:", user);
+
   const [isModalOpen, setModalOpen] = useState(false);
 
   // Function to open modal
@@ -173,14 +177,13 @@ const Topic = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
 
   // Handle expanding and collapsing categories
- const toggleCategory = (index) => {
-   if (expandedCategories.includes(index)) {
-     setExpandedCategories(expandedCategories.filter((i) => i !== index));
-   } else {
-     setExpandedCategories([...expandedCategories, index]);
-   }
- };
-
+  const toggleCategory = (index) => {
+    if (expandedCategories.includes(index)) {
+      setExpandedCategories(expandedCategories.filter((i) => i !== index));
+    } else {
+      setExpandedCategories([...expandedCategories, index]);
+    }
+  };
 
   // State for selected categories and search term
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -232,46 +235,46 @@ const Topic = () => {
   );
 
   // **Handler for Category Checkbox (Left Column)**
- const handleLeftCategoryCheckbox = (category, index) => {
-   if (selectedLeftCategories.includes(index)) {
-     // Uncheck the category and all its subcategories
-     setSelectedLeftCategories(
-       selectedLeftCategories.filter((i) => i !== index)
-     );
-     const updatedSubcategories = { ...selectedLeftSubcategories };
-     delete updatedSubcategories[index];
-     setSelectedLeftSubcategories(updatedSubcategories);
-   } else {
-     // Check the category and all its subcategories
-     setSelectedLeftCategories([...selectedLeftCategories, index]);
-     setSelectedLeftSubcategories({
-       ...selectedLeftSubcategories,
-       [index]: category.subcategories.map((sub) => sub.name),
-     });
-   }
- };
+  const handleLeftCategoryCheckbox = (category, index) => {
+    if (selectedLeftCategories.includes(index)) {
+      // Uncheck the category and all its subcategories
+      setSelectedLeftCategories(
+        selectedLeftCategories.filter((i) => i !== index)
+      );
+      const updatedSubcategories = { ...selectedLeftSubcategories };
+      delete updatedSubcategories[index];
+      setSelectedLeftSubcategories(updatedSubcategories);
+    } else {
+      // Check the category and all its subcategories
+      setSelectedLeftCategories([...selectedLeftCategories, index]);
+      setSelectedLeftSubcategories({
+        ...selectedLeftSubcategories,
+        [index]: category.subcategories.map((sub) => sub.name),
+      });
+    }
+  };
   // Handle subcategory checkbox change (Independent of parent category)
- const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
-   const updatedSubcategories = { ...selectedLeftSubcategories };
+  const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
+    const updatedSubcategories = { ...selectedLeftSubcategories };
 
-   if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
-     // Unselect the subcategory
-     updatedSubcategories[categoryIndex] = updatedSubcategories[
-       categoryIndex
-     ].filter((name) => name !== subcategoryName);
-   } else {
-     // Select the subcategory
-     if (!updatedSubcategories[categoryIndex]) {
-       updatedSubcategories[categoryIndex] = [];
-     }
-     updatedSubcategories[categoryIndex] = [
-       ...updatedSubcategories[categoryIndex],
-       subcategoryName,
-     ];
-   }
+    if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
+      // Unselect the subcategory
+      updatedSubcategories[categoryIndex] = updatedSubcategories[
+        categoryIndex
+      ].filter((name) => name !== subcategoryName);
+    } else {
+      // Select the subcategory
+      if (!updatedSubcategories[categoryIndex]) {
+        updatedSubcategories[categoryIndex] = [];
+      }
+      updatedSubcategories[categoryIndex] = [
+        ...updatedSubcategories[categoryIndex],
+        subcategoryName,
+      ];
+    }
 
-   setSelectedLeftSubcategories(updatedSubcategories);
- };
+    setSelectedLeftSubcategories(updatedSubcategories);
+  };
 
   // State to handle the visibility of the "Improve this question" section
   const [showUniversities, setShowUniversities] = useState(false);
@@ -292,12 +295,12 @@ const Topic = () => {
         </div>
 
         {/* Main content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Left Column - Categories */}
           <div className="lg:col-span-2 space-y-9">
             {/* Create Quiz Section */}
             <div className="p-4 bg-white rounded-lg ">
-              <div className="flex flex-wrap justify-start lg:gap-15 gap-3">
+              <div className="flex flex-wrap justify-start gap-3 lg:gap-15">
                 <div>
                   <label
                     htmlFor="noOfQuestions"
@@ -331,7 +334,7 @@ const Topic = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex mb-2 justify-end items-center">
+              <div className="flex items-center justify-end mb-2">
                 {/* <p className=" text-[13px] font-bold text-secondary">
                   Test contains 493 questions and 4 topics
                 </p> */}
@@ -357,8 +360,8 @@ const Topic = () => {
             {/* Categories Section */}
             <div className="bg-white rounded-lg border border-[#E6E9EC]">
               <div className="flex justify-between items-center p-4 border-b border-[#DEE2E6]">
-                <h2 className="text-title-sm text-primary font-semibold">
-                  Categories - S1
+                <h2 className="font-semibold text-title-sm text-primary">
+                  Categories - {user?.year?.replace(/(\D)(\d)/, "$1 $2") || ""}
                 </h2>
                 <h2 className="text-[13px] text-primary font-bold">
                   Attempted
@@ -366,46 +369,46 @@ const Topic = () => {
               </div>
 
               <div className="grid gap-3">
-                {categories.map((category, index) => (
-                  <div key={index}>
-                    {/* Main Category */}
-                    <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-3 w-4 h-4 cursor-pointer"
-                          checked={selectedLeftCategories.includes(index)}
-                          onChange={() =>
-                            handleLeftCategoryCheckbox(category, index)
-                          }
-                        />
-                        <span className="text-[14px] text-primary">
-                          {category.name}
-                        </span>
+                {subjectQuestions &&
+                  subjectQuestions?.map((category, index) => (
+                    <div key={index}>
+                      {/* Main Category */}
+                      <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 mr-3 cursor-pointer"
+                            checked={selectedLeftCategories.includes(index)}
+                            onChange={() =>
+                              handleLeftCategoryCheckbox(category, index)
+                            }
+                          />
+                          <span className="text-[14px] text-primary">
+                            {category?.subjectName}
+                          </span>
 
-                        {/* Toggle Icon: Plus or Minus */}
-                        <span
-                          className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8] border border-[#3A57E8] ml-3"
-                          onClick={() => toggleCategory(index)}
-                        >
-                          {expandedCategories.includes(index) ? (
-                            <FaMinus />
-                          ) : (
-                            <FaPlus />
-                          )}
+                          {/* Toggle Icon: Plus or Minus */}
+                          <span
+                            className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8] border border-[#3A57E8] ml-3"
+                            onClick={() => toggleCategory(index)}
+                          >
+                            {expandedCategories.includes(index) ? (
+                              <FaMinus />
+                            ) : (
+                              <FaPlus />
+                            )}
+                          </span>
+                        </div>
+                        <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
+                          1 of {category?.totalQuestions}
                         </span>
                       </div>
-                      <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
-                        {category.progress}
-                      </span>
-                    </div>
 
-                    {/* Subcategories (show only if expanded) */}
-                    {expandedCategories.includes(index) &&
-                      category.subcategories && (
-                        <div>
-                          {category.subcategories.map(
-                            (subcategory, subIndex) => (
+                      {/* Subcategories (show only if expanded) */}
+                      {expandedCategories.includes(index) &&
+                        category?.schools && (
+                          <div>
+                            {category?.schools.map((subcategory, subIndex) => (
                               <div
                                 key={subIndex}
                                 className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
@@ -417,29 +420,28 @@ const Topic = () => {
                                     checked={
                                       selectedLeftSubcategories[
                                         index
-                                      ]?.includes(subcategory.name) || false
+                                      ]?.includes(subcategory?.school) || false
                                     }
                                     onChange={() =>
                                       handleLeftSubcategoryCheckbox(
                                         index,
-                                        subcategory.name
+                                        subcategory?.school
                                       )
                                     }
                                   />
                                   <span className="text-[14px] text-primary">
-                                    {subcategory.name}
+                                    {subcategory.school}
                                   </span>
                                 </div>
                                 <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
-                                  {subcategory.progress}
+                                  1 of {subcategory?.count}
                                 </span>
                               </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                  </div>
-                ))}
+                            ))}
+                          </div>
+                        )}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -451,9 +453,9 @@ const Topic = () => {
               <h2 className="text-title-sm text-primary font-semibold  border-b border-[#E9ECEF] px-6 py-5 ">
                 Test Mode
               </h2>
-              <div className="px-4 py-6 grid grid-cols-2 ">
+              <div className="grid grid-cols-2 px-4 py-6 ">
                 <div className="flex items-center">
-                  <input type="radio" name="mode" className="mr-2 h-4 w-4" />
+                  <input type="radio" name="mode" className="w-4 h-4 mr-2" />
                   <label className="text-[15px] font-medium text-primary">
                     Timed
                   </label>
@@ -501,7 +503,7 @@ const Topic = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary">
+                <span className="absolute transform -translate-y-1/2 right-3 top-1/2 text-secondary">
                   <IoSearchSharp size={17} className="text-secondary" />
                 </span>
               </div>
@@ -531,7 +533,7 @@ const Topic = () => {
 
                   {/* Load More Button */}
                   {visibleItems < filteredCategories.length && (
-                    <div className="text-left py-3 pl-4">
+                    <div className="py-3 pl-4 text-left">
                       <button
                         onClick={loadMoreItems}
                         className="bg-[#007AFF] text-[14px]  font-semibold text-white px-4 py-2 rounded-md"
@@ -545,7 +547,7 @@ const Topic = () => {
             </div>
 
             {/* Recent Tests */}
-            <h2 className="text-title-sm text-primary font-semibold">
+            <h2 className="font-semibold text-title-sm text-primary">
               Recent Tests
             </h2>
 

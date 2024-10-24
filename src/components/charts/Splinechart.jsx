@@ -40,7 +40,7 @@ const SplineChart = ({ heading, series, colors, categories }) => {
   }, [colors, categories]);
   return (
     <div className="">
-      <h2 className="text-xs md:text-base font-bold bg-whitest text-black px-5 py-4">
+      <h2 className="px-5 py-4 text-xs font-bold text-black md:text-base bg-whitest">
         {heading}
       </h2>
       <ReactApexChart
