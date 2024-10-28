@@ -26,10 +26,10 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
 
-  if (isLoggedIn && pathname === "/log-in") {
+  if (isLoggedIn && pathname === "/home") {
     return <Navigate to="/" replace />;
   }
-  if (!isUserLoggedIn) return <Navigate to="/log-in" />;
+  if (!isUserLoggedIn) return <Navigate to="/home" />;
 
   return children;
 };

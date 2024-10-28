@@ -8,6 +8,15 @@ module.exports = {
     fontFamily: {
       Inter: ["Inter", "sans-serif"],
     },
+    animation: {
+      bounce: "bounce 0.6s infinite",
+    },
+    keyframes: {
+      bounce: {
+        "0%, 100%": { transform: "translateY(0)" },
+        "50%": { transform: "translateY(-1rem)" },
+      },
+    },
     screens: {
       "2xsm": "375px",
       xsm: "425px",

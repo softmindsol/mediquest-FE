@@ -20,6 +20,14 @@ function App() {
     <Router>
       <Routes>
         <Route
+          path="/home"
+          element={
+            <NonProtectedRoute>
+              <LandingPage />
+            </NonProtectedRoute>
+          }
+        />{" "}
+        <Route
           path="/log-in"
           element={
             <NonProtectedRoute>
@@ -43,7 +51,6 @@ function App() {
             </NonProtectedRoute>
           }
         />
-
         <Route
           path="/"
           element={
@@ -89,8 +96,7 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
-        <Route path="/landing-page" element={<LandingPage />} />
-
+        {/* <Route path="/landing-page" element={<LandingPage />} /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

@@ -1,9 +1,19 @@
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { createQuiz } from "../store/features/quiz/quiz.service";
 
 const CreateQuizModal = ({ isOpen, closeModal, values }) => {
   if (!isOpen) return null;
+
+  const dispatch = useDispatch();
+
+  const handleCreateQuiz = async () => {
+    const res = await dispatch(createQuiz(values));
+    console.log("🚀 ~ handleCreateQuiz ~ res:", res);
+    closeModal();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#E6E6E6CC] ">
@@ -90,7 +100,10 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
         {/* Start Quiz Button */}
         <div className="flex justify-between mt-7">
           <Link to="">
-            <span className="ml-2 text-[#6B7280] text-[13px] font-bold">
+            <span
+              onClick={handleCreateQuiz}
+              className="ml-2 text-[#6B7280] text-[13px] font-bold"
+            >
               Add to my Tests
             </span>
           </Link>

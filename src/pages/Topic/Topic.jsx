@@ -20,7 +20,7 @@ const Topic = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [formdata, setFormData] = useState({
     name: "",
-    mode: "tutor",
+    mode: "Tutor",
     questionCount: 5,
     university: user?.university || "",
   });
@@ -195,7 +195,7 @@ const Topic = () => {
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
-                    <option value="40">15</option>
+                    <option value="40">40</option>
                     <option value="50">50</option>
                   </select>
                 </div>
@@ -312,8 +312,8 @@ const Topic = () => {
                     type="radio"
                     disabled={userType}
                     name="mode"
-                    value="timed"
-                    checked={formdata.mode === "timed"}
+                    value="Timed"
+                    checked={formdata.mode === "Timed"}
                     onChange={(e) =>
                       setFormData({ ...formdata, mode: e.target.value })
                     }
@@ -327,8 +327,8 @@ const Topic = () => {
                   <input
                     type="radio"
                     name="mode"
-                    value="tutor"
-                    checked={formdata.mode === "tutor"}
+                    value="Tutor"
+                    checked={formdata.mode === "Tutor"}
                     onChange={(e) =>
                       setFormData({ ...formdata, mode: e.target.value })
                     }
