@@ -1,21 +1,37 @@
-import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import NonProtectedRoute from "./components/NonProtectedRoute";
-import ProtectedRoute from "./components/ProtectedRoute";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"; // Import useSelector
 import Login from "./pages/authentication/Login";
 import SignUp from "./pages/authentication/SignUp";
-import VerifyEmail from "./pages/authentication/VerifyEmail";
 import EmailConfirmation from "./pages/email-confirmation/EmailConfirmation";
-import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home/Home";
 import Question from "./pages/questionstemplate/Questions";
 import Settings from "./pages/settings/settings";
 import Subscription from "./pages/subscription/Subscription";
-import SummaryPage from "./pages/summary/Summary";
 import Topic from "./pages/Topic/Topic";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { verifyToken } from "./store/features/auth/auth.service";
+import VerifyEmail from "./pages/authentication/VerifyEmail";
+import NonProtectedRoute from "./components/NonProtectedRoute";
+import SummaryPage from "./pages/summary/Summary";
+import ErrorPage from "./pages/ErrorPage";
 import LandingPage from "./pages/landingpage/LandingPage";
 
 function App() {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      dispatch(verifyToken());
+    }
+  }, [dispatch, isLoggedIn]);
+
   return (
     <Router>
       <Routes>
@@ -89,7 +105,8 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
-        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/LandingPage" element={<LandingPage />} />
+
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>
