@@ -20,7 +20,6 @@ import VerifyEmail from "./pages/authentication/VerifyEmail";
 import NonProtectedRoute from "./components/NonProtectedRoute";
 import SummaryPage from "./pages/summary/Summary";
 import ErrorPage from "./pages/ErrorPage";
-import LandingPage from "./pages/landingpage/LandingPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -105,7 +104,7 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
-        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/summary" element={<LandingPage />} />
 
 
         <Route path="*" element={<ErrorPage />} />

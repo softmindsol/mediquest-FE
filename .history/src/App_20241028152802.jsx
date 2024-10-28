@@ -105,7 +105,7 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
-        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/summary" element={<LandingPage />} />
 
 
         <Route path="*" element={<ErrorPage />} />
