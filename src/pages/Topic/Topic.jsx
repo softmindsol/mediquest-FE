@@ -7,44 +7,44 @@ import CreateQuizModal from "../../components/CreateQuizModal";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
 import { useSelector } from "react-redux";
-const categories = [
-  {
-    name: "Anatomy I",
-    progress: "1 of 4203",
-    subcategories: [
-      { name: "Rabat", progress: "1 of 403" },
-      { name: "Marrakech", progress: "1 of 403" },
-      { name: "Casablanca", progress: "1 of 403" },
-    ],
-  },
-  {
-    name: "An item",
-    progress: "1 of 493",
-    subcategories: [
-      { name: "Rabat", progress: "1 of 403" },
-      { name: "Marrakech", progress: "1 of 403" },
-      { name: "Casablanca", progress: "1 of 403" },
-    ],
-  },
-  {
-    name: "An item",
-    progress: "1 of 493",
-    subcategories: [
-      { name: "Rabat", progress: "1 of 403" },
-      { name: "Marrakech", progress: "1 of 403" },
-      { name: "Casablanca", progress: "1 of 403" },
-    ],
-  },
-  {
-    name: "An item",
-    progress: "1 of 493",
-    subcategories: [
-      { name: "Rabat", progress: "1 of 403" },
-      { name: "Marrakech", progress: "1 of 403" },
-      { name: "Casablanca", progress: "1 of 403" },
-    ],
-  },
-];
+// const categories = [
+//   {
+//     name: "Anatomy I",
+//     progress: "1 of 4203",
+//     subcategories: [
+//       { name: "Rabat", progress: "1 of 403" },
+//       { name: "Marrakech", progress: "1 of 403" },
+//       { name: "Casablanca", progress: "1 of 403" },
+//     ],
+//   },
+//   {
+//     name: "An item",
+//     progress: "1 of 493",
+//     subcategories: [
+//       { name: "Rabat", progress: "1 of 403" },
+//       { name: "Marrakech", progress: "1 of 403" },
+//       { name: "Casablanca", progress: "1 of 403" },
+//     ],
+//   },
+//   {
+//     name: "An item",
+//     progress: "1 of 493",
+//     subcategories: [
+//       { name: "Rabat", progress: "1 of 403" },
+//       { name: "Marrakech", progress: "1 of 403" },
+//       { name: "Casablanca", progress: "1 of 403" },
+//     ],
+//   },
+//   {
+//     name: "An item",
+//     progress: "1 of 493",
+//     subcategories: [
+//       { name: "Rabat", progress: "1 of 403" },
+//       { name: "Marrakech", progress: "1 of 403" },
+//       { name: "Casablanca", progress: "1 of 403" },
+//     ],
+//   },
+// ];
 
 // Array of category items from the design
 const categoryItems = [
@@ -163,6 +163,12 @@ const Topic = () => {
     (state) => state?.user?.selectedUser
   );
 
+  const [formdata,setFormData] = useState({
+    name: "",
+    mode: "",
+    questionCount:5,
+  })
+
   console.log("🚀 ~ Topic ~ user:", user);
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -187,6 +193,7 @@ const Topic = () => {
 
   // State for selected categories and search term
   const [selectedCategories, setSelectedCategories] = useState([]);
+  console.log("🚀 ~ Topic ~ selectedCategories:", selectedCategories)
   const [searchTerm, setSearchTerm] = useState("");
 
   // Handle selecting or unselecting category
@@ -235,46 +242,62 @@ const Topic = () => {
   );
 
   // **Handler for Category Checkbox (Left Column)**
-  const handleLeftCategoryCheckbox = (category, index) => {
-    if (selectedLeftCategories.includes(index)) {
-      // Uncheck the category and all its subcategories
+const handleLeftCategoryCheckbox = (category, index) => {
+  const updatedSubcategories = { ...selectedLeftSubcategories };
+
+  if (selectedLeftCategories.includes(index)) {
+    // Uncheck the category and all its subcategories
+    setSelectedLeftCategories(
+      selectedLeftCategories.filter((i) => i !== index)
+    );
+    delete updatedSubcategories[index]; // Clear subcategories
+  } else {
+    // Check the category and all its subcategories
+    setSelectedLeftCategories([...selectedLeftCategories, index]);
+
+    // Update subcategories using the schools property
+    updatedSubcategories[index] = category.schools.map((sub) => sub.school);
+  }
+
+  setSelectedLeftSubcategories(updatedSubcategories);
+};
+
+const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
+  const updatedSubcategories = { ...selectedLeftSubcategories };
+
+  if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
+    // Unselect the subcategory
+    updatedSubcategories[categoryIndex] = updatedSubcategories[
+      categoryIndex
+    ].filter((name) => name !== subcategoryName);
+
+    // If all subcategories are unselected, uncheck the parent
+    if (updatedSubcategories[categoryIndex].length === 0) {
       setSelectedLeftCategories(
-        selectedLeftCategories.filter((i) => i !== index)
+        selectedLeftCategories.filter((i) => i !== categoryIndex)
       );
-      const updatedSubcategories = { ...selectedLeftSubcategories };
-      delete updatedSubcategories[index];
-      setSelectedLeftSubcategories(updatedSubcategories);
-    } else {
-      // Check the category and all its subcategories
-      setSelectedLeftCategories([...selectedLeftCategories, index]);
-      setSelectedLeftSubcategories({
-        ...selectedLeftSubcategories,
-        [index]: category.subcategories.map((sub) => sub.name),
-      });
+      delete updatedSubcategories[categoryIndex]; // Clean up
     }
-  };
-  // Handle subcategory checkbox change (Independent of parent category)
-  const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
-    const updatedSubcategories = { ...selectedLeftSubcategories };
-
-    if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
-      // Unselect the subcategory
-      updatedSubcategories[categoryIndex] = updatedSubcategories[
-        categoryIndex
-      ].filter((name) => name !== subcategoryName);
-    } else {
-      // Select the subcategory
-      if (!updatedSubcategories[categoryIndex]) {
-        updatedSubcategories[categoryIndex] = [];
-      }
-      updatedSubcategories[categoryIndex] = [
-        ...updatedSubcategories[categoryIndex],
-        subcategoryName,
-      ];
+  } else {
+    // Select the subcategory
+    if (!updatedSubcategories[categoryIndex]) {
+      updatedSubcategories[categoryIndex] = [];
     }
+    updatedSubcategories[categoryIndex].push(subcategoryName);
+  }
 
-    setSelectedLeftSubcategories(updatedSubcategories);
-  };
+  setSelectedLeftSubcategories(updatedSubcategories);
+};
+
+
+
+
+
+const handleSubmit = (e) => {
+      e.preventDefault();
+      const values = {...formdata, subject: selectedLeftCategories,city: selectedLeftSubcategories }
+      console.log("🚀 ~ handleSubmit ~ values:", values)
+}
 
   // State to handle the visibility of the "Improve this question" section
   const [showUniversities, setShowUniversities] = useState(false);
@@ -299,7 +322,7 @@ const Topic = () => {
           {/* Left Column - Categories */}
           <div className="lg:col-span-2 space-y-9">
             {/* Create Quiz Section */}
-            <div className="p-4 bg-white rounded-lg ">
+            <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg ">
               <div className="flex flex-wrap justify-start gap-3 lg:gap-15">
                 <div>
                   <label
@@ -311,6 +334,9 @@ const Topic = () => {
                   <input
                     type="text"
                     placeholder="Create a test name"
+                    onChange={(e) =>
+                      setFormData({ ...formdata, name: e.target.value })
+                    }
                     className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary"
                   />
                 </div>
@@ -323,6 +349,12 @@ const Topic = () => {
                   </label>
                   <select
                     type="select"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formdata,
+                        questionCount: e.target.value,
+                      })
+                    }
                     className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white w-50"
                   >
                     <option value="5">5</option>
@@ -355,7 +387,7 @@ const Topic = () => {
                   />
                 </div>
               </div>
-            </div>
+            </form>
 
             {/* Categories Section */}
             <div className="bg-white rounded-lg border border-[#E6E9EC]">
@@ -378,6 +410,7 @@ const Topic = () => {
                           <input
                             type="checkbox"
                             className="w-4 h-4 mr-3 cursor-pointer"
+                            value={category.subjectName}
                             checked={selectedLeftCategories.includes(index)}
                             onChange={() =>
                               handleLeftCategoryCheckbox(category, index)
@@ -408,7 +441,7 @@ const Topic = () => {
                       {expandedCategories.includes(index) &&
                         category?.schools && (
                           <div>
-                            {category?.schools.map((subcategory, subIndex) => (
+                            {category?.schools?.map((subcategory, subIndex) => (
                               <div
                                 key={subIndex}
                                 className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
@@ -416,6 +449,7 @@ const Topic = () => {
                                 <div className="flex items-center">
                                   <input
                                     type="checkbox"
+                                    // value={}
                                     className="mr-3 cursor-pointer"
                                     checked={
                                       selectedLeftSubcategories[
@@ -455,13 +489,26 @@ const Topic = () => {
               </h2>
               <div className="grid grid-cols-2 px-4 py-6 ">
                 <div className="flex items-center">
-                  <input type="radio" name="mode" className="w-4 h-4 mr-2" />
+                  <input
+                    disabled={user?.userType?.plan === "FREE"}
+                    type="radio"
+                    name="mode"
+                    onChange={(e) =>
+                      setFormData({ ...formdata, mode: e.target.value })
+                    }
+                    className="w-4 h-4 mr-2"
+                  />
                   <label className="text-[15px] font-medium text-primary">
                     Timed
                   </label>
                 </div>
                 <div className="flex items-center">
-                  <input type="radio" name="mode" className="mr-2 " />
+                  <input
+                    checked
+                    type="radio"
+                    name="mode"
+                    className="w-4 h-4 mr-2"
+                  />
                   <label className="text-[15px] font-medium text-primary">
                     Tutor
                   </label>
