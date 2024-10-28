@@ -2,13 +2,13 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
-const CreateQuizModal = ({ isOpen, closeModal }) => {
+const CreateQuizModal = ({ isOpen, closeModal, values }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#E6E6E6CC] ">
-      <div className="bg-white rounded-md p-6 max-w-lg w-full">
-        <div className="flex justify-between items-center ">
+      <div className="w-full max-w-lg p-6 bg-white rounded-md">
+        <div className="flex items-center justify-between ">
           <h2 className="text-base text-[#111827] font-semibold mb-2">
             Create Quiz
           </h2>
@@ -31,6 +31,8 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
             <input
               type="text"
               placeholder="Exam Name here"
+              value={values.name}
+              disabled
               className="mt-3 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] w-50 border border-[#CED4DA] placeholder-secondary"
             />
           </div>
@@ -40,7 +42,11 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
             <label className="block text-sm  text-[#111827] font-semibold">
               No. of Questions
             </label>
-            <select className="mt-3 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white">
+            <select
+              value={values.questionCount}
+              disabled
+              className="mt-3 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white"
+            >
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="30">30</option>
@@ -54,7 +60,9 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
           <label className="block text-sm  text-[#111827] font-semibold">
             Test Mode
           </label>
-          <p className="text-[#6B7280] text-[13px] font-medium">Timed</p>
+          <p className="text-[#6B7280] text-[13px] font-medium capitalize">
+            {values?.mode}
+          </p>
         </div>
 
         {/* University */}
@@ -63,7 +71,7 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
             University
           </label>
           <p className="text-[#6B7280] text-[13px] font-medium">
-            Rabat, Casablanca
+            {values.university}...
           </p>
         </div>
 
@@ -73,7 +81,9 @@ const CreateQuizModal = ({ isOpen, closeModal }) => {
             Topics
           </label>
           <p className="text-[#6B7280] text-[13px] font-medium">
-            Anatomy I, Something Tech
+            {values?.subject?.map((s) => (
+              <span>{s.name}</span>
+            ))}
           </p>
         </div>
 
