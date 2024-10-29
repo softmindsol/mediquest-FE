@@ -88,7 +88,7 @@ function App() {
           }
         />
         <Route
-          path="/question"
+          path="/question/:id"
           element={
             <ProtectedRoute>
               <Question />
@@ -96,7 +96,6 @@ function App() {
           }
         />
         <Route path="/summary" element={<SummaryPage />} />
-        {/* <Route path="/landing-page" element={<LandingPage />} /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

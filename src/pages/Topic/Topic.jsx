@@ -9,6 +9,7 @@ import CreateQuizModal from "../../components/CreateQuizModal";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import RecentTest from "./RecentTest";
 import { categoryItems } from "./Topic-constant";
+import DotsLoader from "../../components/Loader/dots-loader";
 
 const universityNames = categoryItems.map((item) => item.name);
 
@@ -16,13 +17,13 @@ const Topic = () => {
   const { subjectQuestions = [], user = {} } = useSelector(
     (state) => state?.user?.selectedUser
   );
-  const userType = user?.userType?.plan || "";
+  const userType = user?.userType?.plan === "FREE";
   console.log("🚀 ~ Topic ~ userType:", userType);
   const [isModalOpen, setModalOpen] = useState(false);
   const [formdata, setFormData] = useState({
     name: "",
     mode: "Tutor",
-    questionCount: 5,
+    questionCount: 10,
     university: user?.university || "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -307,7 +308,7 @@ const Topic = () => {
               )}
 
               <div className="grid gap-3">
-                {subjectQuestions &&
+                {subjectQuestions && subjectQuestions.length > 0 ? (
                   subjectQuestions?.map((category, index) => (
                     <div key={index}>
                       <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
@@ -374,7 +375,12 @@ const Topic = () => {
                           </div>
                         )}
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <div className="flex justify-center py-8">
+                    <DotsLoader />
+                  </div>
+                )}
               </div>
             </div>
           </div>

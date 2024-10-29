@@ -9,7 +9,6 @@ export const createQuiz = createAsyncThunk(
       const response = await axiosWithoutToken.post("/quiz/create-quiz", data);
       console.log("🚀 ~ response:", response.data);
 
-      toast.success(response?.data?.message);
       return response.data;
     } catch (error) {
       if (error) {
@@ -36,3 +35,40 @@ export const getRecentQuiz = createAsyncThunk(
     }
   }
 );
+
+
+
+
+
+export const getQuizQuesitons = createAsyncThunk(
+  "getQuizQuesitons",
+  async ({ pageNo }, { rejectWithValue }) => {
+    console.log("🚀 ~ pageNo:", pageNo);
+    const params = {};
+
+    if (pageNo) {
+      params.pageNo = pageNo;
+    }
+
+    console.log("🚀 ~ params:", params);
+
+    try {
+      const response = await axiosWithoutToken.get(
+        `quiz/get-quiz-questions/${id}`,
+        {
+          params: params,
+        }
+      );
+      console.log("🚀 ~ response:", response.data);
+
+      return response.data;
+    } catch (error) {
+      if (error) {
+        toast.error(error?.response?.data?.error);
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+

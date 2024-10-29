@@ -1,18 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createQuiz } from "../store/features/quiz/quiz.service";
+import toast from "react-hot-toast";
 
 const CreateQuizModal = ({ isOpen, closeModal, values }) => {
   if (!isOpen) return null;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleCreateQuiz = async () => {
+  const handleCreateQuiz = async (type) => {
     const res = await dispatch(createQuiz(values));
     console.log("🚀 ~ handleCreateQuiz ~ res:", res);
+
+    console.log("🚀 ~ handleCreateQuiz ~ type:", res.payload.data.quiz._id);
+
+    if (type === "start") {
+      navigate(`/question/${res.payload.data.quiz._id}`);
+      closeModal();
+      return;
+    }
+
     closeModal();
+    toast.success(res.payload.message);
   };
 
   return (
@@ -60,6 +72,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="30">30</option>
+              <option value="40">40</option>
               <option value="50">50</option>
             </select>
           </div>
@@ -101,21 +114,19 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
         <div className="flex justify-between mt-7">
           <Link to="">
             <span
-              onClick={handleCreateQuiz}
+              onClick={() => handleCreateQuiz("add")}
               className="ml-2 text-[#6B7280] text-[13px] font-bold"
             >
               Add to my Tests
             </span>
           </Link>
 
-          <Link to="/question">
-            <button
-              className="bg-[#007AFF] text-white font-semibold px-4 py-2 rounded-md"
-              onClick={closeModal}
-            >
-              Start Quiz
-            </button>
-          </Link>
+          <button
+            className="bg-[#007AFF] text-white font-semibold px-4 py-2 rounded-md"
+            onClick={() => handleCreateQuiz("start")}
+          >
+            Start Quiz
+          </button>
         </div>
       </div>
     </div>

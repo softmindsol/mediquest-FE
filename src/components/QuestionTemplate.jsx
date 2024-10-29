@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Button from "./Button";
+import { useDispatch } from "react-redux";
+import { getQuizQuesitons } from "../store/features/quiz/quiz.service";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -44,6 +46,33 @@ const QuestionTemplate = () => {
   // State to track current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const [params, setParams] = useSearchParams();
+  const pageNo = parseInt(params.get("pageNo")) || 1;
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setParams({ pageNo: pageNo + 1 }); // Update URL with next page number
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setParams({ pageNo: pageNo - 1 }); // Update URL with previous page number
+    }
+  };
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const res = await dispatch(getQuizQuesitons({ pageNo, id }));
+      console.log("🚀 ~ fetchQuestions ~ res:", res);
+    };
+
+    fetchQuestions();
+  }, [pageNo, dispatch]);
+
   // State to track selected answers and score
   const [selectedAnswers, setSelectedAnswers] = useState(
     Array(questions.length).fill(null)
@@ -64,19 +93,6 @@ const QuestionTemplate = () => {
       updatedScores[currentQuestionIndex] = "✘";
     }
     setScores(updatedScores);
-  };
-
-  // Handle navigation between questions
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
   };
 
   // State to handle the visibility of the "Improve this question" section
