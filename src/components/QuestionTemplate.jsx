@@ -110,206 +110,158 @@ const QuestionTemplate = () => {
   const addSuggestion = (text) => {
     setSuggestionText((prevText) => (prevText ? `${prevText}, ${text}` : text));
   };
+    
+    
   return (
-    <>
-      <div className="bg-[#ECEFF7] h-fill">
-        <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto ">
-          {/* Main Flex Container */}
-<<<<<<< HEAD
-          <div className="flex flex-wrap justify-between lg:flex-nowrap">
-=======
-          <div className="flex flex-wrap lg:flex-nowrap justify-between">
-
+    <div className="bg-[#ECEFF7] h-fill">
+      <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
+        <div className="flex flex-wrap justify-between lg:flex-nowrap">
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-                Score: 50%
-              </div>
-              <div className="overflow-y-auto max-h-32">
-                <div className="mt-4 px-6 text-center mx-auto pb-7">
-                  <ul className="space-y-2 mx-auto">
-                    {scores.map((score, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-4 space-x-2 justify-center "
-                      >
-                        <span>{index + 1}</span>
-                        <span>
-                          <FaCheck className="text-[#95cb7c]" />
+            <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
+              Score: 50%
+            </div>
+            <div className="overflow-y-auto max-h-32">
+              <ul className="px-6 mx-auto mt-4 text-center pb-7 space-y-2">
+                {scores.map((score, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-center gap-4"
+                  >
+                    <span>{index + 1}</span>
+                    <span>
+                      {score === "✔" ? (
+                        <FaCheck className="text-[#95cb7c]" />
+                      ) : score === "✘" ? (
+                        "❌"
+                      ) : (
+                        "-"
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-                          {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
+            <div className="flex justify-between mb-10">
+              <button
+                onClick={handlePrev}
+                disabled={currentQuestionIndex === 0}
+                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
+              >
+                Prev
+              </button>
+              <span className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6">
+                {currentQuestionIndex + 1} of {questions.length}
+              </span>
+              <button
+                onClick={handleNext}
+                disabled={currentQuestionIndex === questions.length - 1}
+                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
+              >
+                Next
+              </button>
+            </div>
+
+            <div className="my-6 mt-6">
+              <h2 className="text-lg font-bold">
+                {questions[currentQuestionIndex].question}
+              </h2>
+              <p className="mt-2 text-sm text-gray-500">
+                {questions[currentQuestionIndex].details}
+              </p>
+            </div>
+
+            <div className="mt-auto space-y-6 lg:col-span-2">
+              <h3 className="mb-2 font-semibold text-md">
+                Select one of the following options:
+              </h3>
+              <div className="bg-white mx-6 rounded-lg border border-[#E6E9EC]">
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4"
+                  >
+                    <div className="flex items-center">
+                      <input type="checkbox" className="mr-3" />
+                      <span className="text-[14px] text-primary">
+                        {category.name}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-end mt-4">
+                <Link to="/summary">
+                  <Button
+                    text="Submit answer"
+                    type="submit"
+                    rightIcon={SlArrowRight}
+                    className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
+                  />
+                </Link>
               </div>
             </div>
 
->>>>>>> 8ac79ab6323d8cc7ca037e469d4ed1127885f8da
-            <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mb-10">
+            <div className="max-w-4xl p-6">
+              <div className="flex gap-4 items-center border border-[#6c757d] rounded-xl px-2">
+                <div className="border-r p-2 border-[#6c757d]">
+                  <BsHandThumbsUp size={20} className="text-green-600" />
+                </div>
+                <div className="border-r p-2 border-[#6c757d]">
+                  <BsHandThumbsDown size={20} className="text-red-500" />
+                </div>
+                <div className="text-[#6c757d] flex items-center gap-2 p-2 border-r border-[#6c757d]">
+                  <FaRegCommentDots size={20} /> Discuss (2)
+                </div>
                 <button
-                  onClick={handlePrev}
-                  disabled={currentQuestionIndex === 0}
-                  className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100 focus:outline-none"
+                  onClick={handleToggle}
+                  className="bg-gray-200 text-[#6c757d] p-2 rounded-lg hover:bg-gray-300"
                 >
-                  Prev
-                </button>
-                <span className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none">
-                  {currentQuestionIndex + 1} of {questions.length}
-                </span>
-                <button
-                  onClick={handleNext}
-                  disabled={currentQuestionIndex === questions.length - 1}
-                  className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100 focus:outline-none"
-                >
-                  Next
+                  Improve
                 </button>
               </div>
 
-              {/* Question */}
-              <div className="my-6 mt-6">
-                <h2 className="text-lg font-bold">
-                  {questions[currentQuestionIndex].question}
-                </h2>
-                <p className="mt-2 text-sm text-gray-500">
-                  {questions[currentQuestionIndex].details}
-                </p>
-              </div>
-              <div className="flex my-8 ">
-                <p className="bg-[#E9ECEF] text-title-p text-[#68717A] py-9 px-24  ">
-                  Table
-                </p>
-              </div>
-              {/* Categories */}
-              <div className="mt-auto space-y-6 lg:col-span-2">
-                <h3 className="mb-2 font-semibold text-md">
-                  Select one of the following options:
-                </h3>
-                <div className="bg-white mx-6  rounded-lg border border-[#E6E9EC]">
-                  <div className="grid gap-3">
-                    {categories.map((category, index) => (
-                      <div
+              {showImproveSection && (
+                <div className="mt-4 bg-white border border-[#E6E9EC] p-4 rounded-lg">
+                  <h2 className="mb-3 text-lg font-bold text-yellow-500">
+                    Improve this question
+                  </h2>
+                  <p className="mb-3 font-medium text-title-p">
+                    What is the main problem with this question?
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    {suggestions.map((suggestion, index) => (
+                      <button
                         key={index}
-                        className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4"
+                        onClick={() => addSuggestion(suggestion)}
+                        className="bg-white text-[#11caf0] px-4 py-2 border border-[#11caf0] rounded-md"
                       >
-                        <div className="flex items-center">
-                          <input type="checkbox" className="mr-3" />
-                          <span className="text-[14px] text-primary">
-                            {category.name}
-                          </span>
-                        </div>
-                      </div>
+                        <FaPlus className="inline mr-2" />
+                        {suggestion}
+                      </button>
                     ))}
                   </div>
-                </div>
-                <div className="flex justify-end mt-4">
-                  <Link to="/summary">
-                    <Button
-                      text="Submit answer"
-                      type="submit"
-                      rightIcon={SlArrowRight}
-                      rightIconStyle="text-white "
-                      className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
-                    />
-                  </Link>
-                </div>
-              </div>
-              <div className="max-w-4xl p-6">
-                <div className="flex gap-4 w-fit items-center border border-[#6c757d] rounded-xl px-2">
-                  <div className="border-r p-2 border-[#6c757d]">
-                    <BsHandThumbsUp size={20} className="text-green-600 " />
-                  </div>
-                  <div className="border-r p-2 border-[#6c757d]">
-                    <BsHandThumbsDown size={20} className="text-red-500 " />
-                  </div>
 
-                  <div className=" text-[#6c757d] flex  items-center gap-2 p-2 border-r border-[#6c757d] ">
-                    <FaRegCommentDots size={20} />
-                    Discuss (2)
-                  </div>
-                  <button
-                    onClick={handleToggle}
-                    className="bg-gray-200 text-[#6c757d] p-2 rounded-lg hover:bg-gray-300"
-                  >
-                    Improve
+                  <textarea
+                    value={suggestionText}
+                    onChange={(e) => setSuggestionText(e.target.value)}
+                    placeholder="Enter your suggestions here..."
+                    className="w-full h-24 p-2 border border-[#E6E9EC] rounded-lg focus:outline-none"
+                  />
+
+                  <button className="px-4 py-2 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600">
+                    Submit suggestions
                   </button>
                 </div>
-
-                {showImproveSection && (
-                  <div className="mt-4 bg-white border border-[#E6E9EC] p-4 rounded-lg ">
-                    <h2 className="mb-3 text-lg font-bold text-yellow-500">
-                      Improve this question
-                    </h2>
-                    <p className="mb-3 font-medium text-title-p">
-                      What is the main problem with this question?
-                    </p>
-
-                    {/* Problem Options (Tag Buttons) */}
-                    <div className="flex flex-wrap gap-3 mb-3">
-                      {suggestions.map((suggestion, index) => (
-                        <button
-                          key={index}
-                          onClick={() => addSuggestion(suggestion)}
-                          className="bg-white text-[#11caf0] px-4 py-2 border border-[#11caf0] rounded-md"
-                        >
-                          <FaPlus className="inline mr-2" />
-                          {/* Add icon before text */}
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Textarea for Suggestions */}
-                    <textarea
-                      value={suggestionText}
-                      onChange={(e) => setSuggestionText(e.target.value)} // To allow manual input as well
-                      placeholder="Enter your suggestions here..."
-                      className="w-full h-24 p-2 border border-[#E6E9EC] rounded-lg focus:outline-none "
-                    ></textarea>
-
-                    {/* Submit Button */}
-                    <button className="px-4 py-2 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600">
-                      Submit suggestions
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-
-<<<<<<< HEAD
-            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-                Score: 50%
-              </div>
-              <div className="overflow-y-auto max-h-32">
-                <div className="px-6 mx-auto mt-4 text-center pb-7">
-                  <ul className="mx-auto space-y-2">
-                    {scores.map((score, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center justify-center gap-4 space-x-2 "
-                      >
-                        <span>{index + 1}</span>
-                        <span>
-                          <FaCheck className="text-[#95cb7c]" />
-
-                          {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-=======
-          
->>>>>>> 8ac79ab6323d8cc7ca037e469d4ed1127885f8da
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
