@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Button from "./Button";
+import { IoIosThumbsUp } from "react-icons/io";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { SlArrowRight } from "react-icons/sl";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import Button from "./Button";
-import { useDispatch } from "react-redux";
-import { getQuizQuesitons } from "../store/features/quiz/quiz.service";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -46,33 +46,6 @@ const QuestionTemplate = () => {
   // State to track current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const dispatch = useDispatch();
-  const { id } = useParams();
-  const [params, setParams] = useSearchParams();
-  const pageNo = parseInt(params.get("pageNo")) || 1;
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setParams({ pageNo: pageNo + 1 }); // Update URL with next page number
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setParams({ pageNo: pageNo - 1 }); // Update URL with previous page number
-    }
-  };
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      const res = await dispatch(getQuizQuesitons({ pageNo, id }));
-      console.log("🚀 ~ fetchQuestions ~ res:", res);
-    };
-
-    fetchQuestions();
-  }, [pageNo, dispatch]);
-
   // State to track selected answers and score
   const [selectedAnswers, setSelectedAnswers] = useState(
     Array(questions.length).fill(null)
@@ -95,6 +68,19 @@ const QuestionTemplate = () => {
     setScores(updatedScores);
   };
 
+  // Handle navigation between questions
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
   // State to handle the visibility of the "Improve this question" section
   const [showImproveSection, setShowImproveSection] = useState(false);
 
@@ -113,39 +99,9 @@ const QuestionTemplate = () => {
   return (
     <>
       <div className="bg-[#ECEFF7] h-fill">
-        <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto ">
+        <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-40 ">
           {/* Main Flex Container */}
-<<<<<<< HEAD
-          <div className="flex flex-wrap justify-between lg:flex-nowrap">
-=======
           <div className="flex flex-wrap lg:flex-nowrap justify-between">
-
-          <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-                Score: 50%
-              </div>
-              <div className="overflow-y-auto max-h-32">
-                <div className="mt-4 px-6 text-center mx-auto pb-7">
-                  <ul className="space-y-2 mx-auto">
-                    {scores.map((score, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-4 space-x-2 justify-center "
-                      >
-                        <span>{index + 1}</span>
-                        <span>
-                          <FaCheck className="text-[#95cb7c]" />
-
-                          {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
->>>>>>> 8ac79ab6323d8cc7ca037e469d4ed1127885f8da
             <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
               {/* Navigation Buttons */}
               <div className="flex justify-between mb-10">
@@ -173,18 +129,18 @@ const QuestionTemplate = () => {
                 <h2 className="text-lg font-bold">
                   {questions[currentQuestionIndex].question}
                 </h2>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="text-sm text-gray-500 mt-2">
                   {questions[currentQuestionIndex].details}
                 </p>
               </div>
-              <div className="flex my-8 ">
+              <div className=" flex my-8">
                 <p className="bg-[#E9ECEF] text-title-p text-[#68717A] py-9 px-24  ">
                   Table
                 </p>
               </div>
               {/* Categories */}
-              <div className="mt-auto space-y-6 lg:col-span-2">
-                <h3 className="mb-2 font-semibold text-md">
+              <div className="lg:col-span-2 space-y-6  mt-auto">
+                <h3 className="text-md font-semibold mb-2">
                   Select one of the following options:
                 </h3>
                 <div className="bg-white mx-6  rounded-lg border border-[#E6E9EC]">
@@ -216,7 +172,7 @@ const QuestionTemplate = () => {
                   </Link>
                 </div>
               </div>
-              <div className="max-w-4xl p-6">
+              <div className="p-6 max-w-4xl">
                 <div className="flex gap-4 w-fit items-center border border-[#6c757d] rounded-xl px-2">
                   <div className="border-r p-2 border-[#6c757d]">
                     <BsHandThumbsUp size={20} className="text-green-600 " />
@@ -239,10 +195,10 @@ const QuestionTemplate = () => {
 
                 {showImproveSection && (
                   <div className="mt-4 bg-white border border-[#E6E9EC] p-4 rounded-lg ">
-                    <h2 className="mb-3 text-lg font-bold text-yellow-500">
+                    <h2 className="text-lg font-bold text-yellow-500 mb-3">
                       Improve this question
                     </h2>
-                    <p className="mb-3 font-medium text-title-p">
+                    <p className="text-title-p font-medium mb-3">
                       What is the main problem with this question?
                     </p>
 
@@ -270,7 +226,7 @@ const QuestionTemplate = () => {
                     ></textarea>
 
                     {/* Submit Button */}
-                    <button className="px-4 py-2 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600">
+                    <button className="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600">
                       Submit suggestions
                     </button>
                   </div>
@@ -278,18 +234,17 @@ const QuestionTemplate = () => {
               </div>
             </div>
 
-<<<<<<< HEAD
             <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
               <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
                 Score: 50%
               </div>
               <div className="overflow-y-auto max-h-32">
-                <div className="px-6 mx-auto mt-4 text-center pb-7">
-                  <ul className="mx-auto space-y-2">
+                <div className="mt-4 px-6 text-center mx-auto pb-7">
+                  <ul className="space-y-2 mx-auto">
                     {scores.map((score, index) => (
                       <li
                         key={index}
-                        className="flex items-center justify-center gap-4 space-x-2 "
+                        className="flex items-center gap-4 space-x-2 justify-center "
                       >
                         <span>{index + 1}</span>
                         <span>
@@ -303,9 +258,6 @@ const QuestionTemplate = () => {
                 </div>
               </div>
             </div>
-=======
-          
->>>>>>> 8ac79ab6323d8cc7ca037e469d4ed1127885f8da
           </div>
         </div>
       </div>
