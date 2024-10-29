@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { apiClient, axiosWithoutToken } from "../../../api";
+import { apiClient, axiosWithToken } from "../../../api";
 
 export const registerUser = createAsyncThunk(
   "registerUser",
@@ -75,10 +75,7 @@ export const changePassword = createAsyncThunk(
   "changePassword",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post(
-        "/users/changePassword",
-        data
-      );
+      const response = await axiosWithToken.post("/users/changePassword", data);
 
       toast.success(response?.data?.message);
       return response.data;
@@ -95,7 +92,7 @@ export const logout = createAsyncThunk(
   "logout",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post("/auth/logout");
+      const response = await axiosWithToken.post("/auth/logout");
 
       console.log(response.data);
 
@@ -114,7 +111,7 @@ export const verifyToken = createAsyncThunk(
   "auth/verifyToken",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.get("/auth/verify-token");
+      const response = await axiosWithToken.get("/auth/verify-token");
 
       console.log(response?.data);
 
@@ -130,7 +127,7 @@ export const getCurrentUser = createAsyncThunk(
   "getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axiosWithoutToken("/auth/getCurrentUser");
+      const res = await axiosWithToken("/auth/getCurrentUser");
 
       console.log(res.data);
       return res.data.data;

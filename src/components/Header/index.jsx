@@ -6,14 +6,15 @@ import { getCurrentUser } from "../../store/features/auth/auth.service";
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const dispatch = useDispatch();
 
-  // const { selectedUser: user } = useSelector((state) => state?.user || {});
+  const { selectedUser: user } = useSelector((state) => state?.user || {});
 
-  // console.log(user);
+  console.log(user);
+  console.log("🚀 ~ useEffect ~ user?.id:", user?.id);
 
   useEffect(() => {
-    // if (!user?.id) {
-    dispatch(getCurrentUser());
-    // }
+    if (!user?.id) {
+      dispatch(getCurrentUser());
+    }
   }, [dispatch]);
   return (
     <header className="sticky top-0 flex w-full bg-white z-999 drop-shadow-1">

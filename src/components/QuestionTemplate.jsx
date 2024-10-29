@@ -4,114 +4,57 @@ import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Button from "./Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getQuizQuesitons } from "../store/features/quiz/quiz.service";
 
 const QuestionTemplate = () => {
-  // State to manage multiple questions
-  const [questions] = useState([
-    {
-      question:
-        "A 54-year-old man has this and that and 49 mg of that, rushing to the ER because of something. Lay yre7mo.",
-      details:
-        "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condiment≈faucibus.",
-    },
-    {
-      question: "A 25-year-old female presents with...",
-      details:
-        "Nulla facilisi. Curabitur dapibus enim sit amet erat fringilla, in ullamcorper quam vestibulum.",
-    },
-    {
-      question: "A child with fever and rash...",
-      details:
-        "Etiam porta sem malesuada magna mollis euismod. Sed posuere consectetur est at lobortis.",
-    },
-  ]);
-
-  const categories = [
-    { name: "An item" },
-    { name: "An item" },
-    { name: "An item" },
-    { name: "An item" },
-    { name: "An item" },
-  ];
-  const suggestions = [
-    "Not relevant for the exam",
-    "Explanation not adequate",
-    "Wrong category",
-    "Not in keeping with current guidelines",
-    "Spelling/grammar problems",
-  ];
-
-  // State to track current question index
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+  const state = useSelector((state) => state?.quiz?.quiz);
+  const quizQuestions = state[0];
+  const quizDetail = state[1];
   const dispatch = useDispatch();
   const { id } = useParams();
   const [params, setParams] = useSearchParams();
   const pageNo = parseInt(params.get("pageNo")) || 1;
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setParams({ pageNo: pageNo + 1 }); // Update URL with next page number
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setParams({ pageNo: pageNo - 1 }); // Update URL with previous page number
-    }
-  };
+  const [image, setImage] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null); // Track the selected option
 
   useEffect(() => {
     const fetchQuestions = async () => {
       const res = await dispatch(getQuizQuesitons({ pageNo, id }));
-      console.log("🚀 ~ fetchQuestions ~ res:", res);
+      if (res.payload.questions.length > 0) {
+        setImage(res.payload.questions[0].image_url);
+      }
     };
-
     fetchQuestions();
   }, [pageNo, dispatch]);
 
-  // State to track selected answers and score
-  const [selectedAnswers, setSelectedAnswers] = useState(
-    Array(questions.length).fill(null)
-  );
-  const [scores, setScores] = useState(Array(questions.length).fill(null));
-
-  // Handle answer selection
-  const handleOptionChange = (index) => {
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestionIndex] = index;
-    setSelectedAnswers(updatedAnswers);
-
-    // Update the score for the current question
-    const updatedScores = [...scores];
-    if (index === questions[currentQuestionIndex].correctAnswer) {
-      updatedScores[currentQuestionIndex] = "✔";
-    } else {
-      updatedScores[currentQuestionIndex] = "✘";
+  const handleNext = () => {
+    if (pageNo < quizDetail?.totalQuestions) {
+      setParams({ pageNo: pageNo + 1 });
     }
-    setScores(updatedScores);
   };
 
-  // State to handle the visibility of the "Improve this question" section
-  const [showImproveSection, setShowImproveSection] = useState(false);
+  const handlePrev = () => {
+    if (pageNo > 1) {
+      setParams({ pageNo: pageNo - 1 });
+    }
+  };
 
-  // State to store the value of the textarea
+  const [showImproveSection, setShowImproveSection] = useState(false);
   const [suggestionText, setSuggestionText] = useState("");
 
-  // Toggle the Improve Section
   const handleToggle = () => {
     setShowImproveSection(!showImproveSection);
   };
 
-  // Function to append the button text to the textarea
   const addSuggestion = (text) => {
     setSuggestionText((prevText) => (prevText ? `${prevText}, ${text}` : text));
   };
-    
-    
+
+  const handleOptionChange = (index) => {
+    setSelectedOption(index); // Update selected option
+  };
+
   return (
     <div className="bg-[#ECEFF7] h-fill">
       <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
@@ -121,24 +64,8 @@ const QuestionTemplate = () => {
               Score: 50%
             </div>
             <div className="overflow-y-auto max-h-32">
-              <ul className="px-6 mx-auto mt-4 text-center pb-7 space-y-2">
-                {scores.map((score, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center justify-center gap-4"
-                  >
-                    <span>{index + 1}</span>
-                    <span>
-                      {score === "✔" ? (
-                        <FaCheck className="text-[#95cb7c]" />
-                      ) : score === "✘" ? (
-                        "❌"
-                      ) : (
-                        "-"
-                      )}
-                    </span>
-                  </li>
-                ))}
+              <ul className="px-6 mx-auto mt-4 space-y-2 text-center pb-7">
+                {/* Score rendering here */}
               </ul>
             </div>
           </div>
@@ -147,17 +74,17 @@ const QuestionTemplate = () => {
             <div className="flex justify-between mb-10">
               <button
                 onClick={handlePrev}
-                disabled={currentQuestionIndex === 0}
+                disabled={pageNo === 1}
                 className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
               >
                 Prev
               </button>
               <span className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6">
-                {currentQuestionIndex + 1} of {questions.length}
+                {pageNo} of {quizDetail?.totalQuestions}
               </span>
               <button
                 onClick={handleNext}
-                disabled={currentQuestionIndex === questions.length - 1}
+                disabled={pageNo >= quizDetail?.totalQuestions}
                 className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
               >
                 Next
@@ -165,32 +92,46 @@ const QuestionTemplate = () => {
             </div>
 
             <div className="my-6 mt-6">
-              <h2 className="text-lg font-bold">
-                {questions[currentQuestionIndex].question}
-              </h2>
-              <p className="mt-2 text-sm text-gray-500">
-                {questions[currentQuestionIndex].details}
-              </p>
+              <h2
+                className="text-lg font-bold"
+                dangerouslySetInnerHTML={{ __html: quizQuestions?.question }}
+              />
             </div>
 
+            {image && (
+              <div className="flex my-8 ">
+                <img src={image} className="w-64 h-32" alt="Question visual" />
+              </div>
+            )}
             <div className="mt-auto space-y-6 lg:col-span-2">
               <h3 className="mb-2 font-semibold text-md">
                 Select one of the following options:
               </h3>
               <div className="bg-white mx-6 rounded-lg border border-[#E6E9EC]">
-                {categories.map((category, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4"
-                  >
-                    <div className="flex items-center">
-                      <input type="checkbox" className="mr-3" />
-                      <span className="text-[14px] text-primary">
-                        {category.name}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                {quizQuestions?.options?.map(
+                  (category, index) =>
+                    category && (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4"
+                      >
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="mr-3"
+                            checked={selectedOption === index}
+                            onChange={() => handleOptionChange(index)} // Update selected option on change
+                          />
+                          <span
+                            className="text-[14px] text-primary"
+                            dangerouslySetInnerHTML={{
+                              __html: category,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )
+                )}
               </div>
               <div className="flex justify-end mt-4">
                 <Link to="/summary">
@@ -233,7 +174,13 @@ const QuestionTemplate = () => {
                   </p>
 
                   <div className="flex flex-wrap gap-3 mb-3">
-                    {suggestions.map((suggestion, index) => (
+                    {[
+                      "Not relevant for the exam",
+                      "Explanation not adequate",
+                      "Wrong category",
+                      "Not in keeping with current guidelines",
+                      "Spelling/grammar problems",
+                    ].map((suggestion, index) => (
                       <button
                         key={index}
                         onClick={() => addSuggestion(suggestion)}
@@ -264,5 +211,6 @@ const QuestionTemplate = () => {
     </div>
   );
 };
+
 
 export default QuestionTemplate;

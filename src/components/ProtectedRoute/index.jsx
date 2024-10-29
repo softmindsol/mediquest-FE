@@ -14,11 +14,11 @@ const ProtectedRoute = ({ children }) => {
     isLoggedIn: state.user.isLoggedIn,
   }));
 
-  useEffect(() => {
-    if (!isLoggedIn || !isUserLoggedIn) {
-      dispatch(verifyToken());
-    }
-  }, [dispatch, isLoggedIn]);
+ useEffect(() => {
+   if (!isLoggedIn || !isUserLoggedIn) {
+     dispatch(verifyToken());
+   }
+ }, [isLoggedIn, dispatch, isUserLoggedIn]);
   if (isLoading)
     return (
       <div className="flex items-center justify-center h-screen">

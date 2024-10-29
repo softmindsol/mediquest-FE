@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { axiosWithoutToken } from "../../api";
+import { axiosWithToken } from "../../api";
 
 const VerifyEmail = () => {
   const { verificationToken } = useParams();
   console.log("🚀 ~ VerifyEmail ~ verificationToken:", verificationToken);
-
 
   const FRONTEND_URL = "https://www.medquest.ma";
   console.log("🚀 ~ VerifyEmail ~ FRONTEND_URL:", FRONTEND_URL);
@@ -13,7 +12,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await axiosWithoutToken.get(
+        const response = await axiosWithToken.get(
           `/auth/verify-email/${verificationToken}`
         );
         console.log("🚀 ~ verifyUser ~ response:", response?.data);

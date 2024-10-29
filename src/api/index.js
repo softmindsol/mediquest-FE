@@ -7,12 +7,12 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-const axiosWithoutToken = axios.create({
+const axiosWithToken = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
-axiosWithoutToken.interceptors.response.use(
+axiosWithToken.interceptors.response.use(
   (response) => {
     // Return response if successful
     return response;
@@ -34,7 +34,7 @@ axiosWithoutToken.interceptors.response.use(
   }
 );
 
-// axiosWithoutToken.interceptors.response.use(
+// axiosWithToken.interceptors.response.use(
 //   (response) => response,
 //   async (error) => {
 //     const originalRequest = error.config;
@@ -47,13 +47,13 @@ axiosWithoutToken.interceptors.response.use(
 //       originalRequest._retry = true;
 
 //       try {
-//         const response = await axiosWithoutToken.post("/refreshAccessToken");
+//         const response = await axiosWithToken.post("/refreshAccessToken");
 
 //         const { accessToken } = response.data;
 //         // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
 
 //         // Retry the original request with the new access token
-//         return axiosWithoutToken(originalRequest);
+//         return axiosWithToken(originalRequest);
 //       } catch (err) {
 //         // Handle errors from the refresh token request
 //         return Promise.reject(err);
@@ -65,4 +65,4 @@ axiosWithoutToken.interceptors.response.use(
 //   }
 // );
 
-export { axiosWithoutToken, apiClient };
+export { axiosWithToken, apiClient };

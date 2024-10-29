@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosWithoutToken } from "../../../api";
+import { axiosWithToken } from "../../../api";
 import toast from "react-hot-toast";
 
 export const createQuiz = createAsyncThunk(
   "createQuiz",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.post("/quiz/create-quiz", data);
+      const response = await axiosWithToken.post("/quiz/create-quiz", data);
       console.log("🚀 ~ response:", response.data);
 
       return response.data;
@@ -23,7 +23,7 @@ export const getRecentQuiz = createAsyncThunk(
   "getRecentQuiz",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosWithoutToken.get("/users/get-recent-quiz");
+      const response = await axiosWithToken.get("/users/get-recent-quiz");
       console.log("🚀 ~ response:", response.data);
 
       return response.data;
@@ -36,13 +36,9 @@ export const getRecentQuiz = createAsyncThunk(
   }
 );
 
-
-
-
-
 export const getQuizQuesitons = createAsyncThunk(
   "getQuizQuesitons",
-  async ({ pageNo }, { rejectWithValue }) => {
+  async ({ pageNo, id }, { rejectWithValue }) => {
     console.log("🚀 ~ pageNo:", pageNo);
     const params = {};
 
@@ -53,7 +49,7 @@ export const getQuizQuesitons = createAsyncThunk(
     console.log("🚀 ~ params:", params);
 
     try {
-      const response = await axiosWithoutToken.get(
+      const response = await axiosWithToken.get(
         `quiz/get-quiz-questions/${id}`,
         {
           params: params,
@@ -61,7 +57,7 @@ export const getQuizQuesitons = createAsyncThunk(
       );
       console.log("🚀 ~ response:", response.data);
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       if (error) {
         toast.error(error?.response?.data?.error);
