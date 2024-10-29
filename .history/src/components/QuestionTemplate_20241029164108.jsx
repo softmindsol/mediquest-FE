@@ -103,31 +103,8 @@ const QuestionTemplate = () => {
           {/* Main Flex Container */}
           <div className="flex flex-wrap lg:flex-nowrap justify-between">
 
-          <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-                Score: 50%
-              </div>
-              <div className="overflow-y-auto max-h-32">
-                <div className="mt-4 px-6 text-center mx-auto pb-7">
-                  <ul className="space-y-2 mx-auto">
-                    {scores.map((score, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-4 space-x-2 justify-center "
-                      >
-                        <span>{index + 1}</span>
-                        <span>
-                          <FaCheck className="text-[#95cb7c]" />
 
-                          {/* {score === 1 ? "✔️" : score === 2 ? "❌" : "-"} */}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
+            
             <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
               {/* Navigation Buttons */}
               <div className="flex justify-between mb-10">
