@@ -17,6 +17,7 @@ const Topic = () => {
     (state) => state?.user?.selectedUser
   );
   const userType = user?.userType?.plan || "";
+  console.log("🚀 ~ Topic ~ userType:", userType);
   const [isModalOpen, setModalOpen] = useState(false);
   const [formdata, setFormData] = useState({
     name: "",
@@ -24,12 +25,25 @@ const Topic = () => {
     questionCount: 5,
     university: user?.university || "",
   });
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    subjects: "",
+    university: "",
+  });
 
-  console.log("🚀 ~ Topic ~ user:", user);
-  const openModal = () => setModalOpen(true);
+  const openModal = () => {
+    // Validate before opening modal
+    const errors = validateForm();
+    if (Object.keys(errors).length === 0) {
+      setModalOpen(true);
+    } else {
+      setFormErrors(errors);
+    }
+  };
+
   const closeModal = () => setModalOpen(false);
   const [expandedCategories, setExpandedCategories] = useState([]);
-  console.log(user?.university);
+
   useEffect(() => {
     if (user?.university) {
       setSelectedCategories([user.university]);
@@ -41,10 +55,31 @@ const Topic = () => {
   }, [user?.university]);
 
   const [selectedCategories, setSelectedCategories] = useState([]);
-  console.log("🚀 ~ Topic ~ selectedCategories:", selectedCategories);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formdata.name.trim()) {
+      errors.name = "Quiz name is required";
+    } else if (formdata.name.length < 3) {
+      errors.name = "Quiz name must be at least 3 characters";
+    }
+
+    if (selectedLeftCategories.length === 0) {
+      errors.subjects = "Please select at least one subject";
+    }
+
+    if (selectedCategories.length === 0) {
+      errors.university = "Please select at least one university";
+    }
+
+    return errors;
+  };
+
   const togleCategory = (category) => {
+    if (userType) return;
+
     if (selectedCategories.includes(category)) {
       setSelectedCategories(
         selectedCategories.filter((item) => item !== category)
@@ -52,64 +87,79 @@ const Topic = () => {
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
+    setFormErrors((prev) => ({ ...prev, university: "" }));
   };
+
   const [visibleItems, setVisibleItems] = useState(4);
   const loadMoreItems = () => {
     setVisibleItems((prevVisibleItems) => prevVisibleItems + 2);
   };
+
   const removeCategory = (category) => {
     if (userType) return;
     setSelectedCategories(
       selectedCategories.filter((item) => item !== category)
     );
   };
+
   const filteredCategories = universityNames.filter((category) =>
     category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const [selectedLeftCategories, setSelectedLeftCategories] = useState([]);
   const [selectedLeftSubcategories, setSelectedLeftSubcategories] = useState(
-    []
+    {}
   );
 
   const handleLeftCategoryCheckbox = (category, index) => {
     const updatedSubcategories = { ...selectedLeftSubcategories };
 
     if (selectedLeftCategories.includes(index)) {
+      // Uncheck category and all its subcategories
       setSelectedLeftCategories(
         selectedLeftCategories.filter((i) => i !== index)
       );
       delete updatedSubcategories[index];
     } else {
+      // Check category and all its subcategories
       setSelectedLeftCategories([...selectedLeftCategories, index]);
       updatedSubcategories[index] = category.schools.map((sub) => sub.school);
     }
 
     setSelectedLeftSubcategories(updatedSubcategories);
+    setFormErrors((prev) => ({ ...prev, subjects: "" }));
   };
 
   const handleLeftSubcategoryCheckbox = (categoryIndex, subcategoryName) => {
     const updatedSubcategories = { ...selectedLeftSubcategories };
 
+    if (!updatedSubcategories[categoryIndex]) {
+      updatedSubcategories[categoryIndex] = [];
+    }
+
     if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
+      // Remove subcategory
       updatedSubcategories[categoryIndex] = updatedSubcategories[
         categoryIndex
       ].filter((name) => name !== subcategoryName);
 
+      // If no subcategories remain, uncheck the parent category
       if (updatedSubcategories[categoryIndex].length === 0) {
+        delete updatedSubcategories[categoryIndex];
         setSelectedLeftCategories(
           selectedLeftCategories.filter((i) => i !== categoryIndex)
         );
-        delete updatedSubcategories[categoryIndex];
       }
     } else {
-      if (!updatedSubcategories[categoryIndex]) {
-        updatedSubcategories[categoryIndex] = [];
-      }
+      // Add subcategory and ensure parent category is checked
       updatedSubcategories[categoryIndex].push(subcategoryName);
+      if (!selectedLeftCategories.includes(categoryIndex)) {
+        setSelectedLeftCategories([...selectedLeftCategories, categoryIndex]);
+      }
     }
 
     setSelectedLeftSubcategories(updatedSubcategories);
+    setFormErrors((prev) => ({ ...prev, subjects: "" }));
   };
 
   const toggleCategory = (index) => {
@@ -132,18 +182,34 @@ const Topic = () => {
     questionCount: formdata.questionCount,
     subject: subjects,
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errors = validateForm();
 
-    console.log("🚀 ~ handleSubmit ~ values:", values);
+    if (Object.keys(errors).length === 0) {
+      console.log("Form submitted:", values);
+      openModal();
+    } else {
+      setFormErrors(errors);
+    }
   };
+
   const [showUniversities, setShowUniversities] = useState(false);
 
   const handleToggle = () => {
     if (userType) return;
-
     setShowUniversities(!showUniversities);
   };
+
+  const handleQuizNameChange = (e) => {
+    const value = e.target.value;
+    setFormData({ ...formdata, name: value });
+    if (value.trim()) {
+      setFormErrors((prev) => ({ ...prev, name: "" }));
+    }
+  };
+
   return (
     <DefaultLayout>
       <div className="">
@@ -157,40 +223,46 @@ const Topic = () => {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-9">
-            <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg ">
+            <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg">
               <div className="flex flex-wrap justify-start gap-3 lg:gap-15">
                 <div>
                   <label
                     htmlFor="noOfQuestions"
-                    className="block text-[14px] font-semibold text-[#111827] "
+                    className="block text-[14px] font-semibold text-[#111827]"
                   >
                     Quiz Name
                   </label>
                   <input
                     type="text"
                     placeholder="Create a test name"
-                    onChange={(e) =>
-                      setFormData({ ...formdata, name: e.target.value })
-                    }
-                    className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary"
+                    value={formdata.name}
+                    onChange={handleQuizNameChange}
+                    className={`mt-1 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border ${
+                      formErrors.name ? "border-red-500" : "border-[#CED4DA]"
+                    } placeholder-secondary`}
                   />
+                  {formErrors.name && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {formErrors.name}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
                     htmlFor="noOfQuestions"
-                    className="block text-[14px] font-semibold text-[#111827] "
+                    className="block text-[14px] font-semibold text-[#111827]"
                   >
                     No. of questions
                   </label>
                   <select
-                    type="select"
+                    value={formdata.questionCount}
                     onChange={(e) =>
                       setFormData({
                         ...formdata,
                         questionCount: e.target.value,
                       })
                     }
-                    className="mt-1 px-4 py-2  text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px]  border border-[#CED4DA] placeholder-secondary bg-white w-50"
+                    className="mt-1 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border border-[#CED4DA] placeholder-secondary bg-white w-50"
                   >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -203,8 +275,8 @@ const Topic = () => {
               <div className="flex items-center justify-end mb-2">
                 <div>
                   <button
+                    type="submit"
                     className="bg-[#007AFF] text-[12px] flex items-center gap-3 font-semibold text-white px-4 py-3 rounded-md"
-                    onClick={openModal}
                   >
                     Create New Quiz
                     <SlArrowRight className="text-white" />
@@ -217,6 +289,7 @@ const Topic = () => {
                 </div>
               </div>
             </form>
+
             <div className="bg-white rounded-lg border border-[#E6E9EC]">
               <div className="flex justify-between items-center p-4 border-b border-[#DEE2E6]">
                 <h2 className="font-semibold text-title-sm text-primary">
@@ -227,6 +300,12 @@ const Topic = () => {
                 </h2>
               </div>
 
+              {formErrors.subjects && (
+                <p className="text-red-500 text-sm p-4 border-b border-[#DEE2E6]">
+                  {formErrors.subjects}
+                </p>
+              )}
+
               <div className="grid gap-3">
                 {subjectQuestions &&
                   subjectQuestions?.map((category, index) => (
@@ -236,7 +315,6 @@ const Topic = () => {
                           <input
                             type="checkbox"
                             className="w-4 h-4 mr-3 cursor-pointer"
-                            value={category.subjectName}
                             checked={selectedLeftCategories.includes(index)}
                             onChange={() =>
                               handleLeftCategoryCheckbox(category, index)
@@ -302,8 +380,8 @@ const Topic = () => {
           </div>
 
           <div className="space-y-6">
-            <div className=" bg-white rounded-lg border border-[#E6E9EC] ">
-              <h2 className="text-title-sm text-primary font-semibold  border-b border-[#E9ECEF] px-6 py-5 ">
+            <div className="bg-white rounded-lg border border-[#E6E9EC]">
+              <h2 className="text-title-sm text-primary font-semibold border-b border-[#E9ECEF] px-6 py-5">
                 Test Mode
               </h2>
               <div className="grid grid-cols-2 px-4 py-6">

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import Button from "./Button";
-import { IoIosThumbsUp } from "react-icons/io";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaCheck, FaPlus, FaRegCommentDots } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { SlArrowRight } from "react-icons/sl";
+import { Link } from "react-router-dom";
+import Button from "./Button";
 
 const QuestionTemplate = () => {
   // State to manage multiple questions
@@ -99,9 +97,9 @@ const QuestionTemplate = () => {
   return (
     <>
       <div className="bg-[#ECEFF7] h-fill">
-        <div className="container  max-w-screen-xl  mx-auto px-4 py-8 pb-40 ">
+        <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto ">
           {/* Main Flex Container */}
-          <div className="flex flex-wrap lg:flex-nowrap justify-between">
+          <div className="flex flex-wrap justify-between lg:flex-nowrap">
             <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
               {/* Navigation Buttons */}
               <div className="flex justify-between mb-10">
@@ -129,18 +127,18 @@ const QuestionTemplate = () => {
                 <h2 className="text-lg font-bold">
                   {questions[currentQuestionIndex].question}
                 </h2>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="mt-2 text-sm text-gray-500">
                   {questions[currentQuestionIndex].details}
                 </p>
               </div>
-              <div className=" flex my-8">
+              <div className="flex my-8 ">
                 <p className="bg-[#E9ECEF] text-title-p text-[#68717A] py-9 px-24  ">
                   Table
                 </p>
               </div>
               {/* Categories */}
-              <div className="lg:col-span-2 space-y-6  mt-auto">
-                <h3 className="text-md font-semibold mb-2">
+              <div className="mt-auto space-y-6 lg:col-span-2">
+                <h3 className="mb-2 font-semibold text-md">
                   Select one of the following options:
                 </h3>
                 <div className="bg-white mx-6  rounded-lg border border-[#E6E9EC]">
@@ -172,7 +170,7 @@ const QuestionTemplate = () => {
                   </Link>
                 </div>
               </div>
-              <div className="p-6 max-w-4xl">
+              <div className="max-w-4xl p-6">
                 <div className="flex gap-4 w-fit items-center border border-[#6c757d] rounded-xl px-2">
                   <div className="border-r p-2 border-[#6c757d]">
                     <BsHandThumbsUp size={20} className="text-green-600 " />
@@ -195,10 +193,10 @@ const QuestionTemplate = () => {
 
                 {showImproveSection && (
                   <div className="mt-4 bg-white border border-[#E6E9EC] p-4 rounded-lg ">
-                    <h2 className="text-lg font-bold text-yellow-500 mb-3">
+                    <h2 className="mb-3 text-lg font-bold text-yellow-500">
                       Improve this question
                     </h2>
-                    <p className="text-title-p font-medium mb-3">
+                    <p className="mb-3 font-medium text-title-p">
                       What is the main problem with this question?
                     </p>
 
@@ -226,7 +224,7 @@ const QuestionTemplate = () => {
                     ></textarea>
 
                     {/* Submit Button */}
-                    <button className="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600">
+                    <button className="px-4 py-2 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600">
                       Submit suggestions
                     </button>
                   </div>
@@ -239,12 +237,12 @@ const QuestionTemplate = () => {
                 Score: 50%
               </div>
               <div className="overflow-y-auto max-h-32">
-                <div className="mt-4 px-6 text-center mx-auto pb-7">
-                  <ul className="space-y-2 mx-auto">
+                <div className="px-6 mx-auto mt-4 text-center pb-7">
+                  <ul className="mx-auto space-y-2">
                     {scores.map((score, index) => (
                       <li
                         key={index}
-                        className="flex items-center gap-4 space-x-2 justify-center "
+                        className="flex items-center justify-center gap-4 space-x-2 "
                       >
                         <span>{index + 1}</span>
                         <span>
