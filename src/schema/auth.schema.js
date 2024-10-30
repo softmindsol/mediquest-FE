@@ -4,9 +4,13 @@ export const RegisterSchema = Yup.object().shape({
   name: Yup.string()
     .required("Name is required")
     .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
+    .max(50, "Name must be at most 50 characters")
+    .matches(
+      /^[a-zA-Z\s'-]+$/,
+      "Name can only contain letters, spaces, and hyphens"
+    ),
 
-    email: Yup.string()
+  email: Yup.string()
     .required("Email is required")
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -24,10 +28,7 @@ export const RegisterSchema = Yup.object().shape({
     .required("Confirm password is required")
     .oneOf([Yup.ref("password")], "Passwords do not match"),
 
-  year: Yup.string()
-    .required("Year is required")
-    ,
-
+  year: Yup.string().required("Year is required"),
   city: Yup.string().required("City is required"),
 
   university: Yup.string().required("University is required"),

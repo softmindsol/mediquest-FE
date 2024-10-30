@@ -92,8 +92,19 @@ const Login = () => {
                     </div>
                   ))}
                 </div>
+                <div className="flex justify-between items-center py-2 ">
+                  <div className="flex items-center">
+                    <input type="checkbox" className="mr-3 " />
+                    <span className="text-[16px] text-[#212529]">
+                      Rememer me
+                    </span>
+                  </div>
+                  <Link to="/" className="text-[#0D6EFD] text-title-p  underline">
+                    Forgot password
+                  </Link>
+                </div>
 
-                <div className="flex justify-center items-center  w-full pt-9">
+                <div className="flex justify-center items-center  w-full ">
                   <Button
                     disabled={isSubmitting}
                     text="Sign in"
