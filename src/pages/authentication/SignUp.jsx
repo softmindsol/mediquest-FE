@@ -224,7 +224,7 @@ const SignUp = () => {
                 leftIcon={MdOutlineKeyboardArrowLeft}
                 leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={() => setStep((prev) => prev - 1)}
-                className="bg-white border flex items-center border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-4 hover:bg-gray-100 focus:outline-none"
+                className="bg-white border flex items-center border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
             </div>
           )}
@@ -407,7 +407,7 @@ const SignUp = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full"
+                    className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full hover:shadow-md"
                   >
                     {isSubmitting ? "Submitting..." : "Submit"}
                   </button>

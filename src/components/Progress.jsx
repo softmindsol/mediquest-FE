@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
 import SplineChart from "../components/charts/Splinechart"; // Import the SplineChart component
 import { SlArrowRight } from "react-icons/sl";
@@ -6,6 +6,24 @@ import { FaAngleDown } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
 
 const Progress = () => {
+  // Dropdown states
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("This week");
+
+  const options = [
+    "This week",
+    "Last week",
+    "This month",
+    "Last month",
+    "This Semester",
+  ];
+
+  // Handle dropdown option selection
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false); // Close dropdown after selecting an option
+  };
+
   // Dummy data for the SplineChart
   const seriesData = [
     {
@@ -30,11 +48,28 @@ const Progress = () => {
 
       <div className="bg-white rounded-xl p-5 mb-30">
         {/* Time Filter Dropdown */}
-        <div className="pr-3 flex justify-end">
-          <button className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md">
-            This week
+        <div className="pr-3 flex justify-end relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md"
+          >
+            {selectedOption}
             <GoChevronDown size={20} className="text-[#007AFF]" />
           </button>
+
+          {isOpen && (
+            <div className="absolute mt-11 right-1 bg-white border border-[#E4E6EF] rounded-md shadow-lg w-[10%] z-40">
+              {options.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleOptionClick(option)}
+                  className="px-4 py-2 text-[#007AFF] hover:bg-[#F3F6F9] cursor-pointer text-[12px] font-medium"
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Main Container */}
