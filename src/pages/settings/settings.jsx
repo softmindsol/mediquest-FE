@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewRegisterSchema } from "../../schema/auth.schema"; // Import the validation schema
@@ -11,6 +11,7 @@ import {
   logout,
   verifyToken,
 } from "../../store/features/auth/auth.service";
+import FreePlane from "../../components/Modals/FreePlane";
 
 const inputFields = [
   {
@@ -31,6 +32,20 @@ const inputFields = [
 ];
 
 const Settings = () => {
+  // State to control the visibility of the modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to open the modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -181,9 +196,18 @@ const Settings = () => {
               <span className="text-[13px] font-semibold text-[#6D6D6D] text-center lg:text-left">
                 Cancel Subscription
               </span>
-              <button className="bg-[#007AFF] text-white text-base font-semibold px-5 py-2 rounded-md">
-                Upgrade
-              </button>
+              <div>
+                {/* Button to open the modal */}
+                <button
+                  onClick={openModal}
+                  className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Upgrade
+                </button>
+
+                {/* Render the modal if isModalOpen is true */}
+                {isModalOpen && <FreePlane onClose={closeModal} />}
+              </div>
             </div>
           </div>
 

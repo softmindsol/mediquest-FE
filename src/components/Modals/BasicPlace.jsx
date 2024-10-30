@@ -1,8 +1,8 @@
 import React from "react";
 
-const FreePlane = ({ onClose }) => {
+const BasicPlane = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 shadow-md">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative w-[494px] bg-white rounded-lg shadow-lg p-6">
         {/* Close button */}
         <button
@@ -20,7 +20,10 @@ const FreePlane = ({ onClose }) => {
           <p className="text-[#111827] text-title-p font-semibold">
             Your Current Plan
           </p>
-          <p className="text-title-md text-[#6B7280] font-medium">Free</p>
+          <p className="text-title-md text-[#6B7280] font-medium">Basic</p>
+          <p className="text-[12px] text-[#6B7280] font-medium">
+            90 MAD/Per Month
+          </p>
         </div>
 
         {/* Upgrade button */}
@@ -37,4 +40,4 @@ const FreePlane = ({ onClose }) => {
   );
 };
 
-export default FreePlane;
+export default BasicPlane;
