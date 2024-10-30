@@ -20,7 +20,9 @@ const Button = ({
       className={`${styles} `}
     >
       {LeftIcon && (
-        <LeftIcon className={`inline-block ${leftIconStyle} mr-2 items-center`} />
+        <LeftIcon
+          className={`inline-block ${leftIconStyle} mr-2 items-center`}
+        />
       )}
       {text ? text : children}
       {RightIcon && (

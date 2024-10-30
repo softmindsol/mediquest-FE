@@ -4,6 +4,7 @@ import { getQuizQuesitons } from "./quiz.service";
 const initialState = {
   isLoading: false,
   quiz: [],
+  scoreboard: [],
   error: null,
 };
 
@@ -22,6 +23,7 @@ const quizSlice = createSlice({
           totalQuestions: action.payload.totalQuestions,
           score: action.payload.score,
         });
+        state.scoreboard = action.payload.scoreboard;
         state.isLoading = false;
       })
       .addCase(getQuizQuesitons.rejected, (state, action) => {

@@ -4,7 +4,6 @@ import { SlArrowRight } from "react-icons/sl";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { getRecentQuiz } from "../store/features/quiz/quiz.service";
-import Loader from "./Loader";
 import DotsLoader from "./Loader/dots-loader";
 
 const RecentTests = () => {

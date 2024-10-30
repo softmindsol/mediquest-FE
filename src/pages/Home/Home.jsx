@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import Progress from "../../components/Progress";
 import RecentTests from "../../components/RecentTests";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../../store/features/auth/auth.service";
 
 const Home = () => {
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state) => state?.user?.selectedUser || {});
 
+  useEffect(() => {
+    if (!user?.id) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch]);
   return (
     <DefaultLayout>
       <Breadcrumb pageName={`Welcome home ${user?.name || ""}!`} />

@@ -68,3 +68,27 @@ export const getQuizQuesitons = createAsyncThunk(
 );
 
 
+
+
+
+export const submitQuiz = createAsyncThunk(
+  "submitQuiz",
+  async (data, { rejectWithValue }) => {
+    console.log("🚀 ~ data:", data);
+    try {
+      const response = await axiosWithToken.post(`quiz/submit-answer`, data);
+      console.log("🚀 ~ response:", response.data);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        toast.error(error?.response?.data?.error);
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+
+
+

@@ -3,13 +3,14 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { IoSearchSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { SlArrowRight } from "react-icons/sl";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
 import CreateQuizModal from "../../components/CreateQuizModal";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import RecentTest from "./RecentTest";
 import { categoryItems } from "./Topic-constant";
 import DotsLoader from "../../components/Loader/dots-loader";
+import { getCurrentUser } from "../../store/features/auth/auth.service";
 
 const universityNames = categoryItems.map((item) => item.name);
 
@@ -17,6 +18,14 @@ const Topic = () => {
   const { subjectQuestions = [], user = {} } = useSelector(
     (state) => state?.user?.selectedUser
   );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!user?.id) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch]);
   const userType = user?.userType?.plan === "FREE";
   console.log("🚀 ~ Topic ~ userType:", userType);
   const [isModalOpen, setModalOpen] = useState(false);
