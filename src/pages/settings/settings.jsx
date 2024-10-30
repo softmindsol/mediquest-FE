@@ -145,8 +145,8 @@ const Settings = () => {
             />
           </div>
         </div>
-        <div className="mt-6 bg-white rounded-lg border mb-5 border-[#E6E9EC]">
-          <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b border-[#E9ECEF] p-3 ">
+        <div className="mt-6 bg-white rounded-lg border mb-25 border-[#E6E9EC]">
+          <h2 className="text-title-p bg-[#F8F8F8] text-primary font-semibold  border-b rounded-t-xl  border-[#E9ECEF] p-3 ">
             Plan & Billing
           </h2>
           <div className="flex flex-col justify-center p-3 space-y-6 lg:flex-row lg:px-11 py-7 lg:space-y-0">
@@ -187,7 +187,7 @@ const Settings = () => {
             </div>
           </div>
 
-          <div className="border-t border-[#E6E9EC] mx-8 mt-4 py-4 text-center text-[14px] text-black-2">
+          <div className="border-t border-[#E6E9EC] mx-8 mt-4 py-4 font-medium text-center text-[14px] text-black-2">
             For any billing questions please
             <a
               href="mailto:contact@medquest.ma"

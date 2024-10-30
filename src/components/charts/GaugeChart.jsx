@@ -19,8 +19,8 @@ const GaugeChart = ({ heading, series }) => {
         endAngle: 360,
         track: {
           background: "#E7E7E7",
-          strokeWidth: "97%",
-          margin: 5,
+          strokeWidth: "%",
+          margin: 20,
           dropShadow: {
             enabled: true,
             top: 2,
@@ -34,9 +34,10 @@ const GaugeChart = ({ heading, series }) => {
             show: false,
           },
           value: {
-            offsetY: 9,
-            fontSize: "52px",
-            color: "#000", // Optional: set color for better visibility
+            offsetY: 15,
+            fontSize: "62px",
+            fontWeight: "600", // Corrected font weight
+            color: "##343A40", // Optional: set color for better visibility
           },
         },
       },

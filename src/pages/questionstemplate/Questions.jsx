@@ -17,7 +17,7 @@ const Question = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div>
         <QuestionTemplate
           question={currentQuestion}

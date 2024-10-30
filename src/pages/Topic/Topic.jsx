@@ -401,7 +401,7 @@ const Topic = () => {
                     onChange={(e) =>
                       setFormData({ ...formdata, mode: e.target.value })
                     }
-                    className="w-4 h-4 mr-2"
+                    className="w-[16px] h-[16px] mr-2"
                   />
                   <label className="text-[15px] font-medium text-primary">
                     Timed
@@ -416,7 +416,7 @@ const Topic = () => {
                     onChange={(e) =>
                       setFormData({ ...formdata, mode: e.target.value })
                     }
-                    className="w-4 h-4 mr-2"
+                    className="w-[16px] h-[16px] mr-2"
                   />
                   <label className="text-[15px] font-medium text-primary">
                     Tutor
@@ -445,12 +445,12 @@ const Topic = () => {
                   </div>
                 ))}
               </div>
-              <div className="relative mb-4 cursor-pointer">
+              <div className="relative  cursor-pointer border m-4 rounded border-[#9DA2AC]">
                 <input
                   type="text"
                   onClick={handleToggle}
                   placeholder="Search"
-                  className="w-full px-7 cursor-pointer py-2 border-b border-[#DEE2E6] rounded-md focus:outline-none placeholder-secondary"
+                  className="w-full px-7 cursor-pointer py-2  rounded-md focus:outline-none placeholder-secondary"
                   value={searchTerm}
                   disabled={userType}
                   onChange={(e) => setSearchTerm(e.target.value)}
