@@ -95,7 +95,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/summary" element={<SummaryPage />} />
+        <Route path="/summary/:id" element={<SummaryPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
