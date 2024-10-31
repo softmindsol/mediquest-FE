@@ -26,7 +26,7 @@ const Home = () => {
             Get Full Subscription
           </button>
         </Link>
-        <Link to="/topic">
+        <Link to="/question-bank">
           <button className="bg-[#3A57E8] font-semibold text-title-p text-white py-[10px] px-8 rounded-[6px]">
             Create Quiz
           </button>

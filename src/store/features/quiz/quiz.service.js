@@ -91,4 +91,21 @@ export const submitQuiz = createAsyncThunk(
 
 
 
+export const getSummary = createAsyncThunk(
+  "getSummary",
+  async ({ id }, { rejectWithValue }) => {
+    console.log("🚀 ~ id:", id);
 
+    try {
+      const response = await axiosWithToken.get(`/quiz/results/${id}`);
+      console.log("🚀 ~ response:", response.data);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        toast.error(error?.response?.data?.error);
+        return rejectWithValue(error);
+      }
+    }
+  }
+);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Button from "./Button";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,7 +15,6 @@ const QuestionTemplate = () => {
   console.log("🚀 ~ QuestionTemplate ~ scoreboard:", scoreboard);
 
   const quizQuestions = state[0];
-  console.log("🚀 ~ QuestionTemplate ~ quizQuestions:", quizQuestions);
   const quizDetail = state[1];
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -105,7 +104,6 @@ const QuestionTemplate = () => {
                     >
                       <span>{score.questionIndex}</span>
                       <span>
-                        {/* <FaCheck className="text-[#95cb7c]" /> */}
                         {score.isCorrect !== undefined ? (
                           score.isCorrect ? (
                             <span>{"✔️"}</span>
@@ -203,17 +201,28 @@ const QuestionTemplate = () => {
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
                 <div className="flex justify-end mt-4">
-                  <Button
-                    disabled={
-                      !quizQuestions?.isAnswered
-                        ? !quizQuestions?.isAnswered
-                        : false
-                    }
-                    text="Submit answer"
-                    type="submit"
-                    rightIcon={SlArrowRight}
-                    className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
-                  />
+                  {quizDetail?.isSubmit ? (
+                    <Link to={`/summary/${id}`}>
+                      <Button
+                        text="Submit quiz"
+                        type="submit"
+                        rightIcon={SlArrowRight}
+                        className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
+                      />
+                    </Link>
+                  ) : (
+                    <Button
+                      disabled={
+                        !quizQuestions?.isAnswered
+                          ? !quizQuestions?.isAnswered
+                          : false
+                      }
+                      text="Submit answer"
+                      type="submit"
+                      rightIcon={SlArrowRight}
+                      className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
+                    />
+                  )}
                 </div>
               </div>
             </form>
