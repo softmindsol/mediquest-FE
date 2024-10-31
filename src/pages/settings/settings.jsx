@@ -49,6 +49,7 @@ const Settings = () => {
           />
           {isLogoutModalOpen && (
             <Logout
+              onLogout={handleLogout}
               onClose={() => setIsLogoutModalOpen(false)}
               onConfirm={handleLogout} // Add confirmation action
             />
@@ -177,7 +178,7 @@ const Settings = () => {
                 <Button
                   onClick={() => setIsFreePlaneModalOpen(true)}
                   text="Upgrade"
-                  className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
                 />
                 {isFreePlaneModalOpen && (
                   <FreePlane onClose={() => setIsFreePlaneModalOpen(false)} />

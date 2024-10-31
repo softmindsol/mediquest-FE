@@ -33,7 +33,6 @@ const RecentTest = () => {
             {test.quizId?.name}
           </div>
 
-          {/* Accordion Content (Topics, Created Date, Button) */}
           {openIndex === index && (
             <div className="mt-2 p-4 border-t border-[#CED4DA]">
               {test?.quizId?.topics.map((item, topicIndex) => (
