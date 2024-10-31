@@ -104,7 +104,7 @@ const Login = () => {
                       name="rememberMe"
                     />
                     <span className="text-[16px] text-[#212529]">
-                      Rememer me
+                      Remember me
                     </span>
                   </div>
                   <Link

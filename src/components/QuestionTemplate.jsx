@@ -89,7 +89,13 @@ const QuestionTemplate = () => {
   };
 
   return (
-    <div className="bg-[#ECEFF7] h-fill">
+    <div className="bg-[#ECEFF7] min-h-screen">
+      <div className="flex justify-between items-center py-4 px-7 shadow bg-white m-auto text-center">
+        <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
+        <Link to="/">
+          <p className="text-title-p font-semibold text-[#FF3B30]">End Quiz</p>
+        </Link>
+      </div>
       <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
         <div className="flex flex-wrap justify-between lg:flex-nowrap">
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
