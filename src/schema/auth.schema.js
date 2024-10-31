@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+const phoneRegex =
+  /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
 export const RegisterSchema = Yup.object().shape({
   name: Yup.string()
@@ -33,7 +35,9 @@ export const RegisterSchema = Yup.object().shape({
 
   university: Yup.string().required("University is required"),
 
-  phoneNumber: Yup.string().required("Phone number is required"),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(phoneRegex, "Phone number is not valid"),
 });
 
 export const RegisterTwoSchema = Yup.object({
