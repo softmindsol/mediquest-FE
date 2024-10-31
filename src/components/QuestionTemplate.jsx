@@ -8,6 +8,7 @@ import {
   submitQuiz,
 } from "../store/features/quiz/quiz.service";
 import Suggestions from "./Suggestions";
+import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz);
 
@@ -130,30 +131,39 @@ const QuestionTemplate = () => {
           </div>
 
           <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
+            
             <div className="flex justify-between mb-10">
-              <button
+              {/* Previous Button */}
+              <Button
+                text="Prev"
+                type="button"
+                leftIcon={MdOutlineKeyboardArrowLeft}
+                leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handlePrev}
                 disabled={pageNo === 1}
-                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
-              >
-                Prev
-              </button>
-              <span className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6">
+                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
+              />
+
+              {/* Page Indicator */}
+              <span className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6">
                 {pageNo} of {quizDetail?.totalQuestions}
               </span>
-              <button
+
+              {/* Next Button */}
+              <Button
+                text="Next"
+                type="button"
+                rightIcon={MdOutlineKeyboardArrowRight}
+                rightIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handleNext}
                 disabled={pageNo >= quizDetail?.totalQuestions}
-                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-8 hover:bg-gray-100"
-              >
-                Next
-              </button>
+                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
+              />
             </div>
-
             <form onSubmit={handleSubmit}>
               <div className="my-6 mt-6">
                 <h2
-                  className="text-lg font-bold"
+                  className="text-title-p font-semibold"
                   dangerouslySetInnerHTML={{ __html: quizQuestions?.question }}
                 />
               </div>
@@ -187,7 +197,7 @@ const QuestionTemplate = () => {
                                   ? !quizQuestions?.isAnswered
                                   : false
                               }
-                              className="mr-3 cursor-pointer"
+                              className="mr-3 w-[16px] h-[16px] cursor-pointer"
                               checked={
                                 selectedOption ===
                                 String.fromCharCode(65 + index)
@@ -213,7 +223,7 @@ const QuestionTemplate = () => {
                         text="Submit quiz"
                         type="submit"
                         rightIcon={SlArrowRight}
-                        className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
+                        className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-3 px-4"
                       />
                     </Link>
                   ) : (
