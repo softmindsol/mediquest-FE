@@ -1,8 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import ResultsBar from "../components/ResultBar"; // Import the updated ResultsBar component
 import { SlArrowRight } from "react-icons/sl";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import {
+  getQuizQuesitons,
+  getSummary,
+} from "../store/features/quiz/quiz.service";
+
+// Array representing the user's scores (correct = true, incorrect = false)
+const scores = [
+  { correct: true },
+  { correct: false },
+  { correct: true },
+  { correct: false },
+  { correct: true },
+  { correct: true },
+  { correct: false },
+  { correct: true },
+  { correct: false },
+  { correct: true },
+];
 
 const Summary = () => {
   const [questions] = useState([
@@ -27,115 +47,141 @@ const Summary = () => {
     { name: "Cat 3", progress: "23 of 23", progressPercentage: 65 },
   ];
 
-  // Array representing the user's scores (correct = true, incorrect = false)
-  const scores = [
-    { correct: true },
-    { correct: false },
-    { correct: true },
-    { correct: false },
-    { correct: true },
-    { correct: true },
-    { correct: false },
-    { correct: true },
-    { correct: false },
-    { correct: true },
-  ];
+  const dispatch = useDispatch();
+
+  const [data, setData] = useState([]);
+  const { questionSummary, totalQuestions, totalScore, score, scoreboard } =
+    data;
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      const res = await dispatch(getSummary({ id }));
+      if (res.type === "getSummary/fulfilled") {
+        setData(res.payload);
+      }
+    };
+    fetchSummary();
+  }, [dispatch]);
 
   return (
     <div className="bg-[#ECEFF7] h-lvh">
-      <div className="container max-w-screen-xl mx-auto px-4 py-8 pb-40">
-        <div className="flex flex-wrap mt-14 lg:flex-nowrap justify-between">
-          {/* Main Content */}
+      <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
+        <div className="flex flex-wrap justify-between mt-14 lg:flex-nowrap">
           <div className="lg:w-[70%] w-full">
             <div className="text-[#3A57E8] text-title-md font-bold">
               Test Name
             </div>
-            {/* ResultsBar Component */}
             <ResultsBar score={61.5} percentile={85} />{" "}
-            {/* Pass score and percentile dynamically */}
             <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC] p-9">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-title-sm text-primary font-semibold">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-title-sm text-primary">
                   Categories
                 </h2>
                 <h2 className="text-[13px] text-primary font-bold">
                   Question Attempted
                 </h2>
               </div>
-              <div className="bg-white ">
-                <div className="grid ">
-                  {categories.map((category, index) => (
+              <div className="bg-white">
+                <div className="grid">
+                  <div className="flex justify-between items-center border-b border-[#DEE2E6]">
                     <div
-                      key={index}
-                      className="flex justify-between items-center border-b border-[#DEE2E6]"
+                      className="flex items-center justify-between w-full"
+                      style={{
+                        background: `linear-gradient(to right, #E1FFBA ${
+                          (totalScore / totalQuestions) * 100
+                        }%, #FFE8E8 ${(totalScore / totalQuestions) * 100}%)`,
+                      }}
                     >
-                      {/* Parent div with background color based on progress */}
-                      <div
-                        className="flex items-center justify-between w-full"
-                        style={{
-                          background: `linear-gradient(to right, #E1FFBA ${category.progressPercentage}%, #FFE8E8 ${category.progressPercentage}%)`,
-                        }}
-                      >
-                        {/* Left div: Checkbox and Category Name (50% width) */}
-                        <div className="flex items-center py-3 px-4 w-1/2">
-                          <input
-                            type="checkbox"
-                            className="mr-3 cursor-pointer"
-                          />
-                          <span className="text-[14px] text-primary">
-                            {category.name}
-                          </span>
-                        </div>
+                      <div className="flex items-center w-1/2 px-4 py-3">
+                        <span className="text-[14px] text-primary">All</span>
+                      </div>
 
-                        {/* Right div: Progress display (50% width) */}
-                        <div className="py-3 px-4 w-1/2 flex justify-end">
-                          <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                            {category.progress}
-                          </span>
-                        </div>
+                      <div className="flex justify-end w-1/2 px-4 py-3">
+                        <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
+                          {`${totalScore} / ${totalQuestions}`}
+                        </span>
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  {questionSummary &&
+                    Object.entries(questionSummary).map(
+                      ([subject, { total, correct }], index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center border-b border-[#DEE2E6]"
+                        >
+                          <div
+                            className="flex items-center justify-between w-full"
+                            style={{
+                              background: `linear-gradient(to right, #E1FFBA ${
+                                (correct / total) * 100
+                              }%, #FFE8E8 ${(correct / total) * 100}%)`,
+                            }}
+                          >
+                            <div className="flex items-center w-1/2 px-4 py-3">
+                              <span className="text-[14px] text-primary">
+                                {subject}
+                              </span>
+                            </div>
+
+                            <div className="flex justify-end w-1/2 px-4 py-3">
+                              <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
+                                {`${correct} / ${total}`}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
                 </div>
               </div>
             </div>
             <div className="flex justify-end mt-7">
-              <Button
-                text="Continue"
-                type="submit"
-                rightIcon={SlArrowRight}
-                rightIconStyle="text-white "
-                className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
-              />
+              <Link to="/">
+                <Button
+                  text="Continue"
+                  type="submit"
+                  rightIcon={SlArrowRight}
+                  rightIconStyle="text-white "
+                  className="bg-[#3A57E8] text-title-p rounded-[4px] border text-white font-normal py-2 px-6 focus:outline-none"
+                />
+              </Link>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
             <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-              Score: 50%
+              Score: {score}%
             </div>
-            <div className="mt-4 px-6 text-center mx-auto pb-7">
-              <div className="overflow-y-auto max-h-32">
-                {/* Set a max height */}
-                <ul className="space-y-2 mx-auto">
-                  {scores.map((score, index) => (
+            <div className="overflow-y-auto max-h-[70vh]">
+              <ul className="px-6 mx-auto mt-4 space-y-2 text-center pb-7">
+                {scoreboard && scoreboard.length > 0 ? (
+                  scoreboard.map((score) => (
                     <li
-                      key={index}
-                      className="flex items-center gap-4 space-x-2 justify-center"
+                      key={score.questionIndex}
+                      className="flex items-center justify-center gap-4 space-x-2 "
                     >
-                      <span>{index + 1}</span>
+                      <span>{score.questionIndex}</span>
                       <span>
-                        {score.correct ? (
-                          <FaCheck className="text-[#95cb7c]" />
+                        {score.isCorrect !== undefined ? (
+                          score.isCorrect ? (
+                            <span>{"✔️"}</span>
+                          ) : (
+                            <span>{"❌"}</span>
+                          )
                         ) : (
-                          <FaTimes className="text-[#FF5C5C]" />
+                          <span className="px-2">{"-"}</span>
                         )}
                       </span>
                     </li>
-                  ))}
-                </ul>
-              </div>
+                  ))
+                ) : (
+                  <span className="py-4"> Start the quiz</span>
+                )}
+              </ul>
             </div>
           </div>
         </div>
