@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
 import { useDispatch } from "react-redux";
 import { getRecentQuiz } from "../../store/features/quiz/quiz.service";
+import { Link } from "react-router-dom";
 
 const RecentTest = () => {
   const [openIndex, setOpenIndex] = useState(0);
   const [quiz, setQuiz] = useState([]);
+  console.log("🚀 ~ RecentTest ~ quiz:", quiz);
   const dispatch = useDispatch();
 
   const toggleAccordion = (index) => {

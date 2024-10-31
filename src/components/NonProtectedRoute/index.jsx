@@ -9,7 +9,7 @@ const NonProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (isUserLoggedIn || isLoggedIn) {
-    return <Navigate to={location.state?.from || "/home"} replace />;
+    return <Navigate to={location.state?.from || "/"} replace />;
   }
 
   return children;
