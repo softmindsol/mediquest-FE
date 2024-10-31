@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+
 const phoneRegex =
   /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 
@@ -17,7 +18,9 @@ export const RegisterSchema = Yup.object().shape({
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
       "Invalid email format"
-    ),
+    )
+    .email("Invalid email format"),
+
   password: Yup.string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
@@ -31,6 +34,7 @@ export const RegisterSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Passwords do not match"),
 
   year: Yup.string().required("Year is required"),
+
   city: Yup.string().required("City is required"),
 
   university: Yup.string().required("University is required"),
