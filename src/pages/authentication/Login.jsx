@@ -67,7 +67,7 @@ const Login = () => {
             }}
           >
             {({ isSubmitting }) => (
-              <Form className="space-y-6">
+              <Form className="space-y-5">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-1 ">
                   {inputFields?.map((field) => (
                     <div key={field.name}>
@@ -92,11 +92,11 @@ const Login = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between items-center py-2 ">
+                <div className="flex justify-between items-center ">
                   <div className="flex items-center">
                     <input type="checkbox" className="mr-3 " />
                     <span className="text-[16px] text-[#212529]">
-                      Rememer me
+                      Remember me
                     </span>
                   </div>
                   <Link to="/" className="text-[#0D6EFD] text-title-p  underline">
