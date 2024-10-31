@@ -43,6 +43,7 @@ const Login = () => {
             initialValues={{
               email: "",
               password: "",
+              rememberMe: false,
             }}
             validationSchema={LoginSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -66,8 +67,8 @@ const Login = () => {
               }
             }}
           >
-            {({ isSubmitting }) => (
-              <Form className="space-y-5">
+            {({ isSubmitting, setFieldValue }) => (
+              <Form className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-1 ">
                   {inputFields?.map((field) => (
                     <div key={field.name}>
@@ -92,19 +93,29 @@ const Login = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between items-center ">
+                <div className="flex items-center justify-between py-2 ">
                   <div className="flex items-center">
-                    <input type="checkbox" className="mr-3 " />
+                    <input
+                      onChange={(e) =>
+                        setFieldValue("rememberMe", e.target.checked)
+                      }
+                      type="checkbox"
+                      className="mr-3 "
+                      name="rememberMe"
+                    />
                     <span className="text-[16px] text-[#212529]">
                       Remember me
                     </span>
                   </div>
-                  <Link to="/" className="text-[#0D6EFD] text-title-p  underline">
+                  <Link
+                    to="/"
+                    className="text-[#0D6EFD] text-title-p  underline"
+                  >
                     Forgot password
                   </Link>
                 </div>
 
-                <div className="flex justify-center items-center  w-full ">
+                <div className="flex items-center justify-center w-full ">
                   <Button
                     disabled={isSubmitting}
                     text="Sign in"

@@ -80,6 +80,8 @@ const QuestionTemplate = () => {
       console.log("🚀 ~ handleSubmit ~ res:", res);
     }
   };
+  console.log(quizDetail);
+  
 
   const handleOptionChange = (index) => {
     const selectedValue = String.fromCharCode(65 + index);

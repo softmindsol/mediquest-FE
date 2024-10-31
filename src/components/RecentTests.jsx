@@ -95,7 +95,9 @@ const RecentTests = () => {
                             className="bg-white text-[#007AFF] px-4 py-2 border border-[#007AFF] rounded-md flex items-center justify-center gap-3"
                           >
                             {/* Conditionally render the button label based on quiz status */}
-                            {test.isAttempted ? "Continue Quiz" : "Start Quiz"}
+                            {test.currentQuestionIndex !== 0
+                              ? "Continue Quiz"
+                              : "Start Quiz"}
                             <SlArrowRight className="text-[#007AFF]" />
                           </button>
                         </div>
@@ -118,10 +120,16 @@ const RecentTests = () => {
                                   Cancel
                                 </button>
                                 <Link
-                                  to="/question"
+                                  to={`/question/${test?.quizId?._id}?pageNo=${
+                                    test?.currentQuestionIndex === 0
+                                      ? 1
+                                      : test?.currentQuestionIndex
+                                  }`}
                                   className="px-4 py-2 bg-[#007AFF] text-[14px] font-medium text-white rounded"
                                 >
-                                  Start my quiz
+                                  {test?.currentQuestionIndex === 0
+                                    ? "Start my quiz"
+                                    : "Continue my quiz"}
                                 </Link>
                               </div>
                             </div>
