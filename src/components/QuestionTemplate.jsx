@@ -9,6 +9,7 @@ import {
 } from "../store/features/quiz/quiz.service";
 import Suggestions from "./Suggestions";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import Timer from "./Timer";
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz);
 
@@ -23,6 +24,7 @@ const QuestionTemplate = () => {
   const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
   const [image, setImage] = useState("");
+  const [timer, setTimer] = useState("");
   const [selectedOption, setSelectOption] = useState(null);
 
   const calculateScore =
@@ -31,8 +33,10 @@ const QuestionTemplate = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       const res = await dispatch(getQuizQuesitons({ pageNo, id }));
+      console.log("🚀 ~ fetchQuestions ~ res:", res);
       if (res.payload.questions.length > 0) {
         setImage(res.payload.questions[0].image_url);
+        // setTimer(res.payload.question[0].startTime);
       }
     };
     fetchQuestions();
@@ -81,7 +85,6 @@ const QuestionTemplate = () => {
     }
   };
   console.log(quizDetail);
-  
 
   const handleOptionChange = (index) => {
     const selectedValue = String.fromCharCode(65 + index);
@@ -91,7 +94,7 @@ const QuestionTemplate = () => {
 
   return (
     <div className="bg-[#ECEFF7] min-h-screen">
-      <div className="flex justify-between items-center py-4 px-7 shadow bg-white m-auto text-center">
+      <div className="flex items-center justify-between py-4 m-auto text-center bg-white shadow px-7">
         <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
         <Link to="/">
           <p className="text-title-p font-semibold text-[#FF3B30]">End Quiz</p>
@@ -133,7 +136,6 @@ const QuestionTemplate = () => {
           </div>
 
           <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
-            
             <div className="flex justify-between mb-10">
               {/* Previous Button */}
               <Button
@@ -165,7 +167,7 @@ const QuestionTemplate = () => {
             <form onSubmit={handleSubmit}>
               <div className="my-6 mt-6">
                 <h2
-                  className="text-title-p font-semibold"
+                  className="font-semibold text-title-p"
                   dangerouslySetInnerHTML={{ __html: quizQuestions?.question }}
                 />
               </div>
@@ -245,6 +247,10 @@ const QuestionTemplate = () => {
               </div>
             </form>
             <Suggestions />
+          </div>
+
+          <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+            <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
           </div>
         </div>
       </div>

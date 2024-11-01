@@ -23,6 +23,7 @@ const quizSlice = createSlice({
           totalQuestions: action.payload.totalQuestions,
           score: action.payload.score,
           isSubmit: action.payload.isSubmit,
+          startTime: action.payload.startTime,
         });
         state.scoreboard = action.payload.scoreboard;
         state.isLoading = false;
