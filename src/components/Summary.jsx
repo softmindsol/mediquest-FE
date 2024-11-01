@@ -10,48 +10,21 @@ import {
   getSummary,
 } from "../store/features/quiz/quiz.service";
 
-// Array representing the user's scores (correct = true, incorrect = false)
-const scores = [
-  { correct: true },
-  { correct: false },
-  { correct: true },
-  { correct: false },
-  { correct: true },
-  { correct: true },
-  { correct: false },
-  { correct: true },
-  { correct: false },
-  { correct: true },
-];
+
 
 const Summary = () => {
-  const [questions] = useState([
-    {
-      question: "A 54-year-old man has this and that...",
-      details: "Cras sit amet nibh libero, in gravida nulla...",
-    },
-    {
-      question: "A 25-year-old female presents with...",
-      details: "Nulla facilisi. Curabitur dapibus enim sit amet...",
-    },
-    {
-      question: "A child with fever and rash...",
-      details: "Etiam porta sem malesuada magna mollis euismod...",
-    },
-  ]);
-
-  const categories = [
-    { name: "All", progress: "132 of 265", progressPercentage: 50 },
-    { name: "Cat 1", progress: "23 of 23", progressPercentage: 35 },
-    { name: "Cat 2", progress: "23 of 23", progressPercentage: 65 },
-    { name: "Cat 3", progress: "23 of 23", progressPercentage: 65 },
-  ];
-
   const dispatch = useDispatch();
 
   const [data, setData] = useState([]);
-  const { questionSummary, totalQuestions, totalScore, score, scoreboard } =
-    data;
+  const {
+    questionSummary,
+    totalQuestions,
+    totalScore,
+    score,
+    scoreboard,
+    percentile,
+    rank,
+  } = data;
 
   const { id } = useParams();
 
@@ -73,7 +46,7 @@ const Summary = () => {
             <div className="text-[#3A57E8] text-title-md font-bold">
               Test Name
             </div>
-            <ResultsBar score={61.5} percentile={85} />{" "}
+            <ResultsBar score={percentile} percentile={rank} />{" "}
             <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC] p-9">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-title-sm text-primary">
@@ -100,7 +73,7 @@ const Summary = () => {
 
                       <div className="flex justify-end w-1/2 px-4 py-3">
                         <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                          {`${totalScore} / ${totalQuestions}`}
+                          {`${totalScore || ""} / ${totalQuestions || ""}`}
                         </span>
                       </div>
                     </div>
@@ -129,7 +102,7 @@ const Summary = () => {
 
                             <div className="flex justify-end w-1/2 px-4 py-3">
                               <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                                {`${correct} / ${total}`}
+                                {`${correct || ""} / ${total || ""}`}
                               </span>
                             </div>
                           </div>
