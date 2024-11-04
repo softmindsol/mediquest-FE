@@ -100,7 +100,7 @@ const Login = () => {
                         setFieldValue("rememberMe", e.target.checked)
                       }
                       type="checkbox"
-                      className="mr-3 "
+                      className="mr-3  w-[16px] h-[16px]"
                       name="rememberMe"
                     />
                     <span className="text-[16px] text-[#212529]">
