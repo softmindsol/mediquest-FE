@@ -1,13 +1,28 @@
 import { useState } from "react";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
+import { FaThumbsUp } from "react-icons/fa6";
+import { FaThumbsDown } from "react-icons/fa";
 import { FaPlus, FaRegCommentDots } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Suggestions = () => {
+  const { documentId = "", _id: questionId = "" } = useSelector(
+    (state) => state?.quiz?.quiz[0] || {}
+  );
+
+  const {
+    likes = 0,
+    dislikes = 0,
+    isUserLiked = { liked: false, disliked: false },
+  } = useSelector((state) => state?.quiz?.quiz[1] || {});
+
+  console.log("Hell", isUserLiked.liked);
+
+  const state = useSelector((state) => state?.quiz || []);
+  console.log("World", state);
+
   const [showImproveSection, setShowImproveSection] = useState(false);
   const [suggestionText, setSuggestionText] = useState("");
-  const [likes, setLikes] = useState(32); // Initial likes
-  const [dislikes, setDislikes] = useState(16); // Initial dislikes
-
   const handleToggle = () => {
     setShowImproveSection(!showImproveSection);
   };
@@ -16,23 +31,21 @@ const Suggestions = () => {
     setSuggestionText((prevText) => (prevText ? `${prevText}, ${text}` : text));
   };
 
-  // Calculate the total votes and percentage
   const totalVotes = likes + dislikes;
   const likePercentage = (likes / totalVotes) * 100;
   const dislikePercentage = (dislikes / totalVotes) * 100;
 
   return (
     <div className="max-w-4xl p-6">
-      {/* Like and Dislike Bar */}
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-green-600 flex items-center">
+        <span className="flex items-center text-green-600">
           <BsHandThumbsUp /> {likes}
         </span>
-        <span className="text-red-500 flex items-center ml-4">
+        <span className="flex items-center ml-4 text-red-500">
           <BsHandThumbsDown /> {dislikes}
         </span>
       </div>
-      <div className="h-2 flex  rounded-full  mb-7">
+      <div className="flex h-2 rounded-full mb-7">
         <div
           style={{ width: `${likePercentage}%` }}
           className="h-full bg-green-600"
@@ -46,10 +59,18 @@ const Suggestions = () => {
       {/* Action Buttons */}
       <div className="flex gap-4 items-center border border-[#6c757d] rounded-xl px-2">
         <div className="border-r p-2 border-[#6c757d]">
-          <BsHandThumbsUp size={20} className="text-green-600" />
+          {isUserLiked.liked ? (
+            <FaThumbsUp size={20} className="text-green-600" />
+          ) : (
+            <BsHandThumbsUp size={20} className="text-green-600" />
+          )}
         </div>
         <div className="border-r p-2 border-[#6c757d]">
-          <BsHandThumbsDown size={20} className="text-red-500" />
+          {isUserLiked.disliked ? (
+            <FaThumbsDown size={20} className="text-red-500" />
+          ) : (
+            <BsHandThumbsDown size={20} className="text-red-500" />
+          )}
         </div>
         <div className="text-[#6c757d] flex items-center gap-2 p-2 border-r border-[#6c757d]">
           <FaRegCommentDots size={20} /> Discuss (2)
@@ -98,7 +119,7 @@ const Suggestions = () => {
             className="w-full h-24 p-2 border border-[#E6E9EC] rounded-lg focus:outline-none"
           />
 
-          <button className="px-4 py-2 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600 mt-3">
+          <button className="px-4 py-2 mt-3 text-black bg-yellow-500 rounded-lg hover:bg-yellow-600">
             Submit suggestions
           </button>
         </div>

@@ -24,6 +24,9 @@ const quizSlice = createSlice({
           score: action.payload.score,
           isSubmit: action.payload.isSubmit,
           startTime: action.payload.startTime,
+          likes: action.payload.likeCount,
+          dislikes: action.payload.dislikeCount,
+          isUserLiked: action.payload.isUserLikeDislike,
         });
         state.scoreboard = action.payload.scoreboard;
         state.isLoading = false;

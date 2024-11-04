@@ -52,6 +52,8 @@ export const getQuizQuesitons = createAsyncThunk(
       const response = await axiosWithToken.get(
         `quiz/get-quiz-questions/${id}`,
         {
+          isNextClicked,
+          isPrevClicked,
           params: params,
         }
       );
@@ -66,10 +68,6 @@ export const getQuizQuesitons = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 export const submitQuiz = createAsyncThunk(
   "submitQuiz",
@@ -89,8 +87,6 @@ export const submitQuiz = createAsyncThunk(
   }
 );
 
-
-
 export const getSummary = createAsyncThunk(
   "getSummary",
   async ({ id }, { rejectWithValue }) => {
@@ -98,6 +94,38 @@ export const getSummary = createAsyncThunk(
 
     try {
       const response = await axiosWithToken.get(`/quiz/results/${id}`);
+      console.log("🚀 ~ response:", response.data);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        toast.error(error?.response?.data?.error);
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+export const likeDislikeQuestion = createAsyncThunk(
+  "likeDislikeQuestion",
+  async ({ documentId, questionId, action }, { rejectWithValue }) => {
+    console.log("🚀 ~ id:", id);
+
+    const params = {};
+    if (documentId) {
+      params.documentId = documentId;
+    }
+    if (questionId) {
+      params.questionId = questionId;
+    }
+    try {
+      const response = await axiosWithToken.patch(
+        `/questions/like-dislike-question`,
+        {
+          action,
+          params,
+        }
+      );
       console.log("🚀 ~ response:", response.data);
 
       return response.data.data;

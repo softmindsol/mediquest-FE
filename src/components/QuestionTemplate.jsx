@@ -13,18 +13,26 @@ import Timer from "./Timer";
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz);
 
+  console.log(state);
+
   const { scoreboard = [] } = useSelector((state) => state?.quiz);
   console.log("🚀 ~ QuestionTemplate ~ scoreboard:", scoreboard);
 
   const quizQuestions = state[0];
   const quizDetail = state[1];
+
+  console.log(quizDetail);
+  console.log(quizQuestions, "Hello");
+
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [isNextClicked, setNextClicked] = useState(false);
+  const [isPrevClicked, setPrevClicked] = useState(false);
+
   const [params, setParams] = useSearchParams();
   const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
   const [image, setImage] = useState("");
-  const [timer, setTimer] = useState("");
   const [selectedOption, setSelectOption] = useState(null);
 
   const calculateScore =
@@ -32,10 +40,15 @@ const QuestionTemplate = () => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const res = await dispatch(getQuizQuesitons({ pageNo, id }));
+      const res = await dispatch(
+        getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
+      );
       console.log("🚀 ~ fetchQuestions ~ res:", res);
       if (res.payload.questions.length > 0) {
         setImage(res.payload.questions[0].image_url);
+        setNextClicked(false);
+        setPrevClicked(false);
+
         // setTimer(res.payload.question[0].startTime);
       }
     };
@@ -46,6 +59,7 @@ const QuestionTemplate = () => {
     if (pageNo < quizDetail?.totalQuestions) {
       setParams({ pageNo: pageNo + 1 });
       setSelectOption(null);
+      setNextClicked(true);
       setError("");
     }
   };
@@ -54,6 +68,7 @@ const QuestionTemplate = () => {
     if (pageNo > 1) {
       setParams({ pageNo: pageNo - 1 });
       setSelectOption(null);
+      setPrevClicked(true);
       setError("");
     }
   };
