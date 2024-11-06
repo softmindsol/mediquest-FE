@@ -17,7 +17,6 @@ const QuestionTemplate = () => {
     (state) => state?.quiz || {}
   );
 
-  console.log(isLoading, "False");
 
   const quizQuestions = state[0];
   const quizDetail = state[1];
@@ -271,7 +270,7 @@ const QuestionTemplate = () => {
                 </div>
               </div>
             </form>
-            <Suggestions />
+            <Suggestions pageNo={pageNo} id={id} />
           </div>
 
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">

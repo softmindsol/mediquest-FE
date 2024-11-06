@@ -77,20 +77,10 @@ export const submitQuiz = createAsyncThunk(
   }
 );
 
-const handleError = (error) => {
-  const errorMessage = error?.response?.data?.error || "An error occurred";
-  toast.error(errorMessage);
-  return {
-    response: {
-      data: { error: errorMessage },
-      status: error?.response?.status,
-    },
-  };
-};
 
 export const getSummary = createAsyncThunk(
   "getSummary",
-  async ({ id }, {  rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.get(`/quiz/results/${id}`);
 
@@ -107,26 +97,17 @@ export const getSummary = createAsyncThunk(
 export const likeDislikeQuestion = createAsyncThunk(
   "likeDislikeQuestion",
   async ({ documentId, questionId, action }, { rejectWithValue }) => {
-    const params = {};
-    if (documentId) {
-      params.documentId = documentId;
-    }
-    if (questionId) {
-      params.questionId = questionId;
-    }
     try {
       const response = await axiosWithToken.patch(
-        `/questions/like-dislike-question`,
+        `/questions/like-dislike-question/${documentId}/${questionId}`,
         {
           action,
-          params,
         }
       );
 
       return response.data.data;
     } catch (error) {
       if (error) {
-        toast.error(error?.response?.data?.error);
         return rejectWithValue(handleError(error));
       }
     }

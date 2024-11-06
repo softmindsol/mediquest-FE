@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Button from "./Button";
-import { FaCheck, FaTimes } from "react-icons/fa";
-import ResultsBar from "../components/ResultBar"; // Import the updated ResultsBar component
 import { SlArrowRight } from "react-icons/sl";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import {
-  getQuizQuesitons,
-  getSummary,
-} from "../store/features/quiz/quiz.service";
-
-
+import ResultsBar from "../components/ResultBar";
+import { getSummary } from "../store/features/quiz/quiz.service";
+import Button from "./Button";
 
 const Summary = () => {
   const dispatch = useDispatch();
