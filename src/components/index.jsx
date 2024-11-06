@@ -11,7 +11,7 @@ import MultiSelect from './MultiSelect';
 
 export {
   Breadcrumb,
-  DefaultLayout,
+  DefaultLayout,  
   SelectGroup,
   CheckBox,
   InputBox,
