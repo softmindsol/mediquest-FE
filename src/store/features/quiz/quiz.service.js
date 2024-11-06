@@ -92,7 +92,6 @@ export const getSummary = createAsyncThunk(
   "getSummary",
   async ({ id }, {  rejectWithValue }) => {
     try {
-      // dispatch(resetState());
       const response = await axiosWithToken.get(`/quiz/results/${id}`);
 
       return response.data.data;
