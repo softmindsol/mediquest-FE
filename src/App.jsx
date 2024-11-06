@@ -26,7 +26,7 @@ function App() {
               <LandingPage />
             </NonProtectedRoute>
           }
-        />{" "}
+        />
         <Route
           path="/log-in"
           element={

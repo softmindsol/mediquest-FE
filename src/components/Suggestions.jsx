@@ -51,7 +51,6 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
       const res = await dispatch(
         likeDislikeQuestion({ action, documentId, questionId })
       );
-      setLoading({ likeIsLoading: false, dislikeIsLoading: false });
 
       if (res.type === "likeDislikeQuestion/fulfilled") {
         await dispatch(
@@ -63,6 +62,8 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
           })
         );
       }
+      setLoading({ likeIsLoading: false, dislikeIsLoading: false });
+
     },
     [dispatch, documentId, questionId, pageNo, id]
   );
