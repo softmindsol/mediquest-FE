@@ -37,7 +37,7 @@ const GaugeChart = ({ heading, series }) => {
             offsetY: 15,
             fontSize: "62px",
             fontWeight: "600", // Corrected font weight
-            color: "##343A40", // Optional: set color for better visibility
+            color: "#343A40", // Optional: set color for better visibility
           },
         },
       },

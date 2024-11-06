@@ -214,19 +214,19 @@ const SignUp = () => {
           </h1>
 
           {step > 1 && (
-            <div className="relative md:right-1/2">
+            <div className="relative md:right-1/2 md:bottom-10">
               <Button
                 text="Prev"
                 type="button"
                 leftIcon={MdOutlineKeyboardArrowLeft}
                 leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={() => setStep((prev) => prev - 1)}
-                className="bg-white border flex items-center border-[#E9ECEF] text-secondary rounded-[4px] py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
+                className="bg-white border flex items-center border-[#E9ECEF] text-secondary rounded-[4px] py-3 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
             </div>
           )}
         </div>
-        <p className="text-title-sm text-[#0D6EFD] font-bold text-center mb-6">
+        <p className="text-title-sm text-[#0D6EFD] font-bold text-center  relative md:bottom-15">
           {step}/2
         </p>
 
