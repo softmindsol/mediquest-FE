@@ -8,8 +8,6 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await apiClient.post("/auth/register", data);
 
-      console.log("Hello", response.data);
-
       toast.success(response?.data?.message);
       return response.data;
     } catch (error) {
@@ -41,8 +39,6 @@ export const checkMail = createAsyncThunk(
     try {
       const response = await apiClient.get(`/auth/check-email/${id}`);
 
-      console.log(response.data);
-
       return response.data;
     } catch (error) {
       if (error) {
@@ -57,8 +53,6 @@ export const loginUser = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await apiClient.post("/auth/login", data);
-
-      console.log("Hello", response.data);
 
       toast.success(response?.data?.message);
       return response.data;
@@ -94,8 +88,6 @@ export const logout = createAsyncThunk(
     try {
       const response = await axiosWithToken.post("/auth/logout");
 
-      console.log(response.data);
-
       toast.success(response?.data?.message);
       return response.data;
     } catch (error) {
@@ -113,8 +105,6 @@ export const verifyToken = createAsyncThunk(
     try {
       const response = await axiosWithToken.get("/auth/verify-token");
 
-      console.log(response?.data);
-
       return response?.data?.data?.isLoggedIn;
     } catch (error) {
       console.error("Token verification failed:", error);
@@ -129,7 +119,6 @@ export const getCurrentUser = createAsyncThunk(
     try {
       const res = await axiosWithToken("/auth/getCurrentUser");
 
-      console.log(res.data);
       return res.data.data;
     } catch (error) {
       console.error("Token verification failed:", error);

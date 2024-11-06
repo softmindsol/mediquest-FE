@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getQuizQuesitons } from "./quiz.service";
+import { createQuiz, getQuizQuesitons, submitQuiz } from "./quiz.service";
 
 const initialState = {
   isLoading: false,
@@ -14,25 +14,58 @@ const quizSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(getQuizQuesitons.pending, (state, _) => {
+      .addCase(getQuizQuesitons.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getQuizQuesitons.fulfilled, (state, action) => {
-        state.quiz = action.payload.questions;
+        const {
+          questions,
+          totalQuestions,
+          score,
+          scoreboard,
+          isSubmit,
+          startTime,
+          likeCount,
+          dislikeCount,
+          isUserLikeDislike,
+        } = action.payload;
+
+        state.quiz = questions;
         state.quiz.push({
-          totalQuestions: action.payload.totalQuestions,
-          score: action.payload.score,
-          isSubmit: action.payload.isSubmit,
-          startTime: action.payload.startTime,
-          likes: action.payload.likeCount,
-          dislikes: action.payload.dislikeCount,
-          isUserLiked: action.payload.isUserLikeDislike,
+          totalQuestions,
+          score,
+          isSubmit,
+          startTime,
+          likes: likeCount,
+          dislikes: dislikeCount,
+          isUserLiked: isUserLikeDislike,
         });
-        state.scoreboard = action.payload.scoreboard;
+        state.scoreboard = scoreboard;
         state.isLoading = false;
       })
       .addCase(getQuizQuesitons.rejected, (state, action) => {
         state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(createQuiz.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(createQuiz.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(createQuiz.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(submitQuiz.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(submitQuiz.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(submitQuiz.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
       });
   },
 });

@@ -68,11 +68,8 @@ const Settings = () => {
             }}
             validationSchema={NewRegisterSchema}
             onSubmit={async (values, { resetForm }) => {
-              console.log("Form Submitted Values:", values);
-
               try {
                 const res = await dispatch(changePassword(values));
-                console.log("🚀 ~ onSubmit={ ~ res:", res);
 
                 resetForm();
               } catch (error) {

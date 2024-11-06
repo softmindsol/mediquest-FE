@@ -183,9 +183,6 @@ const SignUp = () => {
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
 
-  console.log(user);
-  console.log(user?.user?.data?.id);
-
   localStorage.setItem("userId", user?.user?.data?.id);
 
   const [step, setStep] = useState(1);

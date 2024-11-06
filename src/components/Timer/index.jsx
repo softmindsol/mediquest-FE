@@ -11,11 +11,9 @@ const Timer = ({ startTime, id }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
 
-  console.log(startTime);
 
   useEffect(() => {
     if (!startTime) {
-      console.error("startTime is undefined");
       return; // Exit if startTime is not provided
     }
 

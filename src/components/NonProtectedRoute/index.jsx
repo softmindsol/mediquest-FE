@@ -5,7 +5,6 @@ import { useLocation, Navigate } from "react-router-dom";
 const NonProtectedRoute = ({ children }) => {
   const isUserLoggedIn = localStorage.getItem("isLoggedIn");
   const isLoggedIn = useSelector((state) => state?.user?.isLoggedIn);
-  console.log("🚀 ~ NonProtectedRoute ~ isLoggedIn:", isLoggedIn);
   const location = useLocation();
 
   if (isUserLoggedIn || isLoggedIn) {

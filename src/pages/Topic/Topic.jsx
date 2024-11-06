@@ -27,7 +27,6 @@ const Topic = () => {
     }
   }, [dispatch]);
   const userType = user?.userType?.plan === "FREE";
-  console.log("🚀 ~ Topic ~ userType:", userType);
   const [isModalOpen, setModalOpen] = useState(false);
   const [formdata, setFormData] = useState({
     name: "",
@@ -77,7 +76,10 @@ const Topic = () => {
     }
 
     if (selectedLeftCategories.length === 0) {
-      errors.subjects = "Please select at least one subject";
+      errors.subjects =
+        subjectQuestions.length > 0
+          ? "Please select at least one subject"
+          : "You can create quiz because subject is not available for your year";
     }
 
     if (selectedCategories.length === 0) {
@@ -198,7 +200,6 @@ const Topic = () => {
     const errors = validateForm();
 
     if (Object.keys(errors).length === 0) {
-      console.log("Form submitted:", values);
       openModal();
     } else {
       setFormErrors(errors);
@@ -317,74 +318,81 @@ const Topic = () => {
               )}
 
               <div className="grid gap-3">
-                {subjectQuestions && subjectQuestions.length > 0 ? (
-                  subjectQuestions?.map((category, index) => (
-                    <div key={index}>
-                      <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 mr-3 cursor-pointer"
-                            checked={selectedLeftCategories.includes(index)}
-                            onChange={() =>
-                              handleLeftCategoryCheckbox(category, index)
-                            }
-                          />
-                          <span className="text-[14px] text-primary">
-                            {category?.subjectName}
-                          </span>
-                          <span
-                            className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8] border border-[#3A57E8] ml-3"
-                            onClick={() => toggleCategory(index)}
-                          >
-                            {expandedCategories.includes(index) ? (
-                              <FaMinus />
-                            ) : (
-                              <FaPlus />
-                            )}
+                {subjectQuestions ? (
+                  subjectQuestions.length === 0 ? (
+                    <div className="p-4 text-sm font-medium">
+                      No subjects found for this year
+                    </div>
+                  ) : (
+                    subjectQuestions?.map((category, index) => (
+                      <div key={index}>
+                        <div className="flex justify-between items-center border-b border-[#DEE2E6] py-2 px-4">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4 mr-3 cursor-pointer"
+                              checked={selectedLeftCategories.includes(index)}
+                              onChange={() =>
+                                handleLeftCategoryCheckbox(category, index)
+                              }
+                            />
+                            <span className="text-[14px] text-primary">
+                              {category?.subjectName}
+                            </span>
+                            <span
+                              className="cursor-pointer text-[10px] bg-[#EBEEFD] p-1 text-[#3A57E8] border border-[#3A57E8] ml-3"
+                              onClick={() => toggleCategory(index)}
+                            >
+                              {expandedCategories.includes(index) ? (
+                                <FaMinus />
+                              ) : (
+                                <FaPlus />
+                              )}
+                            </span>
+                          </div>
+                          <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
+                            1 of {category?.totalQuestions}
                           </span>
                         </div>
-                        <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
-                          1 of {category?.totalQuestions}
-                        </span>
-                      </div>
-                      {expandedCategories.includes(index) &&
-                        category?.schools && (
-                          <div>
-                            {category?.schools?.map((subcategory, subIndex) => (
-                              <div
-                                key={subIndex}
-                                className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
-                              >
-                                <div className="flex items-center">
-                                  <input
-                                    type="checkbox"
-                                    className="mr-3 cursor-pointer"
-                                    checked={
-                                      selectedLeftSubcategories[
-                                        index
-                                      ]?.includes(subcategory?.school) || false
-                                    }
-                                    onChange={() =>
-                                      handleLeftSubcategoryCheckbox(
-                                        index,
-                                        subcategory?.school
-                                      )
-                                    }
-                                  />
-                                  <span className="text-[14px] text-primary">
-                                    {subcategory.school}
+                        {expandedCategories.includes(index) &&
+                          category?.schools && (
+                            <div>
+                              {category.schools.map((subcategory, subIndex) => (
+                                <div
+                                  key={subIndex}
+                                  className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
+                                >
+                                  <div className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      className="mr-3 cursor-pointer"
+                                      checked={
+                                        selectedLeftSubcategories[
+                                          index
+                                        ]?.includes(subcategory?.school) ||
+                                        false
+                                      }
+                                      onChange={() =>
+                                        handleLeftSubcategoryCheckbox(
+                                          index,
+                                          subcategory?.school
+                                        )
+                                      }
+                                    />
+                                    <span className="text-[14px] text-primary">
+                                      {subcategory?.school}
+                                    </span>
+                                  </div>
+                                  <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
+                                    1 of {subcategory?.count}
                                   </span>
                                 </div>
-                                <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
-                                  1 of {subcategory?.count}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                    </div>
-                  ))
+                              ))}
+                            </div>
+                          )}
+                      </div>
+                    ))
+                  )
                 ) : (
                   <div className="flex justify-center py-8">
                     <DotsLoader />
@@ -459,7 +467,7 @@ const Topic = () => {
                   type="text"
                   onClick={handleToggle}
                   placeholder="Search"
-                  className="w-full px-7 cursor-pointer py-2  rounded-md focus:outline-none placeholder-secondary"
+                  className="w-full py-2 rounded-md cursor-pointer px-7 focus:outline-none placeholder-secondary"
                   value={searchTerm}
                   disabled={userType}
                   onChange={(e) => setSearchTerm(e.target.value)}

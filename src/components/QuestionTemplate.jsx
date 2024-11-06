@@ -11,23 +11,21 @@ import Suggestions from "./Suggestions";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Timer from "./Timer";
 const QuestionTemplate = () => {
-  const state = useSelector((state) => state?.quiz?.quiz);
+  const state = useSelector((state) => state?.quiz?.quiz || []);
 
-  console.log(state);
+  const { scoreboard = [], isLoading = false } = useSelector(
+    (state) => state?.quiz || {}
+  );
 
-  const { scoreboard = [] } = useSelector((state) => state?.quiz);
-  console.log("🚀 ~ QuestionTemplate ~ scoreboard:", scoreboard);
+  console.log(isLoading, "False");
 
   const quizQuestions = state[0];
   const quizDetail = state[1];
 
-  console.log(quizDetail);
-  console.log(quizQuestions, "Hello");
-
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [isNextClicked, setNextClicked] = useState(false);
-  const [isPrevClicked, setPrevClicked] = useState(false);
+  const [isNextClicked, setNextClicked] = useState(true);
+  const [isPrevClicked, setPrevClicked] = useState(true);
 
   const [params, setParams] = useSearchParams();
   const pageNo = parseInt(params.get("pageNo")) || 1;
@@ -43,8 +41,7 @@ const QuestionTemplate = () => {
       const res = await dispatch(
         getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
       );
-      console.log("🚀 ~ fetchQuestions ~ res:", res);
-      if (res.payload.questions.length > 0) {
+      if (res?.payload?.questions?.length > 0) {
         setImage(res.payload.questions[0].image_url);
         setNextClicked(false);
         setPrevClicked(false);
@@ -56,19 +53,21 @@ const QuestionTemplate = () => {
   }, [pageNo, dispatch]);
 
   const handleNext = () => {
+    setNextClicked(true);
+
     if (pageNo < quizDetail?.totalQuestions) {
       setParams({ pageNo: pageNo + 1 });
       setSelectOption(null);
-      setNextClicked(true);
       setError("");
     }
   };
 
   const handlePrev = () => {
+    setPrevClicked(true);
+
     if (pageNo > 1) {
       setParams({ pageNo: pageNo - 1 });
       setSelectOption(null);
-      setPrevClicked(true);
       setError("");
     }
   };
@@ -78,33 +77,44 @@ const QuestionTemplate = () => {
     if (!selectedOption) {
       setError("Please select at least one option.");
     } else {
-      console.log("Form submitted with option:", selectedOption);
-
       const values = {
         selectedOption,
         quizId: id,
         questionIndex: pageNo,
       };
-      console.log("🚀 ~ handleSubmit ~ values:", values);
 
       const res = await dispatch(submitQuiz(values));
-
       if (res.type === "submitQuiz/fulfilled") {
-        handleNext();
+        // If we are on the last question, don't set next clicked to false
+        if (pageNo === quizDetail?.totalQuestions) {
+          setNextClicked(true); // setNextClicked to true only on last question
+          dispatch(
+            getQuizQuesitons({ pageNo, id, isNextClicked: true, isPrevClicked })
+          );
+        } else {
+          handleNext(); // For other questions, navigate to the next one
+        }
       }
 
-      if (pageNo === quizDetail?.totalQuestions) {
-        dispatch(getQuizQuesitons({ pageNo, id }));
-      }
-      console.log("🚀 ~ handleSubmit ~ res:", res);
+      // if (res.type === "submitQuiz/fulfilled") {
+      //   handleNext();
+      // }
+
+      // if (pageNo === quizDetail?.totalQuestions) {
+      //   setNextClicked(true);
+      //   console.log(isNextClicked);
+      //   console.log(isPrevClicked);
+
+      //   dispatch(
+      //     getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
+      //   );
+      // }
     }
   };
-  console.log(quizDetail);
 
   const handleOptionChange = (index) => {
     const selectedValue = String.fromCharCode(65 + index);
     setSelectOption(selectedValue);
-    console.log("Selected option:", selectedValue);
   };
 
   return (
@@ -159,7 +169,7 @@ const QuestionTemplate = () => {
                 leftIcon={MdOutlineKeyboardArrowLeft}
                 leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handlePrev}
-                disabled={pageNo === 1}
+                disabled={pageNo === 1 || isLoading}
                 className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
 
@@ -175,7 +185,7 @@ const QuestionTemplate = () => {
                 rightIcon={MdOutlineKeyboardArrowRight}
                 rightIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handleNext}
-                disabled={pageNo >= quizDetail?.totalQuestions}
+                disabled={pageNo >= quizDetail?.totalQuestions || isLoading}
                 className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
             </div>
@@ -250,7 +260,7 @@ const QuestionTemplate = () => {
                       disabled={
                         !quizQuestions?.isAnswered
                           ? !quizQuestions?.isAnswered
-                          : false
+                          : false || isLoading
                       }
                       text="Submit answer"
                       type="submit"

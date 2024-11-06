@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { LoginSchema } from "../../schema/auth.schema"; // Import the validation schema
+import { LoginSchema } from "../../schema/auth.schema";
 import { loginUser } from "../../store/features/auth/auth.service";
 
 const inputFields = [
@@ -22,7 +22,14 @@ const inputFields = [
     label: "Password",
   },
 ];
-
+const encryptPassword = (password) => {
+  try {
+    return btoa(password);
+  } catch (error) {
+    console.error("Encoding error:", error);
+    throw error;
+  }
+};
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,13 +54,19 @@ const Login = () => {
             }}
             validationSchema={LoginSchema}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
-              console.log("Form Submitted Values:", values);
               setSubmitting(true);
 
               try {
-                const response = await dispatch(loginUser(values));
+                // Encrypt the password before sending it to the backend
+                const encodedPassword = encryptPassword(values.password);
 
-                console.log(response);
+                const response = await dispatch(
+                  loginUser({
+                    email: values.email,
+                    password: encodedPassword,
+                    rememberMe: values.rememberMe,
+                  })
+                );
 
                 if (response.type === "loginUser/fulfilled") {
                   navigate("/");

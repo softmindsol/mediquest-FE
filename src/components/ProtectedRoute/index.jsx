@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }) => {
  }, [isLoggedIn, dispatch, isUserLoggedIn]);
   if (isLoading)
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-white">
         <Loader />
       </div>
     );

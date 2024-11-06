@@ -11,14 +11,12 @@ const RecentTests = () => {
   const [isLoading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quiz, setQuiz] = useState([]);
-  console.log("🚀 ~ RecentTests ~ quiz:", quiz);
 
   useEffect(() => {
     const fetchRecentQuizes = async () => {
       setLoading(true);
       const res = await dispatch(getRecentQuiz());
       setLoading(false);
-      console.log("🚀 ~ fetchRecentQuizes ~ res:", res);
 
       setQuiz(res?.payload?.data);
     };

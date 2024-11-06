@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 const RecentTest = () => {
   const [openIndex, setOpenIndex] = useState(0);
   const [quiz, setQuiz] = useState([]);
-  console.log("🚀 ~ RecentTest ~ quiz:", quiz);
   const dispatch = useDispatch();
 
   const toggleAccordion = (index) => {

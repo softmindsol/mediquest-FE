@@ -7,7 +7,6 @@ export const createQuiz = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.post("/quiz/create-quiz", data);
-      console.log("🚀 ~ response:", response.data);
 
       return response.data;
     } catch (error) {
@@ -24,7 +23,6 @@ export const getRecentQuiz = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.get("/users/get-recent-quiz");
-      console.log("🚀 ~ response:", response.data);
 
       return response.data;
     } catch (error) {
@@ -38,26 +36,20 @@ export const getRecentQuiz = createAsyncThunk(
 
 export const getQuizQuesitons = createAsyncThunk(
   "getQuizQuesitons",
-  async ({ pageNo, id }, { rejectWithValue }) => {
-    console.log("🚀 ~ pageNo:", pageNo);
+  async ({ pageNo, id, isNextClicked, isPrevClicked }, { rejectWithValue }) => {
     const params = {};
 
     if (pageNo) {
       params.pageNo = pageNo;
     }
 
-    console.log("🚀 ~ params:", params);
-
     try {
-      const response = await axiosWithToken.get(
-        `quiz/get-quiz-questions/${id}`,
-        {
-          isNextClicked,
-          isPrevClicked,
-          params: params,
-        }
-      );
-      console.log("🚀 ~ response:", response.data);
+      const response = await axiosWithToken.post(`quiz/get-quiz-questions`, {
+        isNextClicked,
+        isPrevClicked,
+        id,
+        page: pageNo,
+      });
 
       return response.data.data;
     } catch (error) {
@@ -72,10 +64,8 @@ export const getQuizQuesitons = createAsyncThunk(
 export const submitQuiz = createAsyncThunk(
   "submitQuiz",
   async (data, { rejectWithValue }) => {
-    console.log("🚀 ~ data:", data);
     try {
       const response = await axiosWithToken.post(`quiz/submit-answer`, data);
-      console.log("🚀 ~ response:", response.data);
 
       return response.data.data;
     } catch (error) {
@@ -87,14 +77,23 @@ export const submitQuiz = createAsyncThunk(
   }
 );
 
+const handleError = (error) => {
+  const errorMessage = error?.response?.data?.error || "An error occurred";
+  toast.error(errorMessage);
+  return {
+    response: {
+      data: { error: errorMessage },
+      status: error?.response?.status,
+    },
+  };
+};
+
 export const getSummary = createAsyncThunk(
   "getSummary",
-  async ({ id }, { rejectWithValue }) => {
-    console.log("🚀 ~ id:", id);
-
+  async ({ id }, {  rejectWithValue }) => {
     try {
+      // dispatch(resetState());
       const response = await axiosWithToken.get(`/quiz/results/${id}`);
-      console.log("🚀 ~ response:", response.data);
 
       return response.data.data;
     } catch (error) {
@@ -109,8 +108,6 @@ export const getSummary = createAsyncThunk(
 export const likeDislikeQuestion = createAsyncThunk(
   "likeDislikeQuestion",
   async ({ documentId, questionId, action }, { rejectWithValue }) => {
-    console.log("🚀 ~ id:", id);
-
     const params = {};
     if (documentId) {
       params.documentId = documentId;
@@ -126,13 +123,12 @@ export const likeDislikeQuestion = createAsyncThunk(
           params,
         }
       );
-      console.log("🚀 ~ response:", response.data);
 
       return response.data.data;
     } catch (error) {
       if (error) {
         toast.error(error?.response?.data?.error);
-        return rejectWithValue(error);
+        return rejectWithValue(handleError(error));
       }
     }
   }

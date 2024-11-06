@@ -247,22 +247,29 @@ module.exports = {
         7: "-5px 0 0 #313D4A, 5px 0 0 #313D4A",
         8: "1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)",
       },
+
       dropShadow: {
         1: "0px 1px 0px #E2E8F0",
         2: "0px 1px 4px rgba(0, 0, 0, 0.12)",
       },
+      animation: {
+        bounce: "bounce 0.6s infinite", // Default bounce animation
+        "spin-1.5": "spin 1.5s linear infinite", // Custom spin animation (1.5s duration)
+        rotating: "rotating 2s linear infinite", // Custom rotating animation
+      },
       keyframes: {
+        bounce: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-1rem)" }, // Bouncing effect
+        },
+        spin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" }, // Spin from 0 to 360 degrees
+        },
         rotating: {
           "0%, 100%": { transform: "rotate(360deg)" },
-          "50%": { transform: "rotate(0deg)" },
+          "50%": { transform: "rotate(0deg)" }, // A different rotating effect (could look like a bounce)
         },
-      },
-      animation: {
-        "ping-once": "ping 5s cubic-bezier(0, 0, 0.2, 1)",
-        rotating: "rotating 30s linear infinite",
-        "spin-1.5": "spin 1.5s linear infinite",
-        "spin-2": "spin 2s linear infinite",
-        "spin-3": "spin 3s linear infinite",
       },
     },
   },

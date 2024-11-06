@@ -16,10 +16,8 @@ const Suggestions = () => {
     isUserLiked = { liked: false, disliked: false },
   } = useSelector((state) => state?.quiz?.quiz[1] || {});
 
-  console.log("Hell", isUserLiked.liked);
 
   const state = useSelector((state) => state?.quiz || []);
-  console.log("World", state);
 
   const [showImproveSection, setShowImproveSection] = useState(false);
   const [suggestionText, setSuggestionText] = useState("");

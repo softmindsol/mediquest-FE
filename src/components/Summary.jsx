@@ -73,7 +73,7 @@ const Summary = () => {
 
                       <div className="flex justify-end w-1/2 px-4 py-3">
                         <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                          {`${totalScore || ""} / ${totalQuestions || ""}`}
+                          {`${totalScore} / ${totalQuestions}`}
                         </span>
                       </div>
                     </div>
@@ -102,7 +102,7 @@ const Summary = () => {
 
                             <div className="flex justify-end w-1/2 px-4 py-3">
                               <span className="text-white text-[10px] font-semibold bg-[#9C9C9C] px-2 py-1 rounded-md">
-                                {`${correct || ""} / ${total || ""}`}
+                                {`${correct} / ${total || ""}`}
                               </span>
                             </div>
                           </div>

@@ -11,7 +11,7 @@ const Question = () => {
   });
 
   const handleAnswerSubmit = (selectedOption) => {
-    console.log(`Selected answer: ${currentQuestion.options[selectedOption]}`);
+    // console.log(`Selected answer: ${currentQuestion.options[selectedOption]}`);
     // You can then trigger navigation to the AnswerTemplate, etc.
   };
 
