@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { getRecentQuiz } from "../store/features/quiz/quiz.service";
+import { Link, useNavigate } from "react-router-dom";
+import { getRecentQuiz, resumeQuiz } from "../store/features/quiz/quiz.service";
 import DotsLoader from "./Loader/dots-loader";
 
+/* 
+`/question/${test?.quizId?._id}?pageNo=${
+  test?.currentQuestionIndex === 0 ? 1 : test?.currentQuestionIndex
+}`;
+*/
 const RecentTests = () => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quiz, setQuiz] = useState([]);
 
@@ -28,13 +34,26 @@ const RecentTests = () => {
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     setIsModalOpen(false);
   };
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const handleResumeQuiz = async (id, mode, currentIndex) => {
+    if (mode === "Timed") {
+      const res = await dispatch(resumeQuiz({ id }));
+      if (res.type === "resumeQuiz/fulfilled") {
+        navigate(`/question/${id}?pageNo=${res.payload.currentIndex}`);
+      }
+    } else {
+      navigate(
+        `/question/${id}?pageNo=${currentIndex === 0 ? 1 : currentIndex}`
+      );
+    }
   };
 
   return (
@@ -49,7 +68,6 @@ const RecentTests = () => {
           {quiz && quiz.length > 0 ? (
             quiz.map((test, index) => (
               <div key={index} className="border-b border-[#CED4DA]">
-                {/* Accordion Header (Test Name and Score) */}
                 <div
                   className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100"
                   onClick={() => toggleAccordion(index)}
@@ -83,7 +101,7 @@ const RecentTests = () => {
                             </div>
                           ))}
                           <div className="text-[12px] font-bold text-secondary">
-                            Created:{" "}
+                            Created:
                             {test?.quizId?.createdAt?.slice(0, 10) || ""}
                           </div>
                         </div>
@@ -93,7 +111,7 @@ const RecentTests = () => {
                             className="bg-white text-[#007AFF] px-4 py-2 border border-[#007AFF] rounded-md flex items-center justify-center gap-3"
                           >
                             {/* Conditionally render the button label based on quiz status */}
-                            {test.currentQuestionIndex !== 0
+                            {test?.currentQuestionIndex !== 0
                               ? "Continue Quiz"
                               : "Start Quiz"}
                             <SlArrowRight className="text-[#007AFF]" />
@@ -117,18 +135,26 @@ const RecentTests = () => {
                                 >
                                   Cancel
                                 </button>
-                                <Link
-                                  to={`/question/${test?.quizId?._id}?pageNo=${
-                                    test?.currentQuestionIndex === 0
-                                      ? 1
-                                      : test?.currentQuestionIndex
-                                  }`}
+                                <button
+                                  // to={`/question/${test?.quizId?._id}?pageNo=${
+                                  //   test?.currentQuestionIndex === 0
+                                  //     ? 1
+                                  //     : test?.currentQuestionIndex
+                                  // }`}
+                                  // to={}
+                                  onClick={() =>
+                                    handleResumeQuiz(
+                                      test?.quizId?._id || "",
+                                      test?.quizId?.mode || "",
+                                      test?.currentQuestionIndex || 0
+                                    )
+                                  }
                                   className="px-4 py-2 bg-[#007AFF] text-[14px] font-medium text-white rounded"
                                 >
                                   {test?.currentQuestionIndex === 0
                                     ? "Start my quiz"
                                     : "Continue my quiz"}
-                                </Link>
+                                </button>
                               </div>
                             </div>
                           </div>

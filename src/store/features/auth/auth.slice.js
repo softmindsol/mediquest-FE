@@ -34,16 +34,16 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(verifyToken.pending, (state) => {
-        state.isLoading = true;
+        // state.isLoading = true;
         state.error = null;
       })
       .addCase(verifyToken.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
         localStorage.setItem("isLoggedIn", action.payload);
-        state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(verifyToken.rejected, (state, action) => {
-        state.isLoading = false;
+        // state.isLoading = false;
         state.isLoggedIn = false;
         localStorage.removeItem("isLoggedIn");
         state.error = action.payload;

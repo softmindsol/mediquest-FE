@@ -108,7 +108,54 @@ export const likeDislikeQuestion = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       if (error) {
-        return rejectWithValue(handleError(error));
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+export const getRemainingTime = createAsyncThunk(
+  "getRemainingTime",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.get(`/quiz/${id}/remaining-time`);
+      console.log(response.data);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+export const endQuiz = createAsyncThunk(
+  "endQuiz",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.patch(`/quiz/${id}/end`);
+      console.log(response.data);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+export const resumeQuiz = createAsyncThunk(
+  "resumeQuiz",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.patch(`/quiz/${id}/resume`);
+
+      return response.data.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
       }
     }
   }

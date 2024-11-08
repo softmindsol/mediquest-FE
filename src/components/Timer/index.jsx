@@ -1,27 +1,40 @@
-// Timer.js
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { getSummary } from "../../store/features/quiz/quiz.service";
+import {
+  getRemainingTime,
+  getSummary,
+} from "../../store/features/quiz/quiz.service";
+import { useNavigate } from "react-router-dom";
 
-const Timer = ({ startTime, id }) => {
+const Timer = ({ id }) => {
   const dispatch = useDispatch();
+  const timerRef = useRef(null);
+  const navigate = useNavigate();
 
-  const Ref = useRef(null);
   const [timer, setTimer] = useState("00:00:00");
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
 
-
   useEffect(() => {
-    if (!startTime) {
-      return; // Exit if startTime is not provided
-    }
+    const fetchData = async () => {
+      const res = await dispatch(getRemainingTime({ id }));
 
-    const [hours, minutes, seconds] = startTime.split(":").map(Number);
-    const total = (hours * 3600 + minutes * 60 + seconds) * 1000; // Convert to milliseconds
-    setTimeRemaining(total);
-    startTimer(total);
-  }, [startTime]);
+      if (res.type === "getRemainingTime/fulfilled") {
+        const remainingTimeInSeconds = res.payload.remainingTime;
+
+        setTimeRemaining(remainingTimeInSeconds);
+        startTimer(remainingTimeInSeconds);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [dispatch, id]);
 
   const getTimeRemaining = (total) => {
     const seconds = Math.floor((total / 1000) % 60);
@@ -31,23 +44,24 @@ const Timer = ({ startTime, id }) => {
   };
 
   const startTimer = (total) => {
-    if (Ref.current) clearInterval(Ref.current);
+    if (timerRef.current) clearInterval(timerRef.current);
 
     let remaining = total;
     setTimer(getFormattedTime(remaining));
 
     const timerId = setInterval(() => {
-      remaining -= 1000; // Decrease by 1 second
+      remaining -= 1000;
       setTimer(getFormattedTime(remaining));
 
       if (remaining <= 0) {
-        clearInterval(timerId); // Stop the timer
-        setIsRunning(false); // Update running state
+        clearInterval(timerId);
+        setIsRunning(false);
         dispatch(getSummary({ id }));
+        navigate(`/summary/${id}`);
       }
     }, 1000);
 
-    Ref.current = id;
+    timerRef.current = timerId;
     setIsRunning(true);
   };
 

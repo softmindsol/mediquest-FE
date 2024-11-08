@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import Button from "./Button";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  endQuiz,
   getQuizQuesitons,
   submitQuiz,
 } from "../store/features/quiz/quiz.service";
 import Suggestions from "./Suggestions";
-import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
 import Timer from "./Timer";
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz || []);
@@ -17,7 +27,6 @@ const QuestionTemplate = () => {
     (state) => state?.quiz || {}
   );
 
-
   const quizQuestions = state[0];
   const quizDetail = state[1];
 
@@ -25,7 +34,7 @@ const QuestionTemplate = () => {
   const { id } = useParams();
   const [isNextClicked, setNextClicked] = useState(true);
   const [isPrevClicked, setPrevClicked] = useState(true);
-
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
@@ -33,7 +42,7 @@ const QuestionTemplate = () => {
   const [selectedOption, setSelectOption] = useState(null);
 
   const calculateScore =
-    (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0;
+    ((quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0).toFixed(1);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -84,31 +93,31 @@ const QuestionTemplate = () => {
 
       const res = await dispatch(submitQuiz(values));
       if (res.type === "submitQuiz/fulfilled") {
-        // If we are on the last question, don't set next clicked to false
         if (pageNo === quizDetail?.totalQuestions) {
-          setNextClicked(true); // setNextClicked to true only on last question
+          setNextClicked(true);
           dispatch(
             getQuizQuesitons({ pageNo, id, isNextClicked: true, isPrevClicked })
           );
         } else {
-          handleNext(); // For other questions, navigate to the next one
+          handleNext();
         }
       }
-
-      // if (res.type === "submitQuiz/fulfilled") {
-      //   handleNext();
-      // }
-
-      // if (pageNo === quizDetail?.totalQuestions) {
-      //   setNextClicked(true);
-      //   console.log(isNextClicked);
-      //   console.log(isPrevClicked);
-
-      //   dispatch(
-      //     getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
-      //   );
-      // }
     }
+  };
+
+  const handleEndQuiz = async () => {
+
+    if(quizDetail?.mode === 'Timed') {
+    const res = await dispatch(endQuiz({ id }));
+
+    if (res.type === "endQuiz/fulfilled") {
+      navigate("/");
+    }
+    } else {
+      navigate('/')
+    }
+
+
   };
 
   const handleOptionChange = (index) => {
@@ -120,9 +129,14 @@ const QuestionTemplate = () => {
     <div className="bg-[#ECEFF7] min-h-screen">
       <div className="flex items-center justify-between py-4 m-auto text-center bg-white shadow px-7">
         <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
-        <Link to="/">
-          <p className="text-title-p font-semibold text-[#FF3B30]">End Quiz</p>
-        </Link>
+        {/* <Link to="/"> */}
+        <p
+          onClick={handleEndQuiz}
+          className="text-title-p font-semibold text-[#FF3B30]"
+        >
+          End Quiz
+        </p>
+        {/* </Link> */}
       </div>
       <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
         <div className="flex flex-wrap justify-between lg:flex-nowrap">
@@ -274,7 +288,9 @@ const QuestionTemplate = () => {
           </div>
 
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-            <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
+            {quizDetail?.mode === "Timed" && (
+              <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
+            )}
           </div>
         </div>
       </div>

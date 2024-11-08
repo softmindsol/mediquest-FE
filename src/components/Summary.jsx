@@ -5,10 +5,12 @@ import { Link, useParams } from "react-router-dom";
 import ResultsBar from "../components/ResultBar";
 import { getSummary } from "../store/features/quiz/quiz.service";
 import Button from "./Button";
+import Loader from "./Loader";
 
 const Summary = () => {
   const dispatch = useDispatch();
 
+  const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const {
     questionSummary,
@@ -23,14 +25,24 @@ const Summary = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    setLoading(true);
     const fetchSummary = async () => {
       const res = await dispatch(getSummary({ id }));
+      setLoading(false);
       if (res.type === "getSummary/fulfilled") {
         setData(res.payload);
       }
     };
     fetchSummary();
   }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#ECEFF7] h-lvh">

@@ -31,7 +31,6 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
 
   const dispatch = useDispatch();
 
-  // Use the memoized selector
   const { likes, dislikes, isUserLiked, documentId, questionId } = useSelector(
     selectLikesAndDislikes
   );

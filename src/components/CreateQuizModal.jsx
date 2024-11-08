@@ -1,9 +1,9 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createQuiz } from "../store/features/quiz/quiz.service";
-import toast from "react-hot-toast";
 import Loader from "./Loader";
 
 const CreateQuizModal = ({ isOpen, closeModal, values }) => {
@@ -24,7 +24,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
       closeModal();
       toast.success(res.payload.message);
     } catch (error) {
-      toast.error("Failed to create quiz");
+      // toast.error("Failed to create quiz");
     }
   };
 
@@ -137,17 +137,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
               "Start Quiz"
             )}
           </button>
-
-          {/* <button type="button">
-            {isLoading ? (
-              <span className="flex items-center gap-x-2">
-                <span>Creating...</span>{" "}
-                <Loader className="w-4 h-4 border-4 border-blue-500 border-solid rounded-full animate-spin border-t-transparent" />
-              </span>
-            ) : (
-              "Start Quiz"
-            )}
-          </button> */}
         </div>
       </div>
     </div>

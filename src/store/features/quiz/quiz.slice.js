@@ -25,6 +25,7 @@ const quizSlice = createSlice({
           scoreboard,
           isSubmit,
           startTime,
+          mode,
           likeCount,
           dislikeCount,
           isUserLikeDislike,
@@ -39,6 +40,7 @@ const quizSlice = createSlice({
           likes: likeCount,
           dislikes: dislikeCount,
           isUserLiked: isUserLikeDislike,
+          mode,
         });
         state.scoreboard = scoreboard;
         state.isLoading = false;
