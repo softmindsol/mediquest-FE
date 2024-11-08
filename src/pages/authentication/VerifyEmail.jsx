@@ -5,7 +5,7 @@ import { axiosWithToken } from "../../api";
 const VerifyEmail = () => {
   const { verificationToken } = useParams();
 
-  const FRONTEND_URL = "https://www.medquest.ma";
+  const FRONTEND_URL = import.meta.env.VITE_FRONTENT_URL;
 
   useEffect(() => {
     const verifyUser = async () => {
