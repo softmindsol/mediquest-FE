@@ -235,8 +235,8 @@ const QuestionTemplate = () => {
                             <input
                               type="checkbox"
                               disabled={
-                                !quizQuestions?.isAnswered
-                                  ? !quizQuestions?.isAnswered
+                                !quizQuestions?.hasAnswered
+                                  ? !quizQuestions?.hasAnswered
                                   : false
                               }
                               className="mr-3 w-[16px] h-[16px] cursor-pointer"
@@ -271,8 +271,8 @@ const QuestionTemplate = () => {
                   ) : (
                     <Button
                       disabled={
-                        !quizQuestions?.isAnswered
-                          ? !quizQuestions?.isAnswered
+                        !quizQuestions?.hasAnswered
+                          ? !quizQuestions?.hasAnswered
                           : false || isLoading
                       }
                       text="Submit answer"
@@ -287,11 +287,12 @@ const QuestionTemplate = () => {
             <Suggestions pageNo={pageNo} id={id} />
           </div>
 
-          <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-            {quizDetail?.mode === "Timed" && (
+          <div className="lg:w-[12%] w-fit bg-white rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start"></div>
+          {quizDetail?.mode === "Timed" && (
+            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
               <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
