@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
 import SplineChart from "../components/charts/Splinechart"; // Import the SplineChart component
-import { SlArrowRight } from "react-icons/sl";
-import { FaAngleDown } from "react-icons/fa";
 import { GoChevronDown } from "react-icons/go";
+import { useDispatch } from "react-redux";
+import { userSuccess } from "../store/features/quiz/quiz.service";
 
 const Progress = () => {
-  // Dropdown states
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [successData, setSuccessData] = useState("");
   const [selectedOption, setSelectedOption] = useState("This week");
 
   const options = [
@@ -18,37 +18,78 @@ const Progress = () => {
     "This Semester",
   ];
 
+  useEffect(() => {
+    const getUserSuccessRate = async () => {
+      const response = await dispatch(userSuccess());
+      if (response.type === "userSuccess/fulfilled") {
+        setSuccessData(response.payload.data);
+      }
+    };
+
+    getUserSuccessRate();
+  }, [dispatch]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
   // Handle dropdown option selection
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selecting an option
   };
 
-  // Dummy data for the SplineChart
-  const seriesData = [
-    {
-      name: "Your Performance",
-      data: [45, 60, 50, 70, 80, 60, 75], // Example data
+  // Dummy data for different time periods (You can replace this with actual API data)
+  const dataForTimePeriods = {
+    "This week": {
+      seriesData: [
+        { name: "Your Performance", data: [45, 60, 50, 70, 80, 60, 75] },
+        { name: "Year 1 Students", data: [50, 65, 55, 75, 85, 65, 78] },
+      ],
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     },
-    {
-      name: "Year 1 Students",
-      data: [50, 65, 55, 75, 85, 65, 78], // Example data
+    "Last week": {
+      seriesData: [
+        { name: "Your Performance", data: [50, 65, 55, 72, 82, 68, 80] },
+        { name: "Year 1 Students", data: [55, 70, 60, 78, 88, 72, 80] },
+      ],
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     },
-  ];
+    "This month": {
+      seriesData: [
+        { name: "Your Performance", data: [60, 70, 65, 80, 90, 85, 95] },
+        { name: "Year 1 Students", data: [60, 72, 68, 85, 92, 88, 90] },
+      ],
+      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    },
+    "Last month": {
+      seriesData: [
+        { name: "Your Performance", data: [55, 65, 70, 75] },
+        { name: "Year 1 Students", data: [60, 72, 75, 78] },
+      ],
+      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    },
+    "This Semester": {
+      seriesData: [
+        { name: "Your Performance", data: [60, 70, 80, 85, 90] },
+        { name: "Year 1 Students", data: [65, 75, 80, 88, 92] },
+      ],
+      categories: ["Sept", "Oct", "Nov", "Dec", "Jan"],
+    },
+  };
 
-  const categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]; // Example categories
+  // Get the data based on selected option
+  const { seriesData, categories } = dataForTimePeriods[selectedOption];
 
   const colors = ["#FF5733", "#3498DB"]; // Example colors for the chart
 
   return (
     <>
-      <h2 className="text-2xl font-semibold text-primary mt-10 mb-6">
+      <h2 className="mt-10 mb-6 text-2xl font-semibold text-primary">
         Progress
       </h2>
 
-      <div className="bg-white rounded-xl p-5 mb-30">
+      <div className="p-5 bg-white rounded-xl mb-30">
         {/* Time Filter Dropdown */}
-        <div className="pr-3 flex justify-end relative">
+        <div className="relative flex justify-end pr-3">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md"
@@ -73,40 +114,19 @@ const Progress = () => {
         </div>
 
         {/* Main Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10 justify-center">
+        <div className="grid justify-center grid-cols-1 gap-6 mt-10 lg:grid-cols-2">
           {/* Left side: Two circular charts */}
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-            {/* Performance (without difficulty) */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <div className="text-center">
-              {/* <p className="text-[#343A40] text-title-sm font-semibold">
-                Performance
-              </p> */}
-              {/* <p className="text-title-p text-[#343A40] font-semibold">
-                (without difficulty)
-              </p> */}
-              <GaugeChart series={[60]} />
+              <GaugeChart series={[successData]} />
               <p className="text-[#8D8D8D] font-semibold text-sm mt-4 ">
                 Performance NOT adjusted to question difficulty
               </p>
             </div>
-
-            {/* Weighted Performance (with difficulty) */}
-            {/* <div className="text-center">
-              <p className="text-[#343A40] text-title-sm font-semibold">
-                Weighted Performance
-              </p>
-              <p className="text-title-p text-[#343A40] font-semibold">
-                (with difficulty)
-              </p>
-              <GaugeChart series={[74]} />
-              <p className="text-[#8D8D8D] font-semibold text-sm mt-4 ">
-                Performance adjusted to question difficulty
-              </p>
-            </div> */}
           </div>
 
           {/* Right side: SplineChart comparison */}
-          <div className="lg:w-full ">
+          <div className="lg:w-full">
             <h3 className="text-[#343A40] text-title-sm font-semibold">
               Performance compared to Year 1 students
             </h3>
@@ -118,7 +138,7 @@ const Progress = () => {
               colors={colors}
             />
 
-            <p className="text-center mt-4 text-black text-title-p font-medium">
+            <p className="mt-4 font-medium text-center text-black text-title-p">
               <span className="font-bold">55%</span> of the population scored
               above your level.
             </p>

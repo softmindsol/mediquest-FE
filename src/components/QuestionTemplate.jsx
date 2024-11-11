@@ -132,7 +132,7 @@ const QuestionTemplate = () => {
         {/* <Link to="/"> */}
         <p
           onClick={handleEndQuiz}
-          className="text-title-p font-semibold text-[#FF3B30]"
+          className="text-title-p cursor-pointer font-semibold text-[#FF3B30]"
         >
           End Quiz
         </p>

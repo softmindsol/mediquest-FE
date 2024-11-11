@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,11 +9,27 @@ import Loader from "./Loader";
 const CreateQuizModal = ({ isOpen, closeModal, values }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading = false } = useSelector((state) => state?.quiz || {});
+  const [loading, setLoading] = useState({
+    addLoading: false,
+    startLoading: false,
+  });
+  // const { isLoading = false } = useSelector((state) => state?.quiz || {});
 
   const handleCreateQuiz = async (type) => {
     try {
-      const res = await dispatch(createQuiz(values));
+      let res;
+      if (type === "add") {
+        const data = { ...values, test: true };
+
+        console.log(data);
+        setLoading({ ...loading, addLoading: true });
+        const res = await dispatch(createQuiz(data));
+        setLoading({ ...loading, addLoading: false });
+      } else {
+        setLoading({ ...loading, startLoading: true });
+        res = await dispatch(createQuiz(values));
+        setLoading({ ...loading, startLoading: false });
+      }
 
       if (type === "start") {
         navigate(`/question/${res.payload.data.quiz._id}`);
@@ -114,7 +130,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
 
         <div className="flex justify-between mt-7">
           <button
-            disabled={isLoading}
+            disabled={loading.addLoading}
             type="button"
             onClick={() => handleCreateQuiz("add")}
             className="text-[#6B7280] text-[13px] font-bold"
@@ -125,10 +141,10 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
           <button
             type="button"
             className="bg-[#007AFF] text-white font-semibold px-4 py-2 rounded-md flex items-center justify-center"
-            disabled={isLoading}
+            disabled={loading.startLoading}
             onClick={() => handleCreateQuiz("start")}
           >
-            {isLoading ? (
+            {loading.startLoading ? (
               <>
                 <span className="">Loading...</span>
                 <Loader className="w-4 h-4 border-white border-solid rounded-full animate-spin-1.5 border-t-transparent border-2" />

@@ -7,7 +7,7 @@ export const createQuiz = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.post("/quiz/create-quiz", data);
-
+      toast.success(response?.data?.message);
       return response.data;
     } catch (error) {
       if (error) {
@@ -76,7 +76,6 @@ export const submitQuiz = createAsyncThunk(
     }
   }
 );
-
 
 export const getSummary = createAsyncThunk(
   "getSummary",
@@ -153,6 +152,21 @@ export const resumeQuiz = createAsyncThunk(
       const response = await axiosWithToken.patch(`/quiz/${id}/resume`);
 
       return response.data.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+export const userSuccess = createAsyncThunk(
+  "userSuccess",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.get(`/quiz/userSuccess`);
+
+      return response.data;
     } catch (error) {
       if (error) {
         return rejectWithValue(error);
