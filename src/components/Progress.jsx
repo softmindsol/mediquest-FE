@@ -4,6 +4,7 @@ import SplineChart from "../components/charts/Splinechart"; // Import the Spline
 import { GoChevronDown } from "react-icons/go";
 import { useDispatch } from "react-redux";
 import { userSuccess } from "../store/features/quiz/quiz.service";
+import BellCurveGraph from "./charts/BellCurveGraph";
 
 const Progress = () => {
   const dispatch = useDispatch();
@@ -132,16 +133,12 @@ const Progress = () => {
             </h3>
 
             {/* SplineChart integration */}
-            <SplineChart
+            {/* <SplineChart
               series={seriesData}
               categories={categories}
               colors={colors}
-            />
-
-            <p className="mt-4 font-medium text-center text-black text-title-p">
-              <span className="font-bold">55%</span> of the population scored
-              above your level.
-            </p>
+            /> */}
+            <BellCurveGraph userScore={1.5} />
           </div>
         </div>
       </div>
