@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
-import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
-import SplineChart from "../components/charts/Splinechart"; // Import the SplineChart component
 import { GoChevronDown } from "react-icons/go";
-import { useDispatch } from "react-redux";
-import { userSuccess } from "../store/features/quiz/quiz.service";
+import { useDispatch, useSelector } from "react-redux";
+import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
+import {
+  userPerformance,
+  userSuccess,
+} from "../store/features/quiz/quiz.service";
 import BellCurveGraph from "./charts/BellCurveGraph";
 
 const Progress = () => {
   const dispatch = useDispatch();
+  const { performance = [] } = useSelector((state) => state?.quiz || {});
+  const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
+
+  console.log(performance);
+
+  console.log(user);
+
   const [successData, setSuccessData] = useState("");
   const [selectedOption, setSelectedOption] = useState("This week");
 
@@ -31,6 +40,20 @@ const Progress = () => {
   }, [dispatch]);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const getPerformance = async () => {
+      if (user?.year) {
+        const response = await dispatch(
+          userPerformance({ year: user?.year || "" })
+        );
+
+        console.log(response);
+      }
+    };
+
+    getPerformance();
+  }, [user?.year]);
 
   // Handle dropdown option selection
   const handleOptionClick = (option) => {
@@ -132,13 +155,16 @@ const Progress = () => {
               Performance compared to Year 1 students
             </h3>
 
-            {/* SplineChart integration */}
-            {/* <SplineChart
-              series={seriesData}
-              categories={categories}
-              colors={colors}
-            /> */}
-            <BellCurveGraph userScore={1.5} />
+            <BellCurveGraph
+              userScore={performance.userScore}
+              meanScore={performance.meanScore}
+              standardDeviation={performance.standardDeviation}
+              zScore={performance.zScore}
+              percentile={performance.percentile}
+              performanceBands={performance.performanceBands}
+              totalUsers={Number(performance.totalUsers)}
+              allUser={Number(performance.betterThanUsers)}
+            />
           </div>
         </div>
       </div>

@@ -174,3 +174,23 @@ export const userSuccess = createAsyncThunk(
     }
   }
 );
+
+
+
+export const userPerformance = createAsyncThunk(
+  "userPerformance",
+  async ({ year }, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.get(`/quiz/performance/${year}`);
+
+      console.log("🚀 ~ response:", response.data);
+      return response.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
+      }
+    }
+  }
+);
+
+

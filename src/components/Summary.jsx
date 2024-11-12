@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
 import { useDispatch } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ResultsBar from "../components/ResultBar";
 import { getSummary } from "../store/features/quiz/quiz.service";
 import Button from "./Button";
@@ -9,6 +9,29 @@ import Loader from "./Loader";
 
 const Summary = () => {
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // This will block the user from going back
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      // You can add a custom message here if you want, but browsers don't support custom messages anymore
+      event.returnValue = "";
+    };
+
+    // Block the back button and ensure the user cannot navigate back to the quiz page
+    window.addEventListener("popstate", () => {
+      navigate("/", { replace: true }); // This will force navigate to home
+    });
+
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener("popstate", () => {
+        navigate("/", { replace: true });
+      });
+    };
+  }, [navigate]);
 
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);

@@ -2,11 +2,21 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
+// Function to calculate normal distribution (bell curve)
 const normalDistribution = (x) => {
   return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-(x * x) / 2);
 };
 
-const BellCurve = ({ userScore = 0 }) => {
+const BellCurve = ({
+  userScore = 0,
+  percentile = 0,
+  performanceBands = {},
+  totalUsers = 0,
+  allUser = 0,
+}) => {
+  console.log(performanceBands);
+
+  // Generate data points for the bell curve
   const generateData = () => {
     const data = [];
     for (let x = -4; x <= 4; x += 0.1) {
@@ -18,14 +28,15 @@ const BellCurve = ({ userScore = 0 }) => {
 
   const bellCurveData = generateData();
 
+  // Zones for the performance bands
   const zones = [
-    { x: -3, percentage: "0.1%" },
-    { x: -2, percentage: "2.1%" },
-    { x: -1, percentage: "13.6%" },
-    { x: 0, percentage: "34.1%" },
-    { x: 1, percentage: "13.6%" },
-    { x: 2, percentage: "2.1%" },
-    { x: 3, percentage: "0.1%" },
+    { x: -3, percentage: `${performanceBands["-3"]}%` },
+    { x: -2, percentage: `${performanceBands["-2"]}%` },
+    { x: -1, percentage: `${performanceBands["-1"]}%` },
+    { x: 0, percentage: `${performanceBands["mean"]}%` },
+    { x: 1, percentage: `${performanceBands["+1"]}%` },
+    { x: 2, percentage: `${performanceBands["+2"]}%` },
+    { x: 3, percentage: `${performanceBands["+3"]}%` },
   ];
 
   const options = {
@@ -78,12 +89,6 @@ const BellCurve = ({ userScore = 0 }) => {
       },
       gridLineWidth: 0,
     },
-    tooltip: {
-      headerFormat: "",
-      pointFormat:
-        "Standard Deviation: {point.x:.2f}σ<br>Density: {point.y:.4f}",
-    },
-
     plotOptions: {
       area: {
         marker: {
@@ -114,6 +119,27 @@ const BellCurve = ({ userScore = 0 }) => {
           },
         })),
       },
+      // Add the percentile marker to the annotations
+      {
+        labels: [
+          {
+            point: { x: percentile, y: normalDistribution(percentile) },
+            text: `Your Percentile: ${percentile.toFixed(2)}%`,
+            style: {
+              color: "red",
+              fontSize: "14px",
+              fontWeight: "bold",
+              backgroundColor: "white",
+              padding: "2px 5px",
+              borderRadius: "5px",
+            },
+            align: "center",
+            verticalAlign: "bottom",
+            x: 0, // Adjust positioning to the right
+            y: 15, // Adjust vertical position if needed
+          },
+        ],
+      },
     ],
     series: [
       {
@@ -127,7 +153,7 @@ const BellCurve = ({ userScore = 0 }) => {
       {
         type: "scatter",
         name: "Your Score",
-        data: [[userScore, normalDistribution(userScore)]],
+        data: [[percentile, normalDistribution(percentile)]],
         color: "red",
         marker: {
           radius: 6,
@@ -142,6 +168,14 @@ const BellCurve = ({ userScore = 0 }) => {
     <div className="w-full max-w-4xl p-4 mx-auto">
       <div className="p-4 bg-white rounded-lg shadow-sm">
         <HighchartsReact highcharts={Highcharts} options={options} />
+
+        {percentile && (
+          <p className="mt-4 text-sm text-center text-gray-600">
+            You are performing better than{" "}
+            {(((totalUsers - allUser) / totalUsers) * 100).toFixed(1)}% of users
+            in your year
+          </p>
+        )}
       </div>
     </div>
   );

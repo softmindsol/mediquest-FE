@@ -1,11 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createQuiz, getQuizQuesitons, submitQuiz } from "./quiz.service";
+import {
+  createQuiz,
+  getQuizQuesitons,
+  submitQuiz,
+  userPerformance,
+} from "./quiz.service";
 
 const initialState = {
   isLoading: false,
   quiz: [],
   scoreboard: [],
   error: null,
+  performance: [],
 };
 
 const quizSlice = createSlice({
@@ -68,6 +74,12 @@ const quizSlice = createSlice({
       .addCase(submitQuiz.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(userPerformance.fulfilled, (state, action) => {
+          state.performance = action.payload.data;
+      })
+      .addCase(userPerformance.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../store/features/auth/auth.service";
 
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
+
   return (
     <header className="sticky top-0 flex w-full bg-white z-999 drop-shadow-1">
       <div className="flex items-center justify-between flex-grow px-4 py-4 lg:py-0 shadow-2 md:px-6 2xl:px-11">

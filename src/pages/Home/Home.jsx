@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../store/features/auth/auth.service";
 
 const Home = () => {
+  const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
+
   const dispatch = useDispatch();
-
-  const { user } = useSelector((state) => state?.user?.selectedUser || {});
-
   useEffect(() => {
     if (!user?.id) {
       dispatch(getCurrentUser());

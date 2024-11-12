@@ -3,8 +3,12 @@ import ReactApexChart from "react-apexcharts";
 const GaugeChart = ({ heading, series }) => {
   // Function to determine the color based on the series percentage
   const getColor = (value) => {
-    if (value < 40) return "#FF0000"; // Red for values below 40%
-    if (value < 70) return "#CCD000"; // Orange for values between 40% and 70%
+    if (value < 40) {
+      return "#FF0000";
+    } // Red for values below 40%
+    if (value < 70) {
+      return "#CCD000";
+    } // Orange for values between 40% and 70%
     return "#32CD32"; // Green for values 70% and above
   };
 
