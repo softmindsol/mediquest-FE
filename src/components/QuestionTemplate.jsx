@@ -3,7 +3,6 @@ import { SlArrowRight } from "react-icons/sl";
 import {
   Link,
   Navigate,
-  useLocation,
   useNavigate,
   useParams,
   useSearchParams,
@@ -42,11 +41,9 @@ const QuestionTemplate = () => {
   const [image, setImage] = useState("");
   const [selectedOption, setSelectOption] = useState(null);
 
-  const calculateScore = (
-    (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
-  ).toFixed(1);
+  const calculateScore =
+    ((quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0).toFixed(1);
 
-  const location = useLocation();
   useEffect(() => {
     const fetchQuestions = async () => {
       const res = await dispatch(
@@ -109,15 +106,18 @@ const QuestionTemplate = () => {
   };
 
   const handleEndQuiz = async () => {
-    if (quizDetail?.mode === "Timed") {
-      const res = await dispatch(endQuiz({ id }));
 
-      if (res.type === "endQuiz/fulfilled") {
-        navigate("/");
-      }
-    } else {
+    if(quizDetail?.mode === 'Timed') {
+    const res = await dispatch(endQuiz({ id }));
+
+    if (res.type === "endQuiz/fulfilled") {
       navigate("/");
     }
+    } else {
+      navigate('/')
+    }
+
+
   };
 
   const handleOptionChange = (index) => {

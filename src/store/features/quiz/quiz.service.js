@@ -194,3 +194,24 @@ export const userPerformance = createAsyncThunk(
 );
 
 
+
+export const addImprovements = createAsyncThunk(
+  "addImprovements",
+  async ({ question, questionText, document, text }, { rejectWithValue }) => {
+    try {
+      const response = await axiosWithToken.post(`/improvements/create`, {
+        question,
+        text,
+        questionText,
+        document,
+      });
+
+      toast.success(response?.data?.message);
+      return response.data;
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error);
+      }
+    }
+  }
+);

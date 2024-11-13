@@ -164,6 +164,7 @@ const Progress = () => {
               performanceBands={performance.performanceBands}
               totalUsers={Number(performance.totalUsers)}
               allUser={Number(performance.betterThanUsers)}
+              gaussianCurve={performance.gaussianCurve}
             />
           </div>
         </div>
