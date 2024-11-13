@@ -68,8 +68,8 @@ const BellCurve = ({
       startOnTick: false,
       labels: {
         formatter: function () {
-          const zone = zones.find((zone) => zone.x === this.value);
-          return zone ? `${this.value}σ<br/>${zone.percentage}` : null;
+          const zone = zones.find((zone) => zone?.x === this?.value);
+          return zone ? `${this.value}σ<br/>${zone?.percentage || ""}` : null;
         },
         style: {
           color: "#414E79",
@@ -108,8 +108,8 @@ const BellCurve = ({
     annotations: [
       {
         labels: zones.map((zone) => ({
-          point: { x: zone.x, y: 0.05 }, // Adjust this `y` value to position the percentage label in the grid
-          text: zone.percentage,
+          point: { x: zone?.x || "", y: 0.05 }, // Adjust this `y` value to position the percentage label in the grid
+          text: zone?.percentage || "",
           style: {
             color: "#414E79",
             fontSize: "12px",
@@ -122,7 +122,7 @@ const BellCurve = ({
         labels: [
           {
             point: { x: percentile, y: normalDistribution(percentile) },
-            text: `Your Percentile: ${percentile.toFixed(2)}%`,
+            text: `Your Percentile: ${percentile?.toFixed(2) || 0}%`,
             style: {
               color: "red",
               fontSize: "14px",
@@ -170,8 +170,8 @@ const BellCurve = ({
         {percentile && (
           <p className="mt-4 text-sm text-center text-gray-600">
             You are performing better than{" "}
-            {(((totalUsers - allUser) / totalUsers) * 100).toFixed(1)}% of users
-            in your year
+            {(((totalUsers - allUser) / totalUsers) * 100)?.toFixed(1)}% of
+            users in your year
           </p>
         )}
       </div>
