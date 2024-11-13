@@ -30,7 +30,6 @@ const EmailVerification = () => {
   const handleConfirmEmail = async () => {
     const response = await dispatch(checkMail(userId));
 
-    console.log(response);
 
     if (response.type === "checkMail/fulfilled") {
       navigate("/log-in");

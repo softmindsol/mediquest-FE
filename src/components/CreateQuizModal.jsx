@@ -21,7 +21,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
       if (type === "add") {
         const data = { ...values, test: true };
 
-        console.log(data);
         setLoading({ ...loading, addLoading: true });
         const res = await dispatch(createQuiz(data));
         setLoading({ ...loading, addLoading: false });

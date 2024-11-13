@@ -14,8 +14,6 @@ const BellCurve = ({
   totalUsers = 0,
   allUser = 0,
 }) => {
-  console.log(performanceBands);
-
   // Generate data points for the bell curve
   const generateData = () => {
     const data = [];

@@ -21,7 +21,6 @@ const RecentTest = () => {
     const fetchRecentQuizes = async () => {
       const res = await dispatch(getRecentQuiz());
 
-      console.log(res.payload);
 
       setQuiz(res?.payload?.data);
     };

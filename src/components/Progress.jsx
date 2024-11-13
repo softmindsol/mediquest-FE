@@ -13,10 +13,6 @@ const Progress = () => {
   const { performance = [] } = useSelector((state) => state?.quiz || {});
   const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
 
-  console.log(performance);
-
-  console.log(user);
-
   const [successData, setSuccessData] = useState("");
   const [selectedOption, setSelectedOption] = useState("This week");
 
@@ -47,8 +43,6 @@ const Progress = () => {
         const response = await dispatch(
           userPerformance({ year: user?.year || "" })
         );
-
-        console.log(response);
       }
     };
 

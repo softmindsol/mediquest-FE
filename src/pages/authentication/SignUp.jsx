@@ -383,7 +383,6 @@ const SignUp = () => {
                     onClick={(e) => {
                       e.preventDefault();
 
-                      console.log(errors);
 
                       if (
                         errors.name ||
