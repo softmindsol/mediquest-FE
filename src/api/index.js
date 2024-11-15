@@ -20,7 +20,10 @@ axiosWithToken.interceptors.response.use(
   async (error) => {
     const { response } = error;
 
-    if (response && response.data.error === "jwt expired") {
+    if (
+      (response && response.data.error === "jwt expired") ||
+      response.data.error === "Token has been invalidated. Please log in again."
+    ) {
       await toast.error("Session expired. Please log in again.");
       localStorage.removeItem("isLoggedIn");
       // Redirect to the login page

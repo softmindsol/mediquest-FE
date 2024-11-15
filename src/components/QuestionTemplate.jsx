@@ -20,6 +20,7 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import Timer from "./Timer";
+import GenericDrawer from "./generic-drawer";
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz || []);
 
@@ -41,8 +42,9 @@ const QuestionTemplate = () => {
   const [image, setImage] = useState("");
   const [selectedOption, setSelectOption] = useState(null);
 
-  const calculateScore =
-    ((quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0).toFixed(1);
+  const calculateScore = (
+    (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
+  ).toFixed(1);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -106,18 +108,15 @@ const QuestionTemplate = () => {
   };
 
   const handleEndQuiz = async () => {
+    if (quizDetail?.mode === "Timed") {
+      const res = await dispatch(endQuiz({ id }));
 
-    if(quizDetail?.mode === 'Timed') {
-    const res = await dispatch(endQuiz({ id }));
-
-    if (res.type === "endQuiz/fulfilled") {
+      if (res.type === "endQuiz/fulfilled") {
+        navigate("/");
+      }
+    } else {
       navigate("/");
     }
-    } else {
-      navigate('/')
-    }
-
-
   };
 
   const handleOptionChange = (index) => {
@@ -295,6 +294,7 @@ const QuestionTemplate = () => {
           )}
         </div>
       </div>
+      <GenericDrawer className="w-3/4 md:w-[29rem]  lg:w-[30rem] xl:w-[34rem]" />
     </div>
   );
 };

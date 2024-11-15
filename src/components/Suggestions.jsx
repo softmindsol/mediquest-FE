@@ -1,35 +1,55 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaRegCommentDots, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
+import { useDrawer } from "../context/drawer";
 import {
   getQuizQuesitons,
   likeDislikeQuestion,
 } from "../store/features/quiz/quiz.service";
+import DiscussionDrawer from "./discussion/DiscussionDrawer";
 import Improvements from "./Improvements";
-
-// Create memoized selectors
-const selectQuiz = (state) => state?.quiz?.quiz || [];
-const selectLikesAndDislikes = createSelector([selectQuiz], (quiz) => ({
-  likes: quiz[1]?.likes || 0,
-  dislikes: quiz[1]?.dislikes || 0,
-  isUserLiked: quiz[1]?.isUserLiked || { liked: false, disliked: false },
-  documentId: quiz[0]?.documentId || "",
-  questionId: quiz[0]?.questionId || "",
-}));
+import { getComments } from "../store/features/discussion/discussion.service";
+import GenericDrawer from "./generic-drawer";
 
 const Suggestions = ({ pageNo = "", id = "" }) => {
-  const [isLoading, setLoading] = useState({
-    likeIsLoading: false,
-    dislikeIsLoading: false,
-  });
-
   const dispatch = useDispatch();
+
+  const selectQuiz = (state) => state?.quiz?.quiz || [];
+  const selectLikesAndDislikes = createSelector([selectQuiz], (quiz) => ({
+    likes: quiz[1]?.likes || 0,
+    dislikes: quiz[1]?.dislikes || 0,
+    isUserLiked: quiz[1]?.isUserLiked || { liked: false, disliked: false },
+    documentId: quiz[0]?.documentId || "",
+    questionId: quiz[0]?.questionId || "",
+  }));
+
+  const { comments = {} } = useSelector((state) => state?.discussion || {});
 
   const { likes, dislikes, isUserLiked, documentId, questionId } = useSelector(
     selectLikesAndDislikes
   );
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      await dispatch(getComments({ question: questionId }));
+    };
+    if (questionId) {
+      fetchComments();
+    }
+  }, [questionId]);
+
+  const { openDrawer } = useDrawer();
+
+  const openDiscussionDrawer = useCallback(() => {
+    openDrawer(<DiscussionDrawer />, `Discussion(${comments?.total || 0})`);
+  }, [comments?.total, openDrawer]);
+
+  const [isLoading, setLoading] = useState({
+    likeIsLoading: false,
+    dislikeIsLoading: false,
+  });
 
   const totalVotes = likes + dislikes;
   const likePercentage = totalVotes === 0 ? 0 : (likes / totalVotes) * 100;
@@ -131,8 +151,11 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
             () => handleLikeDislike("dislike")
           )}
         </div>
-        <div className="text-[#6c757d] flex items-center gap-2 p-2 border-r border-[#6c757d]">
-          <FaRegCommentDots size={20} /> Discuss (2)
+        <div
+          onClick={openDiscussionDrawer}
+          className="text-[#6c757d] flex items-center gap-2 p-2 border-r cursor-pointer border-[#6c757d]"
+        >
+          <FaRegCommentDots size={20} /> Discuss ({comments?.total || 0})
         </div>
         <button
           onClick={handleToggle}
@@ -148,6 +171,7 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
         suggestionText={suggestionText}
         setSuggestionText={setSuggestionText}
       />
+      <GenericDrawer className="w-3/4 md:w-[29rem] lg:w-[30rem] xl:w-[34rem]" />
     </div>
   );
 };
