@@ -9,6 +9,7 @@ import Loader from "../Loader";
 
 const Comment = () => {
   const dispatch = useDispatch();
+
   const selectQuiz = (state) => state?.quiz?.quiz || [];
   const quizQuestion = createSelector([selectQuiz], (quiz) => ({
     questionId: quiz[0]?.questionId || "",
@@ -17,14 +18,26 @@ const Comment = () => {
   const { questionId: question } = useSelector(quizQuestion);
 
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Frontend validation: check if text is empty
+    if (!text.trim()) {
+      setError("Comment cannot be empty");
+      return; // Don't proceed with form submission if validation fails
+    }
+
     setLoading(true);
+    setError(""); // Clear error message if text is valid
+
     const res = await dispatch(addComment({ question, text }));
     setLoading(false);
-    if (res.type === "addComment/fulfilled")
+
+    if (res.type === "addComment/fulfilled") {
       dispatch(getComments({ question }));
+    }
 
     setText("");
   };
@@ -37,6 +50,9 @@ const Comment = () => {
         onChange={(e) => setText(e.target.value)}
         placeholder="Submit a new comment..."
       />
+      {/* Display error message if there is one */}
+      {error && <p className="mb-1 text-sm text-red-500">{error}</p>}
+
       <div className="flex">
         <button
           disabled={isLoading}

@@ -24,6 +24,7 @@ const ShowComment = () => {
 
   const [replyText, setReplyText] = useState({});
   const [loadingState, setLoadingState] = useState({});
+  const [error, setError] = useState({}); // Error state for reply validation
 
   const handleTextChange = (commentId, e) => {
     setReplyText((prevState) => ({
@@ -95,7 +96,17 @@ const ShowComment = () => {
   const handleSubmit = async (commentId, e) => {
     e.preventDefault();
 
+    // Validate reply text is not empty
+    if (!replyText[commentId]?.trim()) {
+      setError((prevState) => ({
+        ...prevState,
+        [commentId]: "Reply cannot be empty",
+      }));
+      return;
+    }
+
     setLoadingState((prevState) => ({ ...prevState, [commentId]: true }));
+    setError((prevState) => ({ ...prevState, [commentId]: "" })); // Clear error if valid
 
     const res = await dispatch(
       addComment({ commentId, text: replyText[commentId], question })
@@ -114,7 +125,6 @@ const ShowComment = () => {
         questionComments.length > 0 &&
         questionComments.map((comment, index) => (
           <div key={comment._id || index}>
-            {/* Main Comment */}
             <div className="pl-2.5 border-l-4 border-teal-400">
               <p>{comment?.text || ""}</p>
             </div>
@@ -179,6 +189,9 @@ const ShowComment = () => {
                   className="w-full px-2 py-1.5 h-[62.4px] border text-sm border-[#DEE2E6] rounded focus:ring-4 focus:outline-none"
                   placeholder="Reply to this comment..."
                 ></textarea>
+                {error[comment?._id] && (
+                  <p className="text-sm text-red-500 ">{error[comment?._id]}</p>
+                )}
                 <button
                   type="submit"
                   className="px-4 py-1.5 text-sm text-black bg-yellow-400 rounded-md mt-2"
