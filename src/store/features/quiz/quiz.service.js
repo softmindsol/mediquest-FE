@@ -118,7 +118,6 @@ export const getRemainingTime = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.get(`/quiz/${id}/remaining-time`);
-      console.log(response.data);
 
       return response.data.data;
     } catch (error) {

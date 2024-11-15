@@ -41,11 +41,8 @@ const Improvements = ({
   };
 
   const handleAddSuggestion = (suggestion) => {
-    if (!suggestionText.includes(suggestion)) {
-      setSuggestionText((prevText) =>
-        prevText ? `${prevText}, ${suggestion}` : suggestion
-      );
-    }
+    // Allow only one suggestion at a time
+    setSuggestionText(suggestion);
   };
 
   return (
@@ -70,9 +67,9 @@ const Improvements = ({
                 key={index}
                 type="button"
                 onClick={() => handleAddSuggestion(suggestion)}
-                disabled={suggestionText.includes(suggestion)}
+                disabled={suggestionText === suggestion} // Disable the button if the suggestion is already selected
                 className={`bg-white text-[#11caf0] px-4 py-2 border border-[#11caf0] rounded-md ${
-                  suggestionText.includes(suggestion)
+                  suggestionText === suggestion
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
