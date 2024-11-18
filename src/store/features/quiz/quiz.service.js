@@ -182,7 +182,6 @@ export const userPerformance = createAsyncThunk(
     try {
       const response = await axiosWithToken.get(`/quiz/performance/${year}`);
 
-      console.log("🚀 ~ response:", response.data);
       return response.data;
     } catch (error) {
       if (error) {

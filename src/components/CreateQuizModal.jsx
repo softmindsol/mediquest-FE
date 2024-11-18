@@ -13,7 +13,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
     (state) => state?.user?.selectedUser
   );
 
-  console.log(values.subject, "--values.subject");
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState({
@@ -21,7 +20,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
     startLoading: false,
   });
 
-  console.log(values, "--values");
   const {
     name = "",
     mode = "",
@@ -34,8 +32,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
 
   const handleCreateQuiz = async (type) => {
     try {
-      console.log("working..");
-
       let res;
       if (type === "add") {
         setLoading({ ...loading, addLoading: true });
@@ -44,7 +40,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
           subjectQuestions,
           values.questionCount
         );
-        console.log("🚀 ~ handleCreateQuiz ~ subject:", subject);
 
         if (subject.length === 0) {
           setLoading(false);
@@ -70,7 +65,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
           subjectQuestions,
           values.questionCount
         );
-        console.log("🚀 ~ handleCreateQuiz ~ subject:", subject);
 
         if (subject.length === 0) {
           setLoading(false);
