@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createQuiz,
+  endQuiz,
   getQuizQuesitons,
+  getSummary,
   submitQuiz,
   userPerformance,
 } from "./quiz.service";
@@ -76,12 +78,37 @@ const quizSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(userPerformance.fulfilled, (state, action) => {
-          state.performance = action.payload.data;
+        state.performance = action.payload.data;
       })
       .addCase(userPerformance.rejected, (state, action) => {
         state.error = action.payload;
+      })
+      .addCase(getSummary.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getSummary.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.quiz = [];
+      })
+      .addCase(getSummary.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+        state.quiz = [];
+      })
+      .addCase(endQuiz.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(endQuiz.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.quiz = [];
+      })
+      .addCase(endQuiz.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+        state.quiz = [];
       });
   },
 });
 
 export default quizSlice.reducer;
+

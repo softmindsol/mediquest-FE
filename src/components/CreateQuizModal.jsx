@@ -5,28 +5,88 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createQuiz } from "../store/features/quiz/quiz.service";
 import Loader from "./Loader";
+import distributeQuestions from "../utils/distribution";
 
 const CreateQuizModal = ({ isOpen, closeModal, values }) => {
   const dispatch = useDispatch();
+  const { subjectQuestions = [] } = useSelector(
+    (state) => state?.user?.selectedUser
+  );
+
+  console.log(values.subject, "--values.subject");
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState({
     addLoading: false,
     startLoading: false,
   });
+
+  console.log(values, "--values");
+  const {
+    name = "",
+    mode = "",
+    questionCount = 0,
+    university = "",
+    timerDuration = 1,
+  } = values || {};
+
   // const { isLoading = false } = useSelector((state) => state?.quiz || {});
 
   const handleCreateQuiz = async (type) => {
     try {
+      console.log("working..");
+
       let res;
       if (type === "add") {
-        const data = { ...values, test: true };
-
         setLoading({ ...loading, addLoading: true });
-        const res = await dispatch(createQuiz(data));
+        const subject = distributeQuestions(
+          values.subject,
+          subjectQuestions,
+          values.questionCount
+        );
+        console.log("🚀 ~ handleCreateQuiz ~ subject:", subject);
+
+        if (subject.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        res = await dispatch(
+          createQuiz({
+            subject,
+            name,
+            mode,
+            questionCount,
+            university,
+            test: true,
+            timerDuration: timerDuration,
+          })
+        );
         setLoading({ ...loading, addLoading: false });
       } else {
         setLoading({ ...loading, startLoading: true });
-        res = await dispatch(createQuiz(values));
+        const subject = distributeQuestions(
+          values.subject,
+          subjectQuestions,
+          values.questionCount
+        );
+        console.log("🚀 ~ handleCreateQuiz ~ subject:", subject);
+
+        if (subject.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        res = await dispatch(
+          createQuiz({
+            subject,
+            name,
+            mode,
+            questionCount,
+            university,
+            timerDuration,
+          })
+        );
         setLoading({ ...loading, startLoading: false });
       }
 

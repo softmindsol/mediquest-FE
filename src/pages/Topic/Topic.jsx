@@ -33,6 +33,7 @@ const Topic = () => {
     mode: "Tutor",
     questionCount: 10,
     university: user?.university || "",
+    timerDuration: "",
   });
   const [formErrors, setFormErrors] = useState({
     name: "",
@@ -41,7 +42,6 @@ const Topic = () => {
   });
 
   const openModal = () => {
-    // Validate before opening modal
     const errors = validateForm();
     if (Object.keys(errors).length === 0) {
       setModalOpen(true);
@@ -79,11 +79,21 @@ const Topic = () => {
       errors.subjects =
         subjectQuestions.length > 0
           ? "Please select at least one subject"
-          : "You can create quiz because subject is not available for your year";
+          : "You cannot create a quiz because subjects are not available for your year";
     }
 
     if (selectedCategories.length === 0) {
       errors.university = "Please select at least one university";
+    }
+
+    if (
+      formdata.mode === "Timed" &&
+      (!formdata.timerDuration ||
+        formdata.timerDuration < 1 ||
+        formdata.timerDuration > 90)
+    ) {
+      errors.timerDuration =
+        "Please enter a valid time between 1 and 90 minutes";
     }
 
     return errors;
@@ -127,13 +137,11 @@ const Topic = () => {
     const updatedSubcategories = { ...selectedLeftSubcategories };
 
     if (selectedLeftCategories.includes(index)) {
-      // Uncheck category and all its subcategories
       setSelectedLeftCategories(
         selectedLeftCategories.filter((i) => i !== index)
       );
       delete updatedSubcategories[index];
     } else {
-      // Check category and all its subcategories
       setSelectedLeftCategories([...selectedLeftCategories, index]);
       updatedSubcategories[index] = category.schools.map((sub) => sub.school);
     }
@@ -150,12 +158,10 @@ const Topic = () => {
     }
 
     if (updatedSubcategories[categoryIndex]?.includes(subcategoryName)) {
-      // Remove subcategory
       updatedSubcategories[categoryIndex] = updatedSubcategories[
         categoryIndex
       ].filter((name) => name !== subcategoryName);
 
-      // If no subcategories remain, uncheck the parent category
       if (updatedSubcategories[categoryIndex].length === 0) {
         delete updatedSubcategories[categoryIndex];
         setSelectedLeftCategories(
@@ -163,7 +169,6 @@ const Topic = () => {
         );
       }
     } else {
-      // Add subcategory and ensure parent category is checked
       updatedSubcategories[categoryIndex].push(subcategoryName);
       if (!selectedLeftCategories.includes(categoryIndex)) {
         setSelectedLeftCategories([...selectedLeftCategories, categoryIndex]);
@@ -195,6 +200,10 @@ const Topic = () => {
     subject: subjects,
   };
 
+  if (formdata.mode === "Timed") {
+    values.timerDuration = formdata.timerDuration;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validateForm();
@@ -218,6 +227,16 @@ const Topic = () => {
     setFormData({ ...formdata, name: value });
     if (value.trim()) {
       setFormErrors((prev) => ({ ...prev, name: "" }));
+    }
+  };
+
+  const handleTimerDurationChange = (e) => {
+    const value = e.target.value;
+
+    if (value === "") {
+      setFormData({ ...formdata, timerDuration: "" });
+    } else if (value >= 1 && value <= 90) {
+      setFormData({ ...formdata, timerDuration: value });
     }
   };
 
@@ -281,6 +300,34 @@ const Topic = () => {
                     <option value="40">40</option>
                     <option value="50">50</option>
                   </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="time"
+                    className="block text-[14px] font-semibold text-[#111827]"
+                  >
+                    Time (minutes)
+                  </label>
+                  <input
+                    type="number"
+                    disabled={userType || values.mode !== "Timed"} // Disable for free users
+                    placeholder="Enter time in minutes"
+                    value={formdata.timerDuration}
+                    min={1}
+                    max={90}
+                    name="timerDuration"
+                    onChange={handleTimerDurationChange} // Separate handler for timer duration
+                    className={`mt-1 px-4 py-2 text-[#ADB5BD] text-title-p w-62.5 focus:outline-none rounded-[4px] border ${
+                      formErrors.timerDuration
+                        ? "border-red-500"
+                        : "border-[#CED4DA]"
+                    } placeholder-secondary`}
+                  />
+                  {formErrors.timerDuration && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {formErrors.timerDuration}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center justify-end mb-2">

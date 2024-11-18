@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
 import {
   Link,
-  Navigate,
   useNavigate,
   useParams,
   useSearchParams,
@@ -20,7 +19,7 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import Timer from "./Timer";
-import GenericDrawer from "./generic-drawer";
+
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz || []);
 
@@ -40,7 +39,7 @@ const QuestionTemplate = () => {
   const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
   const [image, setImage] = useState("");
-  const [selectedOption, setSelectOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]); // Array to hold selected options
 
   const calculateScore = (
     (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
@@ -55,8 +54,6 @@ const QuestionTemplate = () => {
         setImage(res.payload.questions[0].image_url);
         setNextClicked(false);
         setPrevClicked(false);
-
-        // setTimer(res.payload.question[0].startTime);
       }
     };
     fetchQuestions();
@@ -64,34 +61,35 @@ const QuestionTemplate = () => {
 
   const handleNext = () => {
     setNextClicked(true);
-
     if (pageNo < quizDetail?.totalQuestions) {
       setParams({ pageNo: pageNo + 1 });
-      setSelectOption(null);
+      setSelectedOptions([]); // Clear selected options for next question
       setError("");
     }
   };
 
   const handlePrev = () => {
     setPrevClicked(true);
-
     if (pageNo > 1) {
       setParams({ pageNo: pageNo - 1 });
-      setSelectOption(null);
+      setSelectedOptions([]); // Clear selected options for previous question
       setError("");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedOption) {
+    if (selectedOptions.length === 0) {
       setError("Please select at least one option.");
+    } else if (selectedOptions.length > 2) {
+      setError("You can select a maximum of two options.");
     } else {
       const values = {
-        selectedOption,
+        selectedOptions,
         quizId: id,
         questionIndex: pageNo,
       };
+      console.log(values);
 
       const res = await dispatch(submitQuiz(values));
       if (res.type === "submitQuiz/fulfilled") {
@@ -110,7 +108,6 @@ const QuestionTemplate = () => {
   const handleEndQuiz = async () => {
     if (quizDetail?.mode === "Timed") {
       const res = await dispatch(endQuiz({ id }));
-
       if (res.type === "endQuiz/fulfilled") {
         navigate("/");
       }
@@ -120,22 +117,28 @@ const QuestionTemplate = () => {
   };
 
   const handleOptionChange = (index) => {
-    const selectedValue = String.fromCharCode(65 + index);
-    setSelectOption(selectedValue);
+    const optionValue = String.fromCharCode(65 + index); // 'A', 'B', 'C', etc.
+    if (selectedOptions.includes(optionValue)) {
+      // If option is already selected, remove it
+      setSelectedOptions(
+        selectedOptions.filter((option) => option !== optionValue)
+      );
+    } else if (selectedOptions.length < 2) {
+      // If less than 2 options are selected, add the new option
+      setSelectedOptions([...selectedOptions, optionValue]);
+    }
   };
 
   return (
     <div className="bg-[#ECEFF7] min-h-screen">
       <div className="flex items-center justify-between py-4 m-auto text-center bg-white shadow px-7">
         <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
-        {/* <Link to="/"> */}
         <p
           onClick={handleEndQuiz}
           className="text-title-p cursor-pointer font-semibold text-[#FF3B30]"
         >
           End Quiz
         </p>
-        {/* </Link> */}
       </div>
       <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
         <div className="flex flex-wrap justify-between lg:flex-nowrap">
@@ -171,6 +174,11 @@ const QuestionTemplate = () => {
               </ul>
             </div>
           </div>
+          {quizDetail?.mode === "Timed" && (
+            <div className="lg:w-[12%] lg:hidden block w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+              <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
+            </div>
+          )}
 
           <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
             <div className="flex justify-between mb-10">
@@ -220,7 +228,7 @@ const QuestionTemplate = () => {
               )}
               <div className="mt-auto space-y-6 lg:col-span-2">
                 <h3 className="mb-2 font-semibold text-md">
-                  Select one of the following options:
+                  Select up to two options:
                 </h3>
                 <div className="bg-white mx-6 rounded-lg border border-[#E6E9EC]">
                   {quizQuestions?.options?.map(
@@ -233,17 +241,16 @@ const QuestionTemplate = () => {
                           <div className="flex items-center">
                             <input
                               type="checkbox"
+                              className="mr-3 w-[16px] h-[16px] cursor-pointer"
+                              checked={selectedOptions.includes(
+                                String.fromCharCode(65 + index)
+                              )}
+                              onChange={() => handleOptionChange(index)}
                               disabled={
                                 !quizQuestions?.hasAnswered
                                   ? !quizQuestions?.hasAnswered
                                   : false
                               }
-                              className="mr-3 w-[16px] h-[16px] cursor-pointer"
-                              checked={
-                                selectedOption ===
-                                String.fromCharCode(65 + index)
-                              }
-                              onChange={() => handleOptionChange(index)}
                             />
                             <span
                               className="text-[14px] text-primary"
@@ -288,13 +295,12 @@ const QuestionTemplate = () => {
 
           <div className="lg:w-[12%] w-fit bg-white rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start"></div>
           {quizDetail?.mode === "Timed" && (
-            <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+            <div className="lg:w-[12%] hidden lg:block w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
               <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
             </div>
           )}
         </div>
       </div>
-      <GenericDrawer className="w-3/4 md:w-[29rem]  lg:w-[30rem] xl:w-[34rem]" />
     </div>
   );
 };
