@@ -19,6 +19,7 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import Timer from "./Timer";
+import Loader from "./Loader";
 
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz || []);
@@ -29,6 +30,7 @@ const QuestionTemplate = () => {
 
   const quizQuestions = state[0];
   const quizDetail = state[1];
+  const [isSubmitLoading, setSubmitLoading] = useState(false);
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -63,7 +65,7 @@ const QuestionTemplate = () => {
     setNextClicked(true);
     if (pageNo < quizDetail?.totalQuestions) {
       setParams({ pageNo: pageNo + 1 });
-      setSelectedOptions([]); // Clear selected options for next question
+      setSelectedOptions([]);
       setError("");
     }
   };
@@ -89,9 +91,10 @@ const QuestionTemplate = () => {
         quizId: id,
         questionIndex: pageNo,
       };
-      console.log(values);
 
+      setSubmitLoading(true);
       const res = await dispatch(submitQuiz(values));
+      setSubmitLoading(false);
       if (res.type === "submitQuiz/fulfilled") {
         if (pageNo === quizDetail?.totalQuestions) {
           setNextClicked(true);
@@ -281,11 +284,20 @@ const QuestionTemplate = () => {
                           ? !quizQuestions?.hasAnswered
                           : false || isLoading
                       }
-                      text="Submit answer"
+                      // text="Submit answer"
                       type="submit"
                       rightIcon={SlArrowRight}
-                      className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6"
-                    />
+                      className="bg-[#3A57E8] flex justify-center items-center text-title-p rounded-[4px] text-white font-normal py-2 px-6"
+                    >
+                      {isSubmitLoading ? (
+                        <>
+                          <span className="">Loading...</span>
+                          <Loader className="w-4 h-4 border-white border-solid rounded-full animate-spin-1.5 border-t-transparent border-2" />
+                        </>
+                      ) : (
+                        "Submit answer"
+                      )}
+                    </Button>
                   )}
                 </div>
               </div>
