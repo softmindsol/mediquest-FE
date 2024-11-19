@@ -1,182 +1,209 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { useSelector } from "react-redux";
 
-// Function to calculate normal distribution (bell curve)
-const normalDistribution = (x) => {
-  return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-(x * x) / 2);
-};
+const BellCurveGraph = () => {
+  const { grades: allGrades = [], userGrade = "" } = useSelector(
+    (state) => state?.quiz?.performance || {}
+  );
 
-const BellCurve = ({
-  userScore = 0,
-  percentile = 0,
-  performanceBands = {},
-  totalUsers = 0,
-  allUser = 0,
-}) => {
-  // Generate data points for the bell curve
-  const generateData = () => {
-    const data = [];
-    for (let x = -4; x <= 4; x += 0.1) {
-      const y = normalDistribution(x);
-      data.push([x, y]);
+  const [hovered, setHovered] = useState(false);
+  const [hoveredDot, setHoveredDot] = useState(false);
+
+  const graphData = useMemo(() => {
+    const userGradeNumber = Number(userGrade);
+    if (userGradeNumber === 0) {
+      return null;
     }
-    return data;
-  };
 
-  const bellCurveData = generateData();
+    const validGrades = [
+      ...allGrades.map(Number).filter((g) => !isNaN(g)),
+      userGradeNumber,
+    ];
 
-  // Zones for the performance bands
-  const zones = [
-    { x: -3, percentage: `${performanceBands["-3"]}%` },
-    { x: -2, percentage: `${performanceBands["-2"]}%` },
-    { x: -1, percentage: `${performanceBands["-1"]}%` },
-    { x: 0, percentage: `${performanceBands["mean"]}%` },
-    { x: 1, percentage: `${performanceBands["+1"]}%` },
-    { x: 2, percentage: `${performanceBands["+2"]}%` },
-    { x: 3, percentage: `${performanceBands["+3"]}%` },
-  ];
+    if (!validGrades.length || isNaN(userGradeNumber)) {
+      return null;
+    }
+
+    const mean =
+      validGrades.reduce((sum, grade) => sum + grade, 0) / validGrades.length;
+    const variance =
+      validGrades.reduce((sum, grade) => sum + Math.pow(grade - mean, 2), 0) /
+      validGrades.length;
+    const stdDev = Math.sqrt(variance);
+
+    if (stdDev === 0) {
+      return null;
+    }
+
+    const zScore = (userGradeNumber - mean) / stdDev;
+
+    const xPosition = mean + zScore * stdDev;
+
+    const percentile = normalCDF(zScore) * 100;
+    const betterThanUsers =
+      (validGrades.filter((grade) => grade < userGradeNumber).length /
+        validGrades.length) *
+      100;
+
+    const points = [];
+    const min = mean - 4 * stdDev;
+    const max = mean + 4 * stdDev;
+
+    for (let x = min; x <= max; x += stdDev / 10) {
+      points.push([x, normalPDF(x, mean, stdDev)]);
+    }
+
+    const userGradeY = normalPDF(userGradeNumber, mean, stdDev);
+
+    return {
+      points,
+      mean,
+      stdDev,
+      userGradeNumber,
+      zScore,
+      percentile,
+      betterThanUsers,
+      userGradeY,
+      min,
+      max,
+      xPosition,
+    };
+  }, [allGrades, userGrade]);
+
+  if (!graphData) {
+    return <div>Unable to generate bell curve due to insufficient data.</div>;
+  }
 
   const options = {
     chart: {
-      type: "area",
-      zoomType: "x",
-      backgroundColor: "transparent",
+      type: "areaspline",
+      events: {
+        mouseOver: () => {
+          setHovered(true);
+        },
+        mouseOut: () => {
+          setHovered(false);
+        },
+      },
     },
     title: {
-      text: "",
+      text: "Percentile Distribution Bell Curve",
     },
     xAxis: {
-      min: -4,
-      max: 4,
-      tickPositions: [-3, -2, -1, 0, 1, 2, 3],
+      title: { text: "Grade" },
+      min: graphData.min,
+      max: graphData.max,
       plotLines: [
-        {
-          color: "red",
-          dashStyle: "solid",
-          value: userScore,
-          width: 2,
-          zIndex: 5,
-        },
+        ...(hoveredDot
+          ? [
+              {
+                color: "red",
+                width: 3,
+                value: graphData.xPosition,
+                dashStyle: "Dash",
+                label: {
+                  text: `Percentile: ${graphData.percentile.toFixed(2)}%`,
+                  align: "center",
+                  verticalAlign: "middle",
+                  style: { color: "red", fontWeight: "bold" },
+                },
+              },
+            ]
+          : []),
       ],
-      gridLineWidth: 1,
-      gridLineDashStyle: "Solid",
-      gridLineColor: "#E0E0E0",
-      minPadding: 0.02,
-      maxPadding: 0.02,
-      endOnTick: false,
-      startOnTick: false,
-      labels: {
-        formatter: function () {
-          const zone = zones.find((zone) => zone?.x === this?.value);
-          return zone ? `${this.value}σ<br/>${zone?.percentage || ""}` : null;
-        },
-        style: {
-          color: "#414E79",
-          fontSize: "12px",
-          textAlign: "center",
-        },
-      },
     },
     yAxis: {
-      title: {
-        text: "",
-      },
-      labels: {
-        enabled: false,
-      },
-      gridLineWidth: 0,
+      title: { text: "Density" },
     },
-    plotOptions: {
-      area: {
-        marker: {
-          enabled: false,
-        },
-        zones: [
-          { value: -3, color: "#E2E4EC" },
-          { value: -2, color: "#B6BED4" },
-          { value: -1, color: "#62719C" },
-          { value: 0, color: "#414E79" },
-          { value: 1, color: "#414E79" },
-          { value: 2, color: "#62719C" },
-          { value: 3, color: "#B6BED4" },
-          { value: 4, color: "#E2E4EC" },
-        ],
-        zoneAxis: "x",
-      },
-    },
-    annotations: [
-      {
-        labels: zones.map((zone) => ({
-          point: { x: zone?.x || "", y: 0.05 }, // Adjust this `y` value to position the percentage label in the grid
-          text: zone?.percentage || "",
-          style: {
-            color: "#414E79",
-            fontSize: "12px",
-            fontWeight: "bold", // Optional: Make text bold
-          },
-        })),
-      },
-      // Add the percentile marker to the annotations
-      {
-        labels: [
-          {
-            point: { x: percentile, y: normalDistribution(percentile) },
-            text: `Your Percentile: ${percentile?.toFixed(2) || 0}%`,
-            style: {
-              color: "red",
-              fontSize: "14px",
-              fontWeight: "bold",
-              backgroundColor: "white",
-              padding: "2px 5px",
-              borderRadius: "5px",
-            },
-            align: "center",
-            verticalAlign: "bottom",
-            x: 0, // Adjust positioning to the right
-            y: 15, // Adjust vertical position if needed
-          },
-        ],
-      },
-    ],
     series: [
       {
-        name: "Normal Distribution",
-        data: bellCurveData,
-        color: "#414E79",
-        fillOpacity: 0.8,
-        lineWidth: 1,
-        zIndex: 1,
-      },
-      {
-        type: "scatter",
-        name: "Your Score",
-        data: [[percentile, normalDistribution(percentile)]],
-        color: "red",
-        marker: {
-          radius: 6,
-          symbol: "circle",
+        name: "Grade Distribution",
+        data: graphData.points,
+        marker: { enabled: false },
+        zones: [
+          {
+            value: 50,
+            color: "#1e90ff",
+            fillColor: "rgba(30, 144, 255, 0.3)",
+          },
+          {
+            value: 100,
+            color: "#32cd32",
+            fillColor: "rgba(50, 205, 50, 0.3)",
+          },
+          {
+            color: "#ff4500",
+            fillColor: "rgba(255, 69, 0, 0.3)",
+          },
+        ],
+        tooltip: {
+          pointFormat: "Density: {point.y:.4f}",
         },
-        zIndex: 2,
+      },
+
+      {
+        name: "User Grade",
+        type: "scatter",
+        data: [[graphData.userGradeNumber, graphData.userGradeY]],
+        marker: {
+          symbol: "circle",
+          radius: 6,
+          fillColor: "red",
+        },
+        tooltip: {
+          pointFormat: `User Grade: {point.x:.2f}<br>Density: {point.y:.4f}`,
+        },
+        events: {
+          mouseOver: () => {
+            setHoveredDot(true);
+          },
+          mouseOut: () => {
+            setHoveredDot(false);
+          },
+        },
       },
     ],
+    tooltip: {
+      enabled: false,
+      headerFormat: "",
+      pointFormat: "Grade: {point.x:.2f}<br>Density: {point.y:.4f}",
+    },
   };
 
   return (
-    <div className="w-full max-w-4xl p-4 mx-auto">
-      <div className="p-4 bg-white rounded-lg shadow-sm">
-        <HighchartsReact highcharts={Highcharts} options={options} />
-
-        {percentile && (
-          <p className="mt-4 text-sm text-center text-gray-600">
-            You are performing better than{" "}
-            {(((totalUsers - allUser) / totalUsers) * 100)?.toFixed(1)}% of
-            users in your year
-          </p>
-        )}
+    <div className="w-full max-w-4xl p-4">
+      <div className="p-4 mb-4 bg-gray-100 rounded">
+        <p>
+          You are better than {graphData.betterThanUsers.toFixed(2)}% of the
+          class
+        </p>
       </div>
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 };
 
-export default BellCurve;
+function normalPDF(x, mean, stdDev) {
+  return (
+    (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+    Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2))
+  );
+}
+
+function normalCDF(z) {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989422804 * Math.exp((-z * z) / 2);
+  const prob =
+    d *
+    t *
+    (0.31938153 +
+      t *
+        (-0.356563782 +
+          t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+
+  return z > 0 ? 1 - prob : prob;
+}
+
+export default BellCurveGraph;

@@ -13,7 +13,10 @@ const initialState = {
   quiz: [],
   scoreboard: [],
   error: null,
-  performance: [],
+  performance: {
+    grades: [],
+    userGrade: "",
+  },
 };
 
 const quizSlice = createSlice({
@@ -78,7 +81,8 @@ const quizSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(userPerformance.fulfilled, (state, action) => {
-        state.performance = action.payload.data;
+        state.performance.grades = action.payload.data.grades;
+        state.performance.userGrade = action.payload.data.userGrade;
       })
       .addCase(userPerformance.rejected, (state, action) => {
         state.error = action.payload;

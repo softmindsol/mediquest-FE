@@ -178,9 +178,13 @@ export const userSuccess = createAsyncThunk(
 
 export const userPerformance = createAsyncThunk(
   "userPerformance",
-  async ({ year }, { rejectWithValue }) => {
+  async ({ year, timePeriod }, { rejectWithValue }) => {
     try {
-      const response = await axiosWithToken.get(`/quiz/performance/${year}`);
+      const response = await axiosWithToken.get(`/quiz/grades/${year}`, {
+        params: {
+          timePeriod,
+        },
+      });
 
       return response.data;
     } catch (error) {

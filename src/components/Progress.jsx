@@ -10,19 +10,13 @@ import BellCurveGraph from "./charts/BellCurveGraph";
 
 const Progress = () => {
   const dispatch = useDispatch();
-  const { performance = [] } = useSelector((state) => state?.quiz || {});
+ 
+
   const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
 
   const [successData, setSuccessData] = useState("");
-  const [selectedOption, setSelectedOption] = useState("This week");
-
-  const options = [
-    "This week",
-    "Last week",
-    "This month",
-    "Last month",
-    "This Semester",
-  ];
+  const [selectedOption, setSelectedOption] = useState("thisWeek");
+  const options = ["thisWeek", "lastWeek", "thisMonth", "lastMonth"];
 
   useEffect(() => {
     const getUserSuccessRate = async () => {
@@ -41,63 +35,22 @@ const Progress = () => {
     const getPerformance = async () => {
       if (user?.year) {
         const response = await dispatch(
-          userPerformance({ year: user?.year || "" })
+          userPerformance({
+            year: user?.year || "",
+            timePeriod: selectedOption,
+          })
         );
       }
     };
 
     getPerformance();
-  }, [user?.year]);
+  }, [user?.year, selectedOption]);
 
   // Handle dropdown option selection
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false); // Close dropdown after selecting an option
   };
-
-  // Dummy data for different time periods (You can replace this with actual API data)
-  const dataForTimePeriods = {
-    "This week": {
-      seriesData: [
-        { name: "Your Performance", data: [45, 60, 50, 70, 80, 60, 75] },
-        { name: "Year 1 Students", data: [50, 65, 55, 75, 85, 65, 78] },
-      ],
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    "Last week": {
-      seriesData: [
-        { name: "Your Performance", data: [50, 65, 55, 72, 82, 68, 80] },
-        { name: "Year 1 Students", data: [55, 70, 60, 78, 88, 72, 80] },
-      ],
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    "This month": {
-      seriesData: [
-        { name: "Your Performance", data: [60, 70, 65, 80, 90, 85, 95] },
-        { name: "Year 1 Students", data: [60, 72, 68, 85, 92, 88, 90] },
-      ],
-      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    },
-    "Last month": {
-      seriesData: [
-        { name: "Your Performance", data: [55, 65, 70, 75] },
-        { name: "Year 1 Students", data: [60, 72, 75, 78] },
-      ],
-      categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    },
-    "This Semester": {
-      seriesData: [
-        { name: "Your Performance", data: [60, 70, 80, 85, 90] },
-        { name: "Year 1 Students", data: [65, 75, 80, 88, 92] },
-      ],
-      categories: ["Sept", "Oct", "Nov", "Dec", "Jan"],
-    },
-  };
-
-  // Get the data based on selected option
-  const { seriesData, categories } = dataForTimePeriods[selectedOption];
-
-  const colors = ["#FF5733", "#3498DB"]; // Example colors for the chart
 
   return (
     <>
@@ -149,17 +102,7 @@ const Progress = () => {
               Performance compared to Year 1 students
             </h3>
 
-            <BellCurveGraph
-              userScore={performance.userScore}
-              meanScore={performance.meanScore}
-              standardDeviation={performance.standardDeviation}
-              zScore={performance.zScore}
-              percentile={performance.percentile}
-              performanceBands={performance.performanceBands}
-              totalUsers={Number(performance.totalUsers)}
-              allUser={Number(performance.betterThanUsers)}
-              gaussianCurve={performance.gaussianCurve}
-            />
+            <BellCurveGraph />
           </div>
         </div>
       </div>
