@@ -9,6 +9,5 @@ function formatTime(ms) {
 
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
-console.log(formatTime(5199645));
 
 export default formatTime;

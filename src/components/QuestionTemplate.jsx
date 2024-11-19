@@ -169,7 +169,7 @@ const QuestionTemplate = () => {
                     </li>
                   ))
                 ) : (
-                  <span className="py-4"> Start the quiz</span>
+                  <span className="py-4">Start the quiz</span>
                 )}
               </ul>
             </div>
@@ -241,7 +241,7 @@ const QuestionTemplate = () => {
                           <div className="flex items-center">
                             <input
                               type="checkbox"
-                              className="mr-3 w-[16px] h-[16px] cursor-pointer"
+                              className="mr-3 w-[16px] h-[16px] text-[#838f9b] cursor-pointer"
                               checked={selectedOptions.includes(
                                 String.fromCharCode(65 + index)
                               )}

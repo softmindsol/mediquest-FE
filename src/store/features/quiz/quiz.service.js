@@ -133,7 +133,6 @@ export const endQuiz = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axiosWithToken.patch(`/quiz/${id}/end`);
-      console.log(response.data);
 
       return response.data.data;
     } catch (error) {

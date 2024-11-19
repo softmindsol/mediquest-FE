@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { IoCloseSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { useDrawer } from "../../context/drawer/index";
+import { FaRegCommentDots } from "react-icons/fa";
 const GenericDrawer = ({ className }) => {
   const drawer = useDrawer();
   const { comments = {} } = useSelector((state) => state?.discussion || {});
@@ -27,6 +28,7 @@ const GenericDrawer = ({ className }) => {
         <section>
           <div className="flex items-center justify-between px-4 pt-4">
             <div className="flex items-center  text-lg font-bold text-[#212529]">
+              <FaRegCommentDots className="mr-1 opacity-90" size={25} />
               {`Discussion(${comments?.total || 0})`}
             </div>
             <button

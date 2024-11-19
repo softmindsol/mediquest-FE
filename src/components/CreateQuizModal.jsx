@@ -91,10 +91,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
       }
 
       closeModal();
-      toast.success(res.payload.message);
-    } catch (error) {
-      // toast.error("Failed to create quiz");
-    }
+    } catch (error) {}
   };
 
   if (!isOpen) return <></>;
@@ -186,9 +183,16 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
             disabled={loading.addLoading}
             type="button"
             onClick={() => handleCreateQuiz("add")}
-            className="text-[#6B7280] text-[13px] font-bold"
+            className="text-[#6B7280] flex border hover:border-[#007AFF] border-[#ADB5BD] items-center justify-center hover:text-white hover:bg-[#007AFF] shadow-md p-2  rounded-md text-[13px] font-bold"
           >
-            Add to my Tests
+            {loading.addLoading ? (
+              <>
+                <span className="">Loading...</span>
+                <Loader className="w-4 h-4 border-white border-solid rounded-full animate-spin-1.5 border-t-transparent border-2" />
+              </>
+            ) : (
+              "Add to my Tests"
+            )}{" "}
           </button>
 
           <button

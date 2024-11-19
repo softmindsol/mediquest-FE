@@ -252,9 +252,9 @@ const Topic = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-9">
+          <div className="space-y-5 lg:col-span-2">
             <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg">
-              <div className="flex flex-wrap justify-start gap-3 lg:gap-15">
+              <div className="flex flex-wrap justify-start gap-1 lg:gap-7">
                 <div>
                   <label
                     htmlFor="noOfQuestions"
@@ -267,7 +267,7 @@ const Topic = () => {
                     placeholder="Create a test name"
                     value={formdata.name}
                     onChange={handleQuizNameChange}
-                    className={`mt-1 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border ${
+                    className={`mt-1 px-4 py-2 text-[#838f9b] text-title-p focus:outline-none rounded-[4px] border ${
                       formErrors.name ? "border-red-500" : "border-[#CED4DA]"
                     } placeholder-secondary`}
                   />
@@ -292,7 +292,7 @@ const Topic = () => {
                         questionCount: e.target.value,
                       })
                     }
-                    className="mt-1 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border border-[#CED4DA] placeholder-secondary bg-white w-50"
+                    className="mt-1 px-4 py-2 h-[42px] text-[#838f9b] text-title-p focus:outline-none rounded-[4px] border border-[#CED4DA] placeholder-secondary bg-white w-50"
                   >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -317,7 +317,7 @@ const Topic = () => {
                     max={90}
                     name="timerDuration"
                     onChange={handleTimerDurationChange} // Separate handler for timer duration
-                    className={`mt-1 px-4 py-2 text-[#ADB5BD] text-title-p w-62.5 focus:outline-none rounded-[4px] border ${
+                    className={`mt-1 px-4 py-2 text-[#838f9b] text-title-p w-62.5 focus:outline-none rounded-[4px] border ${
                       formErrors.timerDuration
                         ? "border-red-500"
                         : "border-[#CED4DA]"
@@ -334,7 +334,7 @@ const Topic = () => {
                 <div>
                   <button
                     type="submit"
-                    className="bg-[#007AFF] text-[12px] flex items-center gap-3 font-semibold text-white px-4 py-3 rounded-md"
+                    className="bg-[#007AFF] mt-4 text-[12px] flex items-center gap-3 font-semibold text-white px-4 py-3 rounded-md"
                   >
                     Create New Quiz
                     <SlArrowRight className="text-white" />

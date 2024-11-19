@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
 import Comment from "./Comment";
 import ShowComment from "./ShowComment";
-import { useDispatch, useSelector } from "react-redux";
-import { createSelector } from "reselect";
-import { getComments } from "../../store/features/discussion/discussion.service";
 
 const DiscussionDrawer = () => {
   //   const dispatch = useDispatch();

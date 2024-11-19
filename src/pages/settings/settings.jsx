@@ -72,9 +72,7 @@ const Settings = () => {
                 const res = await dispatch(changePassword(values));
 
                 resetForm();
-              } catch (error) {
-                console.log(error);
-              }
+              } catch (error) {}
             }}
           >
             {() => (

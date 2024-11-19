@@ -172,4 +172,3 @@ const distributedQuestions = distributeQuestions(
   availableSubjects,
   totalQuestions
 );
-console.log(distributedQuestions);
