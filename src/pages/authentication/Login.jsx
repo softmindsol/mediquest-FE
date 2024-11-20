@@ -28,7 +28,7 @@ const encryptPassword = (password) => {
 };
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -114,7 +114,7 @@ const Login = () => {
                       <Field
                         id="password"
                         name="password"
-                        type={showPassword ? "text" : "password"} // Toggle between text and password
+                        type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         className="p-3 text-secondary text-title-p focus:outline-none rounded-[4px] w-full border border-[#CED4DA] placeholder-secondary"
                       />

@@ -207,3 +207,4 @@ function normalCDF(z) {
 }
 
 export default BellCurveGraph;
+  
