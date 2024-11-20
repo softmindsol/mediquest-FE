@@ -14,6 +14,9 @@ import Subscription from "./pages/subscription/Subscription";
 import SummaryPage from "./pages/summary/Summary";
 import Topic from "./pages/Topic/Topic";
 import LandingPage from "./pages/landingpage/LandingPage";
+import ForgotPassword from "./pages/forget-password/ForgotPassword";
+import ResetPassword from "./pages/forget-password/ResetPassword";
+import NewPassword from "./pages/forget-password/NewPassword";
 
 function App() {
   return (
@@ -40,6 +43,31 @@ function App() {
           element={
             <NonProtectedRoute>
               <SignUp />
+            </NonProtectedRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <NonProtectedRoute>
+              <ForgotPassword />
+            </NonProtectedRoute>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <NonProtectedRoute>
+              <ResetPassword />
+            </NonProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/new-password"
+          element={
+            <NonProtectedRoute>
+              <NewPassword />
             </NonProtectedRoute>
           }
         />

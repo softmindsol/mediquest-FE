@@ -13,9 +13,7 @@ const DefaultLayout = ({ children }) => {
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-[#ECEFF7]">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main>
-            <div className="mx-auto  px-3  md:pl-12 md:pr-21 ">
-              {children}
-            </div>
+            <div className="px-3 mx-auto md:pl-12 md:pr-21 ">{children}</div>
           </main>
         </div>
       </div>

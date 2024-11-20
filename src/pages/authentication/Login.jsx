@@ -120,7 +120,7 @@ const Login = () => {
                     </span>
                   </div>
                   <Link
-                    to="/"
+                    to="/forgot-password"
                     className="text-[#0D6EFD] text-title-p  underline"
                   >
                     Forgot password

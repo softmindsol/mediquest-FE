@@ -192,7 +192,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
               </>
             ) : (
               "Add to my Tests"
-            )}{" "}
+            )}
           </button>
 
           <button

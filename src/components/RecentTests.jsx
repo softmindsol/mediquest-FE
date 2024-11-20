@@ -6,11 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { getRecentQuiz, resumeQuiz } from "../store/features/quiz/quiz.service";
 import DotsLoader from "./Loader/dots-loader";
 
-/* 
-`/question/${test?.quizId?._id}?pageNo=${
-  test?.currentQuestionIndex === 0 ? 1 : test?.currentQuestionIndex
-}`;
-*/
 const RecentTests = () => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);

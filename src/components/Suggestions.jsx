@@ -101,7 +101,7 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
     return (
       <button disabled={isLoading}>
         <Icon
-          onClick={onClick}
+        onClick={onClick}
           size={20}
           className={`${colorClass} ${isLoading && "opacity-50"}`}
         />
