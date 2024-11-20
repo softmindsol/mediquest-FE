@@ -1,13 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ResetPassword = () => {
-  //   const location = useLocation();
-  //   const email = location.state?.email || "";
-  //   console.log("🚀 ~ ResetPassword ~ email:", email);
+  const location = useLocation();
+  const email = location.state?.email || "";
 
   return (
     <section className="flex h-[100vh] items-center">
-      <div className="w-[75%] mx-auto rounded-3xl bg-white shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
+      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
         <form className="flex flex-col items-center justify-center w-full py-12">
           <div className="max-w-screen-md w-[70%]">
             <div className="flex flex-col items-center justify-center">
@@ -22,14 +21,14 @@ const ResetPassword = () => {
 
             <div className="flex flex-col items-center justify-center mt-6 font-sans text-gray-700">
               <p>We sent the link to:</p>
-              <p>{"taimoorhussain985@gmail.com"}</p>
+              <p>{email || ""}</p>
             </div>
 
-            <div className="flex justify-center">
-              <Link to="/sign-in">
+            <div className="flex justify-center mt-5">
+              <Link to="/forgot-password">
                 <button
                   type="button"
-                  className="bg-[#007AFF] hover:bg-[rgb(0,94,255)] text-white rounded-[20px]  text-2xl font-semibold mb-8 py-4 px-16 mt-6"
+                  className="bg-[#007AFF] flex  justify-center items-center hover:bg-[rgb(0,94,255)] text-white rounded-[20px] text-lg  md:text-2xl font-semibold h-16 mb-8 md:px-16 px-6 py-2 md:py-4"
                 >
                   Back
                 </button>

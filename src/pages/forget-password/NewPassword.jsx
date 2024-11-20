@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import React Icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { resetPassword } from "../../store/features/auth/auth.service";
+import Loader from "../../components/Loader";
 
 const NewPassword = () => {
   const navigate = useNavigate();
+  const { isLoading = false } = useSelector((state) => state?.user || {});
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -12,7 +17,7 @@ const NewPassword = () => {
   const location = useLocation();
 
   // Retrieve the token from query params
-  const token = new URLSearchParams(location.search).get("token");
+  const token = new URLSearchParams(location.search).get("forgotPasswordToken");
 
   // Password validation functions
   const isLongEnough = password.length >= 8;
@@ -21,7 +26,7 @@ const NewPassword = () => {
   const hasNumber = /[0-9]/.test(password);
   const hasSymbol = /[^a-zA-Z0-9]/.test(password);
 
-  const handlePasswordReset = (e) => {
+  const handlePasswordReset = async (e) => {
     e.preventDefault();
     if (!token) {
       setError(
@@ -46,19 +51,29 @@ const NewPassword = () => {
       return;
     }
 
-    setError(""); // Clear errors for static functionality
-    alert("Static: Password reset successfully!"); // Simulate success for static design
-    navigate("/login");
+    try {
+      const response = await dispatch(
+        resetPassword({ token, password, confirmPassword })
+      );
+
+      if (response.type === "resetPassword/fulfilled") {
+        setPassword("");
+        setConfirmPassword("");
+        navigate("/log-in");
+      }
+    } catch (error) {}
+
+    setError("");
   };
 
   return (
     <section className="flex h-[100vh] items-center">
-      <div className="w-[75%] mx-auto rounded-3xl bg-white shadow-[#F0F0F0]  shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
+      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
         <form
           onSubmit={handlePasswordReset}
           className="flex flex-col items-center justify-center w-full py-12"
         >
-          <div className="max-w-screen-md w-[70%]">
+          <div className="max-w-screen-md w-[85%]">
             <div className="flex flex-col items-center justify-center">
               <h1 className="mb-6 font-semibold text-center text-2xl lg:text-[32px]   text-black-2">
                 Set New Password
@@ -139,7 +154,6 @@ const NewPassword = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}{" "}
-                {/* Use the icons */}
               </button>
             </div>
 
@@ -147,12 +161,17 @@ const NewPassword = () => {
               <p className="text-sm font-medium text-red-600">{error}</p>
             )}
 
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-5">
               <button
+                disabled={isLoading}
                 type="submit"
-                className="bg-[#007AFF] hover:bg-[rgb(0,94,255)] text-white rounded-[20px]  text-2xl font-semibold mb-8 py-4 px-16 mt-6"
+                className="bg-[#007AFF] flex  justify-center items-center hover:bg-[rgb(0,94,255)] text-white rounded-[20px] text-lg  md:text-2xl font-semibold h-16 mb-8 md:px-16 px-6 py-2 md:py-4"
               >
-                Done
+                {isLoading ? (
+                  <Loader className="w-4 h-4 border-white border-solid rounded-full animate-spin-1.5 border-t-transparent border-2" />
+                ) : (
+                  "Send"
+                )}{" "}
               </button>
             </div>
 

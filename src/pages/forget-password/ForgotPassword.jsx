@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-import DefaultLayout from "../../layouts/DefaultLayout";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../store/features/auth/auth.service";
+import Loader from "../../components/Loader";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const { isLoading = false } = useSelector((state) => state?.user || {});
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const validateEmail = (email) => {
-    // Basic email regex for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear any previous errors
-    setMessage(""); // Clear any previous success messages
-
-    console.log(email);
+    setError("");
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
@@ -26,6 +28,10 @@ const ForgotPassword = () => {
     }
 
     try {
+      const response = await dispatch(forgotPassword({ email }));
+      if (response.type === "forgotPassword/fulfilled") {
+        navigate("/reset-password", { state: { email } });
+      }
     } catch (err) {
       setError("Unable to process your request. Please try again later.");
     }
@@ -33,7 +39,7 @@ const ForgotPassword = () => {
 
   return (
     <section className="flex h-[100vh] items-center">
-      <div className="w-[75%] mx-auto rounded-3xl bg-white shadow-[#F0F0F0] shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
+      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white shadow-[#F0F0F0] shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
         <form
           noValidate
           onSubmit={handleSubmit}
@@ -55,7 +61,7 @@ const ForgotPassword = () => {
               <input
                 id="email"
                 type="email"
-                className="mb-2 bg-[#F5F5F5] border-[2px] border-[#D1D5DB] placeholder:text-[#374151] placeholder-[#D1D5DB] h-14 w-full rounded-xl pl-4"
+                className="mb-2 text-sm bg-[#F5F5F5] border-[2px] border-[#D1D5DB] placeholder:text-[#374151] placeholder-[#D1D5DB] h-14 w-full rounded-xl pl-4"
                 placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -65,19 +71,20 @@ const ForgotPassword = () => {
                 <p className="mb-6 text-sm font-medium text-red-500">{error}</p>
               )}
             </div>
-            <div className="flex justify-center mt-3">
+            <div className="flex justify-center mt-5">
               <button
                 type="submit"
-                className="bg-[#007AFF] hover:bg-[rgb(0,94,255)] text-white rounded-[20px]  text-2xl font-semibold h-16 mb-8 px-16 py-4"
+                disabled={isLoading}
+                className="bg-[#007AFF] flex  justify-center items-center hover:bg-[rgb(0,94,255)] text-white rounded-[20px] text-lg  md:text-2xl font-semibold h-16 mb-8 md:px-16 px-6 py-2 md:py-4"
               >
-                Send
+                {isLoading ? (
+                  <Loader className="w-4 h-4 border-white border-solid rounded-full animate-spin-1.5 border-t-transparent border-2" />
+                ) : (
+                  "Send"
+                )}
               </button>
             </div>
-            {message && (
-              <p className="mt-4 text-sm font-medium text-center text-green-600">
-                {message}
-              </p>
-            )}
+
             <div className="flex items-center justify-center gap-4 mb-4 mt-7">
               <p className="text-center text-text-p font-normal text-[#3F3F3F] mt-12">
                 Don't have an account?{" "}

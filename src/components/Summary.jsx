@@ -13,19 +13,10 @@ const Summary = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // This will block the user from going back
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      // You can add a custom message here if you want, but browsers don't support custom messages anymore
-      event.returnValue = "";
-    };
-
-    // Block the back button and ensure the user cannot navigate back to the quiz page
     window.addEventListener("popstate", () => {
-      navigate("/", { replace: true }); // This will force navigate to home
+      navigate("/", { replace: true });
     });
 
-    // Cleanup the event listener
     return () => {
       window.removeEventListener("popstate", () => {
         navigate("/", { replace: true });
@@ -43,6 +34,7 @@ const Summary = () => {
     scoreboard,
     percentile,
     rank,
+    name,
   } = data;
 
   const { id } = useParams();
@@ -68,14 +60,49 @@ const Summary = () => {
   }
 
   return (
-    <div className="bg-[#ECEFF7] h-lvh">
+    <div className="bg-[#ECEFF7]">
       <div className="container max-w-screen-xl px-4 py-8 pb-40 mx-auto">
         <div className="flex flex-wrap justify-between mt-14 lg:flex-nowrap">
           <div className="lg:w-[70%] w-full">
             <div className="text-[#3A57E8] text-title-md font-bold">
-              Test Name
+              {name || ""}
             </div>
-            <ResultsBar score={percentile} percentile={rank} />{" "}
+            <div className="flex justify-end">
+              <div className=" lg:hidden lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+                <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
+                  Score: {score}%
+                </div>
+                <div className="overflow-y-auto max-h-[70vh]">
+                  <ul className="px-6 mx-auto mt-4 space-y-2 text-center pb-7">
+                    {scoreboard && scoreboard.length > 0 ? (
+                      scoreboard.map((score) => (
+                        <li
+                          key={score.questionIndex}
+                          className="flex items-center justify-center gap-4 space-x-2 "
+                        >
+                          <span>{score.questionIndex}</span>
+                          <span>
+                            {score.isCorrect !== undefined ? (
+                              score.isCorrect ? (
+                                <span>{"✔️"}</span>
+                              ) : (
+                                <span>{"❌"}</span>
+                              )
+                            ) : (
+                              <span className="px-2">{"-"}</span>
+                            )}
+                          </span>
+                        </li>
+                      ))
+                    ) : (
+                      <span className="py-4"> Start the quiz</span>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <ResultsBar score={percentile} percentile={rank} />
+
             <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC] p-9">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-title-sm text-primary">
@@ -154,7 +181,7 @@ const Summary = () => {
             </div>
           </div>
 
-          <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
+          <div className=" hidden lg:block lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
             <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
               Score: {score}%
             </div>

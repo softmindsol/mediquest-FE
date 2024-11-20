@@ -107,7 +107,6 @@ export const verifyToken = createAsyncThunk(
 
       return response?.data?.data?.isLoggedIn;
     } catch (error) {
-      console.error("Token verification failed:", error);
       return rejectWithValue(error);
     }
   }
@@ -121,7 +120,45 @@ export const getCurrentUser = createAsyncThunk(
 
       return res.data.data;
     } catch (error) {
-      console.error("Token verification failed:", error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "forgotPassword",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await apiClient.post("/auth/forgot-password", {
+        email,
+      });
+
+      response.data.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "resetPassword",
+  async (
+    { token: forgotPasswordToken, password, confirmPassword },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await apiClient.post(
+        `/auth/reset-password?forgotPasswordToken=${forgotPasswordToken}`,
+        {
+          password,
+          confirmPassword,
+        }
+      );
+
+      response.data.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.error);
       return rejectWithValue(error);
     }
   }
