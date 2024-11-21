@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GoChevronDown } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
-import GaugeChart from "../components/charts/GaugeChart"; // Make sure the path is correct
+import GaugeChart from "../components/charts/GaugeChart";
 import {
   userPerformance,
   userSuccess,
@@ -10,46 +10,61 @@ import BellCurveGraph from "./charts/BellCurveGraph";
 
 const Progress = () => {
   const dispatch = useDispatch();
- 
 
   const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
+  const userType = user?.userType?.plan === "FREE";
 
-  const [successData, setSuccessData] = useState("");
-  const [selectedOption, setSelectedOption] = useState("thisWeek");
-  const options = ["thisWeek", "lastWeek", "thisMonth", "lastMonth"];
+  const { successData = "", performance = {} } = useSelector(
+    (state) => state?.quiz || {}
+  );
+  const { grades: allGrades = [], userGrade = "" } = performance || {};
+  const options = [
+    { value: "thisWeek", label: "This Week" },
+    { value: "lastWeek", label: "Last Week" },
+    { value: "thisMonth", label: "This Month" },
+    { value: "lastMonth", label: "Last Month" },
+  ];
 
-  useEffect(() => {
-    const getUserSuccessRate = async () => {
-      const response = await dispatch(userSuccess());
-      if (response.type === "userSuccess/fulfilled") {
-        setSuccessData(response.payload.data);
-      }
-    };
-
-    getUserSuccessRate();
-  }, [dispatch]);
-
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isOptionChanged, setIsOptionChanged] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    const getUserSuccessRate = async () => {
+      await dispatch(userSuccess());
+    };
+    if (!successData) {
+      getUserSuccessRate();
+    }
+  }, [dispatch, successData]);
+
+  useEffect(() => {
     const getPerformance = async () => {
-      if (user?.year) {
-        const response = await dispatch(
+      if (
+        user?.year &&
+        (isOptionChanged || !userGrade || allGrades.length === 0)
+      ) {
+        await dispatch(
           userPerformance({
             year: user?.year || "",
-            timePeriod: selectedOption,
+            timePeriod: selectedOption.value,
           })
         );
+        setIsOptionChanged(false);
       }
     };
 
-    getPerformance();
-  }, [user?.year, selectedOption]);
+    if (!userType) {
+      getPerformance();
+    }
+  }, [user?.year, selectedOption, isOptionChanged]);
 
-  // Handle dropdown option selection
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    setIsOpen(false); // Close dropdown after selecting an option
+    if (option.value !== selectedOption.value) {
+      setSelectedOption(option);
+      setIsOptionChanged(true);
+    }
+    setIsOpen(false);
   };
 
   return (
@@ -59,50 +74,51 @@ const Progress = () => {
       </h2>
 
       <div className="p-5 bg-white rounded-xl mb-30">
-        {/* Time Filter Dropdown */}
-        <div className="relative flex justify-end pr-3">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md"
-          >
-            {selectedOption}
-            <GoChevronDown size={20} className="text-[#007AFF]" />
-          </button>
+        {!userType && (
+          <div className="relative flex justify-end pr-3">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md"
+            >
+              {selectedOption.label}
+              <GoChevronDown size={20} className="text-[#007AFF]" />
+            </button>
 
-          {isOpen && (
-            <div className="absolute mt-11 right-1 bg-white border border-[#E4E6EF] rounded-md shadow-lg w-[10%] z-40">
-              {options.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleOptionClick(option)}
-                  className="px-4 py-2 text-[#007AFF] hover:bg-[#F3F6F9] cursor-pointer text-[12px] font-medium"
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Main Container */}
+            {isOpen && (
+              <div className="absolute mt-11 right-1 bg-white border border-[#E4E6EF] rounded-md shadow-lg w-[10%] z-40">
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleOptionClick(option)}
+                    className="px-4 py-2 text-[#007AFF] hover:bg-[#F3F6F9] cursor-pointer text-[12px] font-medium"
+                  >
+                    {option.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         <div className="grid justify-center grid-cols-1 gap-6 mt-10 lg:grid-cols-2">
-          {/* Left side: Two circular charts */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <div className="text-center">
-              <GaugeChart series={[successData]} />
-              <p className="text-[#8D8D8D] font-semibold text-sm mt-4 ">
-                Performance NOT adjusted to question difficulty
-              </p>
+              {successData && <GaugeChart series={[successData]} />}
             </div>
           </div>
 
-          {/* Right side: SplineChart comparison */}
           <div className="lg:w-full">
             <h3 className="text-[#343A40] text-title-sm font-semibold">
               Performance compared to Year 1 students
             </h3>
-
-            <BellCurveGraph />
+            {!userType ? (
+              <>
+                <BellCurveGraph />
+              </>
+            ) : (
+              <p className="font-semibold mt-4 text-[#343A40]">
+                Not available for your plan
+              </p>
+            )}
           </div>
         </div>
       </div>

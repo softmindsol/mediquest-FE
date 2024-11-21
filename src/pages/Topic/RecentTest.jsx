@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   getRecentQuiz,
   resumeQuiz,
 } from "../../store/features/quiz/quiz.service";
-import { Link, useNavigate } from "react-router-dom";
 
 const RecentTest = () => {
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(0);
-  const [quiz, setQuiz] = useState([]);
   const dispatch = useDispatch();
+  const { recentQuiz: quiz = [], isApiCalled = false } = useSelector(
+    (state) => state.quiz || {}
+  );
 
   const toggleAccordion = (index) => {
     setOpenIndex(index === openIndex ? null : index);
@@ -19,13 +21,12 @@ const RecentTest = () => {
 
   useEffect(() => {
     const fetchRecentQuizes = async () => {
-      const res = await dispatch(getRecentQuiz());
-
-
-      setQuiz(res?.payload?.data);
+      await dispatch(getRecentQuiz());
     };
 
-    fetchRecentQuizes();
+    if (quiz.length === 0 && !isApiCalled) {
+      fetchRecentQuizes();
+    }
   }, [dispatch]);
 
   const handleResumeQuiz = async (id, mode, currentIndex) => {

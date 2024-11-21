@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getRecentQuiz, resumeQuiz } from "../store/features/quiz/quiz.service";
 import DotsLoader from "./Loader/dots-loader";
@@ -11,18 +11,21 @@ const RecentTests = () => {
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [quiz, setQuiz] = useState([]);
+
+  const { recentQuiz: quiz = [], isApiCalled = false } = useSelector(
+    (state) => state.quiz || {}
+  );
 
   useEffect(() => {
     const fetchRecentQuizes = async () => {
       setLoading(true);
       const res = await dispatch(getRecentQuiz());
       setLoading(false);
-
-      setQuiz(res?.payload?.data);
     };
 
-    fetchRecentQuizes();
+    if (quiz.length === 0 && !isApiCalled) {
+      fetchRecentQuizes();
+    }
   }, [dispatch]);
 
   const handleButtonClick = () => {

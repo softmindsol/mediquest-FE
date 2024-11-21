@@ -92,11 +92,11 @@ export const categoryItems = [
     short_name: "UM6SS Dakhla",
     name: "Faculté Mohammed VI de Médecine de Dakhla",
   },
-  {
-    city: "Benguerir",
-    short_name: "UM6P-FMS",
-    name: "Faculty of Medical Sciences",
-  },
+  // {
+  //   city: "Benguerir",
+  //   short_name: "UM6P-FMS",
+  //   name: "Faculty of Medical Sciences",
+  // },
   {
     city: "Guelmim",
     short_name: "FMPG",

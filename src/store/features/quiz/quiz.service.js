@@ -164,6 +164,8 @@ export const userSuccess = createAsyncThunk(
     try {
       const response = await axiosWithToken.get(`/quiz/userSuccess`);
 
+      console.log(response.data);
+      
       return response.data;
     } catch (error) {
       if (error) {

@@ -185,7 +185,6 @@ const QuestionTemplate = () => {
 
           <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
             <div className="flex justify-between mb-10">
-              {/* Previous Button */}
               <Button
                 text="Prev"
                 type="button"
@@ -196,12 +195,10 @@ const QuestionTemplate = () => {
                 className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
 
-              {/* Page Indicator */}
               <span className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6">
                 {pageNo} of {quizDetail?.totalQuestions}
               </span>
 
-              {/* Next Button */}
               <Button
                 text="Next"
                 type="button"
@@ -230,9 +227,6 @@ const QuestionTemplate = () => {
                 </div>
               )}
               <div className="mt-auto space-y-6 lg:col-span-2">
-                <h3 className="mb-2 font-semibold text-md">
-                  Select up to two options:
-                </h3>
                 <div className="bg-white mx-6 rounded-lg border border-[#E6E9EC]">
                   {quizQuestions?.options?.map(
                     (category, index) =>
@@ -308,7 +302,7 @@ const QuestionTemplate = () => {
           <div className="lg:w-[12%] w-fit bg-white rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start"></div>
           {quizDetail?.mode === "Timed" && (
             <div className="lg:w-[12%] hidden lg:block w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
+              <Timer id={id} />
             </div>
           )}
         </div>

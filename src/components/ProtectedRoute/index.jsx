@@ -22,9 +22,7 @@ const ProtectedRoute = ({ children }) => {
   const { isLoading, isLoggedIn } = useSelector(selectAuthStatus);
 
   useEffect(() => {
-    // if (!isLoggedIn) {
     dispatch(verifyToken());
-    // }
   }, [dispatch]);
 
   if (isLoading)

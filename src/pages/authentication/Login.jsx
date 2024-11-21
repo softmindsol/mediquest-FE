@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
-import Header from "../../components/Header";
 import { LoginSchema } from "../../schema/auth.schema";
 import { loginUser } from "../../store/features/auth/auth.service";
 
@@ -34,9 +33,14 @@ const Login = () => {
 
   return (
     <>
-      <Header />
+      <Link
+        to="/home"
+        className="sticky z-10 py-2 m-auto text-center bg-white top-3"
+      >
+        <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
+      </Link>
       <div className="w-[360px] m-auto">
-        <div className="max-w-full mt-30 mb-60 pb-22">
+        <div className="max-w-full mt-30 pb-22">
           <h1 className="mb-5 font-semibold text-center text-title-xl2 text-black-3">
             Log in to your account
           </h1>

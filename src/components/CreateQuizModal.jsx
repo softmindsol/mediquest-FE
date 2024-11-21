@@ -1,24 +1,34 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createQuiz } from "../store/features/quiz/quiz.service";
+import { createQuiz, getRecentQuiz } from "../store/features/quiz/quiz.service";
 import Loader from "./Loader";
 import distributeQuestions from "../utils/distribution";
 
-const CreateQuizModal = ({ isOpen, closeModal, values }) => {
+const CreateQuizModal = ({
+  isOpen,
+  closeModal,
+  values,
+  formdata,
+  setFormData,
+}) => {
+  const { user = {} } = useSelector((state) => state?.user?.selectedUser);
+
+  console.log(values, "--values");
+
   const dispatch = useDispatch();
   const { subjectQuestions = [] } = useSelector(
     (state) => state?.user?.selectedUser
   );
-
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState({
     addLoading: false,
     startLoading: false,
   });
+
+  const [validationErrors, setValidationErrors] = useState({});
 
   const {
     name = "",
@@ -28,9 +38,31 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
     timerDuration = 1,
   } = values || {};
 
-  // const { isLoading = false } = useSelector((state) => state?.quiz || {});
+  // Validation Functions
+  const validateName = (name) => {
+    if (name.length < 3) return "Name must be at least 3 characters long.";
+    if (/^\d/.test(name)) return "Name cannot start with a number.";
+    return null;
+  };
+
+  const validateTimer = (time) => {
+    if (!time || time < 1 || time > 90)
+      return "Time must be between 1 and 90 minutes.";
+    return null;
+  };
 
   const handleCreateQuiz = async (type) => {
+    const nameError = validateName(formdata.name);
+    const timerError =
+      mode === "Timed" ? validateTimer(formdata.timerDuration) : null;
+
+    setValidationErrors({
+      name: nameError,
+      timerDuration: timerError,
+    });
+
+    if (nameError || timerError) return;
+
     try {
       let res;
       if (type === "add") {
@@ -54,10 +86,14 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
             questionCount,
             university,
             test: true,
-            timerDuration: timerDuration,
+            timerDuration: formdata.timerDuration,
           })
         );
         setLoading({ ...loading, addLoading: false });
+        navigate("/");
+ 
+        dispatch(getRecentQuiz());
+        closeModal();
       } else {
         setLoading({ ...loading, startLoading: true });
         const subject = distributeQuestions(
@@ -78,7 +114,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
             mode,
             questionCount,
             university,
-            timerDuration,
+            timerDuration: formdata.timerDuration,
           })
         );
         setLoading({ ...loading, startLoading: false });
@@ -89,8 +125,6 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
         closeModal();
         return;
       }
-
-      closeModal();
     } catch (error) {}
   };
 
@@ -114,28 +148,42 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
         <p className="text-[#6B7280] text-subtitle-xsm mb-4">
           Please confirm your quiz settings.
         </p>
-        <div className="flex justify-start gap-15">
-          <div className="mb-6">
+        <div className="flex flex-wrap justify-start gap-x-15">
+          <div className="mb-6 ">
             <label className="block text-sm text-[#111827] font-semibold">
               Exam Name
             </label>
             <input
               type="text"
               placeholder="Exam Name here"
-              value={values.name}
-              disabled
-              className="mt-3 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] w-50 border border-[#CED4DA] placeholder-secondary"
+              value={formdata.name}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData({ ...formdata, name: value });
+                setValidationErrors({
+                  ...validationErrors,
+                  name: validateName(value),
+                });
+              }}
+              className="mt-3 h-[42px] px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] w-50 border border-[#CED4DA] placeholder-secondary"
             />
+            {validationErrors.name && (
+              <p className="mt-1 text-sm text-red-500">
+                {validationErrors.name}
+              </p>
+            )}
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 ">
             <label className="block text-sm text-[#111827] font-semibold">
               No. of Questions
             </label>
             <select
-              value={values.questionCount}
-              disabled
-              className="mt-3 px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border border-[#CED4DA] placeholder-secondary bg-white"
+              value={formdata.questionCount}
+              onChange={(e) =>
+                setFormData({ ...formdata, questionCount: e.target.value })
+              }
+              className="mt-3 px-4 h-[42px] py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] border border-[#CED4DA] placeholder-secondary bg-white"
             >
               <option value="10">10</option>
               <option value="20">20</option>
@@ -144,6 +192,35 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
               <option value="50">50</option>
             </select>
           </div>
+
+          {values?.mode === "Timed" && (
+            <div className="w-full mb-6">
+              <label className="block text-sm text-[#111827] font-semibold">
+                Time (in minutes)
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={90}
+                placeholder="Enter time"
+                value={formdata.timerDuration}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value, 10);
+                  setFormData({ ...formdata, timerDuration: value });
+                  setValidationErrors({
+                    ...validationErrors,
+                    timerDuration: validateTimer(value),
+                  });
+                }}
+                className="mt-3 h-[42px] px-4 py-2 text-[#ADB5BD] text-title-p focus:outline-none rounded-[4px] w-50 border border-[#CED4DA] placeholder-secondary"
+              />
+              {validationErrors.timerDuration && (
+                <p className="mt-1 text-sm text-red-500">
+                  {validationErrors.timerDuration}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mb-6">
@@ -160,7 +237,7 @@ const CreateQuizModal = ({ isOpen, closeModal, values }) => {
             University
           </label>
           <p className="text-[#6B7280] text-[13px] font-medium">
-            {values.university}
+            {values?.university?.join(", ")}
           </p>
         </div>
 

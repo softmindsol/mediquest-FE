@@ -47,7 +47,7 @@ const inputFieldsStep1 = [
 const inputFieldsStep2 = [
   {
     name: "year",
-    type: "select", // Change type to 'select'
+    type: "select",
     label: "Year",
   },
   {
@@ -62,115 +62,113 @@ const inputFieldsStep2 = [
   },
 ];
 
-// Universities data
 const universitiesData = [
   {
-    "city": "Oujda",
-    "short_name": "FMPO",
-    "name": "Faculté de Médecine et de Pharmacie d’Oujda"
+    city: "Oujda",
+    short_name: "FMPO",
+    name: "Faculté de Médecine et de Pharmacie d’Oujda",
   },
   {
-    "city": "Fes",
-    "short_name": "FMPDF",
-    "name": "Faculté de Médecine, de Pharmacie et de Médecine Dentaire de Fès"
+    city: "Fes",
+    short_name: "FMPDF",
+    name: "Faculté de Médecine, de Pharmacie et de Médecine Dentaire de Fès",
   },
   {
-    "city": "Fes",
-    "short_name": "FEM/ EUROMED",
-    "name": "Faculté Euromed de Médecine"
+    city: "Fes",
+    short_name: "FEM/ EUROMED",
+    name: "Faculté Euromed de Médecine",
   },
   {
-    "city": "Rabat",
-    "short_name": "FMPR",
-    "name": "Faculté de médecine et de pharmacie de Rabat"
+    city: "Rabat",
+    short_name: "FMPR",
+    name: "Faculté de médecine et de pharmacie de Rabat",
   },
   {
-    "city": "Rabat",
-    "short_name": "Faculté de Médecine Abulcasis/UIASS",
-    "name": "Faculté de Médecine Abulcasis"
+    city: "Rabat",
+    short_name: "Faculté de Médecine Abulcasis/UIASS",
+    name: "Faculté de Médecine Abulcasis",
   },
   {
-    "city": "Rabat",
-    "short_name": "Faculté internationale de Médecine /UIR",
-    "name": "Faculté internationale de Médecine"
+    city: "Rabat",
+    short_name: "Faculté internationale de Médecine /UIR",
+    name: "Faculté internationale de Médecine",
   },
   {
-    "city": "Rabat",
-    "short_name": "UM6SS / RABAT",
-    "name": "Faculté Mohammed VI de Médecine de Rabat"
+    city: "Rabat",
+    short_name: "UM6SS / RABAT",
+    name: "Faculté Mohammed VI de Médecine de Rabat",
   },
   {
-    "city": "Marrakech",
-    "short_name": "FMPM",
-    "name": "Faculté de Médecine et de Pharmacie de Marrakech"
+    city: "Marrakech",
+    short_name: "FMPM",
+    name: "Faculté de Médecine et de Pharmacie de Marrakech",
   },
   {
-    "city": "Marrakech",
-    "short_name": "FPMM/UPM",
-    "name": "Faculté Privée de Médecine et de Pharmacie de Marrakech"
+    city: "Marrakech",
+    short_name: "FPMM/UPM",
+    name: "Faculté Privée de Médecine et de Pharmacie de Marrakech",
   },
   {
-    "city": "Casablanca",
-    "short_name": "FMPC",
-    "name": "Faculté de Médecine et de Pharmacie de Casablanca"
+    city: "Casablanca",
+    short_name: "FMPC",
+    name: "Faculté de Médecine et de Pharmacie de Casablanca",
   },
   {
-    "city": "Casablanca",
-    "short_name": "UM6SS / CASA",
-    "name": "Faculté Mohammed VI de Médecine de Casablanca"
+    city: "Casablanca",
+    short_name: "UM6SS / CASA",
+    name: "Faculté Mohammed VI de Médecine de Casablanca",
   },
   {
-    "city": "Casablanca",
-    "short_name": "UM6SS / CASA",
-    "name": "Mohamed VI Faculty of Medicine"
+    city: "Casablanca",
+    short_name: "UM6SS / CASA",
+    name: "Mohamed VI Faculty of Medicine",
   },
   {
-    "city": "Tanger",
-    "short_name": "FMPT",
-    "name": "Faculté de Médecine et de Pharmacie de Tanger"
+    city: "Tanger",
+    short_name: "FMPT",
+    name: "Faculté de Médecine et de Pharmacie de Tanger",
   },
   {
-    "city": "Agadir",
-    "short_name": "FMPA",
-    "name": "Faculté de Médecine et de Pharmacie d'Agadir"
+    city: "Agadir",
+    short_name: "FMPA",
+    name: "Faculté de Médecine et de Pharmacie d'Agadir",
   },
   {
-    "city": "Agadir",
-    "short_name": "Faculté de Médecine de l’UPSSA",
-    "name": "Faculté de Médecine de l’UPSSA"
+    city: "Agadir",
+    short_name: "Faculté de Médecine de l’UPSSA",
+    name: "Faculté de Médecine de l’UPSSA",
   },
   {
-    "city": "Béni Mellal",
-    "short_name": "FMPBM",
-    "name": "Faculté de Médecine et de Pharmacie Beni Mellal"
+    city: "Béni Mellal",
+    short_name: "FMPBM",
+    name: "Faculté de Médecine et de Pharmacie Beni Mellal",
   },
   {
-    "city": "Dakhla",
-    "short_name": "UM6SS Dakhla",
-    "name": "Faculté Mohammed VI de Médecine de Dakhla"
+    city: "Dakhla",
+    short_name: "UM6SS Dakhla",
+    name: "Faculté Mohammed VI de Médecine de Dakhla",
+  },
+  // {
+  //   city: "Benguerir",
+  //   short_name: "UM6P-FMS",
+  //   name: "Faculty of Medical Sciences",
+  // },
+  {
+    city: "Errachidia",
+    short_name: "FMPE",
+    name: "Faculté de Médecine et de Pharmacie d’Errachidia",
   },
   {
-    "city": "Benguerir",
-    "short_name": "UM6P-FMS",
-    "name": "Faculty of Medical Sciences"
+    city: "Guelmim",
+    short_name: "FMPG",
+    name: "Faculté de Médecine et de Pharmacie de Guelmim",
   },
   {
-    "city": "Errachidia",
-    "short_name": "FMPE",
-    "name": "Faculté de Médecine et de Pharmacie d’Errachidia"
+    city: "Laayoune",
+    short_name: "FMPL",
+    name: "Faculté de Médecine et de Pharmacie de Laayoune",
   },
-  {
-    "city": "Guelmim",
-    "short_name": "FMPG",
-    "name": "Faculté de Médecine et de Pharmacie de Guelmim"
-  },
-  {
-    "city": "Laayoune",
-    "short_name": "FMPL",
-    "name": "Faculté de Médecine et de Pharmacie de Laayoune"
-  }
 ];
-
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -196,8 +194,8 @@ const SignUp = () => {
       .filter((university) => university.city === selectedCity)
       .map((university) => university.name);
     setUniversities(filteredUniversities);
-    setFieldValue("city", selectedCity); // Set city value in Formik
-    setFieldValue("university", ""); // Reset university field
+    setFieldValue("city", selectedCity);
+    setFieldValue("university", "");
   };
 
   const years = Array.from({ length: 5 }, (_, i) => ({
@@ -206,8 +204,13 @@ const SignUp = () => {
   }));
   return (
     <>
-      <Header />
-      <div className="xsm:max-w-[360px] m-auto mt-15 pb-22 lg:px-0 px-4">
+      <Link
+        to="/home"
+        className="sticky z-10 py-2 m-auto text-center bg-white top-2"
+      >
+        <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
+      </Link>{" "}
+      <div className="xsm:max-w-[360px] m-auto mt-12 pb-22 lg:px-0 px-4">
         <div>
           <h1 className="mb-5 font-semibold text-center lg:text-title-xl2 text-title-md text-black-3">
             Create an account
@@ -382,7 +385,6 @@ const SignUp = () => {
                     className="bg-[#0D6EFD] text-title-p rounded-[4px] border text-white font-normal py-2 focus:outline-none w-full"
                     onClick={(e) => {
                       e.preventDefault();
-
 
                       if (
                         errors.name ||

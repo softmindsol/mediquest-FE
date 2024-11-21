@@ -3,20 +3,26 @@ import {
   createQuiz,
   endQuiz,
   getQuizQuesitons,
+  getRecentQuiz,
   getSummary,
   submitQuiz,
   userPerformance,
+  userSuccess,
 } from "./quiz.service";
+import { logout } from "../auth/auth.service";
 
 const initialState = {
+  isApiCalled: false,
   isLoading: false,
   quiz: [],
   scoreboard: [],
   error: null,
+  successData: "",
   performance: {
     grades: [],
-    userGrade: "",
+    userGrade: 0,
   },
+  recentQuiz: [],
 };
 
 const quizSlice = createSlice({
@@ -65,6 +71,8 @@ const quizSlice = createSlice({
       })
       .addCase(createQuiz.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.recentQuiz = [];
+        state.isApiCalled = false;
       })
       .addCase(createQuiz.rejected, (state, action) => {
         state.error = action.payload;
@@ -93,6 +101,7 @@ const quizSlice = createSlice({
       .addCase(getSummary.fulfilled, (state, action) => {
         state.isLoading = false;
         state.quiz = [];
+        state.successData = "";
       })
       .addCase(getSummary.rejected, (state, action) => {
         state.error = action.payload;
@@ -110,6 +119,31 @@ const quizSlice = createSlice({
         state.error = action.payload;
         state.isLoading = false;
         state.quiz = [];
+      })
+      .addCase(userSuccess.fulfilled, (state, action) => {
+        state.successData = action.payload.data;
+      })
+
+      .addCase(getRecentQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getRecentQuiz.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isApiCalled = true;
+        state.recentQuiz = action.payload.data;
+      })
+      .addCase(getRecentQuiz.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+        state.isApiCalled = false;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.quiz = [];
+        state.scoreboard = [];
+        state.performance = { grades: [], userGrade: 0 };
+        state.recentQuiz = [];
+        state.isApiCalled = false;
+        state.successData = "";
       });
   },
 });
