@@ -37,7 +37,9 @@ const Login = () => {
         to="/home"
         className="sticky z-10 py-2 m-auto text-center bg-white top-3"
       >
-        <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
+        <p className="text-title-sm font-semibold bg-white text-[#3A57E8]">
+          MEDQUEST
+        </p>
       </Link>
       <div className="w-[360px] m-auto">
         <div className="max-w-full mt-30 pb-22">

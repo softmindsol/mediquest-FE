@@ -46,6 +46,7 @@ const quizSlice = createSlice({
           likeCount,
           dislikeCount,
           isUserLikeDislike,
+          discussionCount,
         } = action.payload;
 
         state.quiz = questions;
@@ -58,6 +59,7 @@ const quizSlice = createSlice({
           dislikes: dislikeCount,
           isUserLiked: isUserLikeDislike,
           mode,
+          discussionCount,
         });
         state.scoreboard = scoreboard;
         state.isLoading = false;

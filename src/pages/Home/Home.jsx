@@ -18,7 +18,7 @@ const Home = () => {
   }, [dispatch]);
   return (
     <DefaultLayout>
-      <Breadcrumb pageName={`Welcome home ${user?.name || ""}!`} />
+      <Breadcrumb pageName={`Welcome home ${user?.lastName || ""}!`} />
       <div className="flex justify-end gap-5 mb-8">
         <Link to="/subscription">
           <button className="bg-[#3A57E8] font-semibold text-title-p text-white py-[10px] px-8 rounded-[6px]">

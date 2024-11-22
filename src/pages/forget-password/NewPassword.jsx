@@ -68,7 +68,7 @@ const NewPassword = () => {
 
   return (
     <section className="flex h-[100vh] items-center">
-      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
+      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl">
         <form
           onSubmit={handlePasswordReset}
           className="flex flex-col items-center justify-center w-full py-12"
@@ -101,11 +101,9 @@ const NewPassword = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <FaEye /> : <FaEyeSlash />}{" "}
-                  {/* Use the icons */}
                 </button>
               </div>
 
-              {/* Validation criteria display */}
               <div className="px-3 py-3 mb-12 text-sm">
                 <li
                   className={`${

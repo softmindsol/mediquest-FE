@@ -12,10 +12,16 @@ import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 const inputFieldsStep1 = [
   {
-    name: "name",
+    name: "firstName",
     type: "text",
-    placeholder: "Enter your name",
-    label: "Name",
+    placeholder: "Enter your first name",
+    label: "First Name",
+  },
+  {
+    name: "lastName",
+    type: "text",
+    placeholder: "Enter your last name",
+    label: "Last Name",
   },
 
   {
@@ -206,10 +212,12 @@ const SignUp = () => {
     <>
       <Link
         to="/home"
-        className="sticky z-10 py-2 m-auto text-center bg-white top-2"
+        className="sticky py-2 m-auto text-center bg-white z-99 top-2"
       >
-        <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
-      </Link>{" "}
+        <p className="text-title-sm font-semibold text-[#3A57E8] bg-white">
+          MEDQUEST
+        </p>
+      </Link>
       <div className="xsm:max-w-[360px] m-auto mt-12 pb-22 lg:px-0 px-4">
         <div>
           <h1 className="mb-5 font-semibold text-center lg:text-title-xl2 text-title-md text-black-3">
@@ -235,7 +243,8 @@ const SignUp = () => {
 
         <Formik
           initialValues={{
-            name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -248,6 +257,8 @@ const SignUp = () => {
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
             try {
+              console.log(values);
+
               const res = await dispatch(registerUser(values));
 
               if (res.type === "registerUser/fulfilled") {
@@ -261,7 +272,7 @@ const SignUp = () => {
             }
           }}
         >
-          {({ setFieldValue, values, isSubmitting, errors }) => (
+          {({ setFieldValue, isSubmitting, errors }) => (
             <Form className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
                 {(step === 1 ? inputFieldsStep1 : inputFieldsStep2).map(

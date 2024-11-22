@@ -91,8 +91,7 @@ const CreateQuizModal = ({
         );
         setLoading({ ...loading, addLoading: false });
         navigate("/");
- 
-        dispatch(getRecentQuiz());
+
         closeModal();
       } else {
         setLoading({ ...loading, startLoading: true });

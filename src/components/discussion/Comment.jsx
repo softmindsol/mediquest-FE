@@ -23,14 +23,14 @@ const Comment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Frontend validation: check if text is empty
+    
     if (!text.trim()) {
       setError("Comment cannot be empty");
-      return; // Don't proceed with form submission if validation fails
+      return;
     }
 
     setLoading(true);
-    setError(""); // Clear error message if text is valid
+    setError(""); 
 
     const res = await dispatch(addComment({ question, text }));
     setLoading(false);

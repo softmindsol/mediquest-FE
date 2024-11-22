@@ -6,13 +6,21 @@ const phoneRegex =
 
 // Register Schema with password and confirmPassword validation
 export const RegisterSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("Name is required")
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters")
+  firstName: Yup.string()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name must be at most 50 characters")
     .matches(
       /^[a-zA-Z\s'-]+$/,
-      "Name can only contain letters, spaces, and hyphens"
+      "First name can only contain letters, spaces, and hyphens"
+    ),
+  lastName: Yup.string()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name must be at most 50 characters")
+    .matches(
+      /^[a-zA-Z\s'-]+$/,
+      "Last name can only contain letters, spaces, and hyphens"
     ),
 
   email: Yup.string()

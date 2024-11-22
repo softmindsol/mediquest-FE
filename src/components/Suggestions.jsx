@@ -1,20 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaRegCommentDots, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { useDrawer } from "../context/drawer";
+import { getComments } from "../store/features/discussion/discussion.service";
 import {
   getQuizQuesitons,
   likeDislikeQuestion,
 } from "../store/features/quiz/quiz.service";
 import DiscussionDrawer from "./discussion/DiscussionDrawer";
-import Improvements from "./Improvements";
-import { getComments } from "../store/features/discussion/discussion.service";
 import GenericDrawer from "./generic-drawer";
+import Improvements from "./Improvements";
 
 const Suggestions = ({ pageNo = "", id = "" }) => {
   const dispatch = useDispatch();
+
+  const discussionCount = useSelector(
+    (state) => state?.quiz?.quiz[1]?.discussionCount || 0
+  );
 
   const selectQuiz = (state) => state?.quiz?.quiz || [];
   const selectLikesAndDislikes = createSelector([selectQuiz], (quiz) => ({
@@ -25,25 +29,22 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
     questionId: quiz[0]?.questionId || "",
   }));
 
-  const { comments = {} } = useSelector((state) => state?.discussion || {});
+  const { comments = [], isApiFetched = false } = useSelector(
+    (state) => state?.discussion || {}
+  );
 
   const { likes, dislikes, isUserLiked, documentId, questionId } = useSelector(
     selectLikesAndDislikes
   );
-
-  useEffect(() => {
-    const fetchComments = async () => {
+  const handleGetDiscussion = async () => {
+    if (comments.length === 0 && !isApiFetched)
       await dispatch(getComments({ question: questionId }));
-    };
-    if (questionId) {
-      fetchComments();
-    }
-  }, [questionId]);
+  };
 
   const { openDrawer } = useDrawer();
 
   const openDiscussionDrawer = useCallback(() => {
-    openDrawer(<DiscussionDrawer />, `Discussion(${comments?.total || 0})`);
+    openDrawer(<DiscussionDrawer />, `Discussion(${discussionCount || 0})`);
   }, [comments?.total, openDrawer]);
 
   const [isLoading, setLoading] = useState({
@@ -101,7 +102,7 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
     return (
       <button disabled={isLoading}>
         <Icon
-        onClick={onClick}
+          onClick={onClick}
           size={20}
           className={`${colorClass} ${isLoading && "opacity-50"}`}
         />
@@ -111,29 +112,6 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
 
   return (
     <div className="max-w-4xl p-6">
-      {/* Votes */}
-      <div className="flex items-center gap-2 mb-2">
-        <span className="flex items-center text-green-600">
-          <BsHandThumbsUp /> {likes}
-        </span>
-        <span className="flex items-center ml-4 text-red-500">
-          <BsHandThumbsDown /> {dislikes}
-        </span>
-      </div>
-
-      {/* Progress bar */}
-      <div className="flex h-2 rounded-full mb-7">
-        <div
-          style={{ width: `${likePercentage}%` }}
-          className="h-full bg-green-600"
-        ></div>
-        <div
-          style={{ width: `${dislikePercentage}%` }}
-          className="h-full bg-red-500"
-        ></div>
-      </div>
-
-      {/* Action Buttons */}
       <div className="flex gap-4 items-center border border-[#6c757d] rounded-xl px-2">
         <div className="border-r p-2 border-[#6c757d]">
           {renderLikeDislikeButton(
@@ -153,9 +131,14 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
         </div>
         <div
           onClick={openDiscussionDrawer}
-          className="text-[#6c757d] flex items-center gap-2 p-2 border-r cursor-pointer border-[#6c757d]"
+          className="text-[#6c757d]  p-2 border-r cursor-pointer border-[#6c757d]"
         >
-          <FaRegCommentDots size={20} /> Discuss ({comments?.total || 0})
+          <div
+            className="flex items-center gap-x-2"
+            onClick={handleGetDiscussion}
+          >
+            <FaRegCommentDots size={20} /> Discuss ({discussionCount || 0})
+          </div>
         </div>
         <button
           onClick={handleToggle}
@@ -165,7 +148,6 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
         </button>
       </div>
 
-      {/* Improve Section */}
       <Improvements
         showImproveSection={showImproveSection}
         suggestionText={suggestionText}

@@ -39,7 +39,7 @@ const ForgotPassword = () => {
 
   return (
     <section className="flex h-[100vh] items-center">
-      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white shadow-[#F0F0F0] shadow-[0px_-4px_10px_rgba(0,0,0,0.1)] drop-shadow-xl">
+      <div className="w-[90%] md:w-[50%] mx-auto rounded-3xl bg-white ">
         <form
           noValidate
           onSubmit={handleSubmit}
