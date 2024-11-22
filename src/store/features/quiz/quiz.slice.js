@@ -61,7 +61,10 @@ const quizSlice = createSlice({
           mode,
           discussionCount,
         });
+
         state.scoreboard = scoreboard;
+        state.isApiCalled = false;
+        state.recentQuiz = [];
         state.isLoading = false;
       })
       .addCase(getQuizQuesitons.rejected, (state, action) => {
@@ -103,6 +106,8 @@ const quizSlice = createSlice({
       .addCase(getSummary.fulfilled, (state, action) => {
         state.isLoading = false;
         state.quiz = [];
+        state.isApiCalled = false;
+        state.recentQuiz = [];
         state.successData = "";
       })
       .addCase(getSummary.rejected, (state, action) => {
