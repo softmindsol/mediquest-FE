@@ -106,6 +106,8 @@ const quizSlice = createSlice({
       .addCase(getSummary.fulfilled, (state, action) => {
         state.isLoading = false;
         state.quiz = [];
+        state.performance.grades=[]
+        state.performance.userGrade=0
         state.isApiCalled = false;
         state.recentQuiz = [];
         state.successData = "";
@@ -125,6 +127,8 @@ const quizSlice = createSlice({
       .addCase(endQuiz.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
+        state.isApiCalled = false;
+        state.recentQuiz = [];
         state.quiz = [];
       })
       .addCase(userSuccess.fulfilled, (state, action) => {
