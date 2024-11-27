@@ -16,6 +16,9 @@ const RecentTests = () => {
     (state) => state.quiz || {}
   );
 
+
+  console.log(quiz);
+
   useEffect(() => {
     const fetchRecentQuizes = async () => {
       setLoading(true);
@@ -41,15 +44,27 @@ const RecentTests = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const handleResumeQuiz = async (id, mode, currentIndex) => {
+  const handleResumeQuiz = async (id, mode, currentIndex, questionCount) => {
     if (mode === "Timed") {
       const res = await dispatch(resumeQuiz({ id }));
       if (res.type === "resumeQuiz/fulfilled") {
-        navigate(`/question/${id}?pageNo=${res.payload.currentIndex}`);
+        navigate(
+          `/question/${id}?pageNo=${
+            res.payload.currentIndex < questionCount
+              ? Number(res.payload.currentIndex) + 1
+              : res.payload.currentIndex
+          }`
+        );
       }
     } else {
       navigate(
-        `/question/${id}?pageNo=${currentIndex === 0 ? 1 : currentIndex}`
+        `/question/${id}?pageNo=${
+          currentIndex === 0
+            ? 1
+            : currentIndex < questionCount
+            ? currentIndex + 1
+            : currentIndex
+        }`
       );
     }
   };
@@ -87,7 +102,6 @@ const RecentTests = () => {
                   </div>
                 </div>
 
-                {/* Accordion Content (Description, Date, Button) */}
                 {openIndex === index && (
                   <div className="mt- p-5 border-t border-[#CED4DA]">
                     {test?.quizId?.topics && (
@@ -108,14 +122,12 @@ const RecentTests = () => {
                             onClick={handleButtonClick}
                             className="bg-white text-[#007AFF] px-4 py-2 border border-[#007AFF] rounded-md flex items-center justify-center gap-3"
                           >
-                            {/* Conditionally render the button label based on quiz status */}
                             {test?.currentQuestionIndex !== 0
                               ? "Continue Quiz"
                               : "Start Quiz"}
                             <SlArrowRight className="text-[#007AFF]" />
                           </button>
                         </div>
-                        {/* Modal */}
                         {isModalOpen && (
                           <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#E6E6E6CC] px-4 ">
                             <div className="max-w-lg p-5 bg-white rounded-lg shadow-md">
@@ -144,7 +156,8 @@ const RecentTests = () => {
                                     handleResumeQuiz(
                                       test?.quizId?._id || "",
                                       test?.quizId?.mode || "",
-                                      test?.currentQuestionIndex || 0
+                                      test?.currentQuestionIndex || 0,
+                                      test?.quizId?.questionsCount
                                     )
                                   }
                                   className="px-4 py-2 bg-[#007AFF] text-[14px] font-medium text-white rounded"

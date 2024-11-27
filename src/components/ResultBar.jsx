@@ -1,11 +1,11 @@
 import React from "react";
 
 const ResultsBar = ({ score, percentile }) => {
-  const greenWidth = score; // score should be a percentage
-  const redWidth = 100 - score; // remaining percentage for the red part of the bar
+  const greenWidth = score;
+  const redWidth = 100 - score;
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md mt-8 mb-4  mx-auto">
+    <div className="p-6 mx-auto mt-8 mb-4 bg-white shadow-md rounded-xl">
       {/* Results Text */}
       <div className="text-[15px] font-medium mb-4">Results</div>
       <p className="text-center mx-auto text-[14px] mb-6 lg:max-w-lg">
@@ -13,14 +13,17 @@ const ResultsBar = ({ score, percentile }) => {
         you on the {percentile}th percentile of users who are taking the exam.
       </p>
 
-      {/* Dynamic Progress Bar */}
-      <div className="w-full flex  bg-gray-300 rounded-full h-4">
+      <div className="flex w-full h-4 bg-gray-300 rounded-full">
         <div
-          className="bg-green-500 h-4 rounded-l-full"
+          className={`h-4 bg-[#009D41] rounded-l-full ${
+            score === "100" || (score === 100 && "border-r-full")
+          }`}
           style={{ width: `${greenWidth}%` }}
         ></div>
         <div
-          className="bg-red-500 h-4 rounded-r-full"
+          className={`h-4 bg-red-500 rounded-r-full ${
+            score === 0 || (score === "0" && "border-l-full")
+          }`}
           style={{ width: `${redWidth}%` }}
         ></div>
       </div>

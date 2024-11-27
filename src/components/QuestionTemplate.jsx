@@ -41,7 +41,7 @@ const QuestionTemplate = () => {
   const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
   const [image, setImage] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState([]); // Array to hold selected options
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const calculateScore = (
     (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
@@ -74,7 +74,7 @@ const QuestionTemplate = () => {
     setPrevClicked(true);
     if (pageNo > 1) {
       setParams({ pageNo: pageNo - 1 });
-      setSelectedOptions([]); // Clear selected options for previous question
+      setSelectedOptions([]);
       setError("");
     }
   };
@@ -120,14 +120,12 @@ const QuestionTemplate = () => {
   };
 
   const handleOptionChange = (index) => {
-    const optionValue = String.fromCharCode(65 + index); // 'A', 'B', 'C', etc.
+    const optionValue = String.fromCharCode(65 + index);
     if (selectedOptions.includes(optionValue)) {
-      // If option is already selected, remove it
       setSelectedOptions(
         selectedOptions.filter((option) => option !== optionValue)
       );
     } else if (selectedOptions.length < 2) {
-      // If less than 2 options are selected, add the new option
       setSelectedOptions([...selectedOptions, optionValue]);
     }
   };
@@ -238,7 +236,7 @@ const QuestionTemplate = () => {
                           <div className="flex items-center">
                             <input
                               type="checkbox"
-                              className="mr-3 w-[16px] h-[16px] text-[#838f9b] cursor-pointer"
+                              className="mr-3 min-w-[16px] min-h-[16px] text-[#838f9b] cursor-pointer"
                               checked={selectedOptions.includes(
                                 String.fromCharCode(65 + index)
                               )}
@@ -278,7 +276,6 @@ const QuestionTemplate = () => {
                           ? !quizQuestions?.hasAnswered
                           : false || isLoading
                       }
-                      // text="Submit answer"
                       type="submit"
                       rightIcon={SlArrowRight}
                       className="bg-[#3A57E8] flex justify-center items-center text-title-p rounded-[4px] text-white font-normal py-2 px-6"

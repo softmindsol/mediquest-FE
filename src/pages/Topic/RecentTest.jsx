@@ -29,15 +29,27 @@ const RecentTest = () => {
     }
   }, [dispatch]);
 
-  const handleResumeQuiz = async (id, mode, currentIndex) => {
+  const handleResumeQuiz = async (id, mode, currentIndex, questionCount) => {
     if (mode === "Timed") {
       const res = await dispatch(resumeQuiz({ id }));
       if (res.type === "resumeQuiz/fulfilled") {
-        navigate(`/question/${id}?pageNo=${res.payload.currentIndex}`);
+        navigate(
+          `/question/${id}?pageNo=${
+            res.payload.currentIndex < questionCount
+              ? Number(res.payload.currentIndex) + 1
+              : res.payload.currentIndex
+          }`
+        );
       }
     } else {
       navigate(
-        `/question/${id}?pageNo=${currentIndex === 0 ? 1 : currentIndex}`
+        `/question/${id}?pageNo=${
+          currentIndex === 0
+            ? 1
+            : currentIndex < questionCount
+            ? currentIndex + 1
+            : currentIndex
+        }`
       );
     }
   };
@@ -70,7 +82,8 @@ const RecentTest = () => {
                     handleResumeQuiz(
                       test?.quizId?._id || "",
                       test?.quizId?.mode || "",
-                      test?.currentQuestionIndex || 0
+                      test?.currentQuestionIndex || 0,
+                      test?.quizId?.questionsCount
                     )
                   }
                   className="flex items-end"

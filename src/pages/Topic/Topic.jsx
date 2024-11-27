@@ -388,7 +388,7 @@ return (
                               handleLeftCategoryCheckbox(category, index)
                             }
                           />
-                          <span className="text-[14px] text-primary">
+                          <span className="text-[14px] text-primary lg:min-w-0 min-w-45 max-w-45 lg:max-w-full text-wrap">
                             {category?.subjectName}
                           </span>
                           <span
@@ -402,7 +402,7 @@ return (
                             )}
                           </span>
                         </div>
-                        <span className="text-white text-[10px] font-semibold bg-[#007AFF] px-2 py-1 rounded-md">
+                        <span className="text-white text-[10px] font-semibold text-nowrap bg-[#007AFF] px-2 py-1 rounded-md">
                           1 of {category?.totalQuestions}
                         </span>
                       </div>
@@ -414,7 +414,7 @@ return (
                                 key={subIndex}
                                 className="flex justify-between items-center pl-12 py-2 px-4 border-b border-[#DEE2E6]"
                               >
-                                <div className="flex items-center">
+                                <div className="flex items-center justify-start">
                                   <input
                                     type="checkbox"
                                     className="mr-3 cursor-pointer"
