@@ -1,13 +1,8 @@
-import React, { useMemo, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useSelector } from "react-redux";
+import React, { useMemo, useState } from "react";
 
-const BellCurveGraph = () => {
-  const { grades: allGrades = [], userGrade = "" } = useSelector(
-    (state) => state?.quiz?.performance || {}
-  );
-
+const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
   const [hovered, setHovered] = useState(false);
   const [hoveredDot, setHoveredDot] = useState(false);
 
@@ -25,7 +20,6 @@ const BellCurveGraph = () => {
     if (!validGrades.length || isNaN(userGradeNumber)) {
       return null;
     }
-
     const mean =
       validGrades.reduce((sum, grade) => sum + grade, 0) / validGrades.length;
     const variance =
@@ -38,7 +32,6 @@ const BellCurveGraph = () => {
     }
 
     const zScore = (userGradeNumber - mean) / stdDev;
-
     const xPosition = mean + zScore * stdDev;
 
     const percentile = normalCDF(zScore) * 100;
@@ -93,18 +86,18 @@ const BellCurveGraph = () => {
     },
     xAxis: {
       title: { text: "Grade" },
-      min: graphData.min,
-      max: graphData.max,
+      min: graphData?.min,
+      max: graphData?.max,
       plotLines: [
         ...(hoveredDot
           ? [
               {
                 color: "red",
                 width: 3,
-                value: graphData.xPosition,
+                value: graphData?.xPosition,
                 dashStyle: "Dash",
                 label: {
-                  text: `Percentile: ${graphData.percentile.toFixed(2)}%`,
+                  text: `Percentile: ${graphData?.percentile?.toFixed(2)}%`,
                   align: "center",
                   verticalAlign: "middle",
                   style: { color: "red", fontWeight: "bold" },
@@ -120,7 +113,7 @@ const BellCurveGraph = () => {
     series: [
       {
         name: "Grade Distribution",
-        data: graphData.points,
+        data: graphData?.points,
         marker: { enabled: false },
         zones: [
           {
@@ -146,7 +139,7 @@ const BellCurveGraph = () => {
       {
         name: "User Grade",
         type: "scatter",
-        data: [[graphData.userGradeNumber, graphData.userGradeY]],
+        data: [[graphData?.userGradeNumber, graphData?.userGradeY]],
         marker: {
           symbol: "circle",
           radius: 6,
@@ -176,7 +169,7 @@ const BellCurveGraph = () => {
     <div className="w-full max-w-4xl p-4">
       <div className="p-4 mb-4 bg-gray-100 rounded">
         <p>
-          You are better than {graphData.betterThanUsers.toFixed(2)}% of the
+          You are better than {graphData?.betterThanUsers?.toFixed(2)}% of the
           class
         </p>
       </div>
@@ -202,9 +195,7 @@ function normalCDF(z) {
       t *
         (-0.356563782 +
           t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
-
   return z > 0 ? 1 - prob : prob;
 }
 
 export default BellCurveGraph;
-  

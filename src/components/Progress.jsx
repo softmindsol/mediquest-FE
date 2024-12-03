@@ -17,7 +17,7 @@ const Progress = () => {
   const { successData = "", performance = {} } = useSelector(
     (state) => state?.quiz || {}
   );
-  const { grades: allGrades = [], userGrade = "" } = performance || {};
+  const data = performance || {};
   const options = [
     { value: "thisWeek", label: "This Week" },
     { value: "lastWeek", label: "Last Week" },
@@ -40,14 +40,10 @@ const Progress = () => {
 
   useEffect(() => {
     const getPerformance = async () => {
-      if (
-        user?.year &&
-        (isOptionChanged || !userGrade || allGrades.length === 0)
-      ) {
+      if (user?.year && Object.keys(performance).length === 0) {
         await dispatch(
           userPerformance({
             year: user?.year || "",
-            timePeriod: selectedOption.value,
           })
         );
         setIsOptionChanged(false);
@@ -57,7 +53,10 @@ const Progress = () => {
     if (!userType) {
       getPerformance();
     }
-  }, [user?.year, selectedOption, isOptionChanged]);
+  }, [user?.year]);
+
+  const allGrades = data[selectedOption?.value]?.grades || [];
+  const userGrade = data[selectedOption?.value]?.userGrade || "0";
 
   const handleOptionClick = (option) => {
     if (option.value !== selectedOption.value) {
@@ -112,7 +111,7 @@ const Progress = () => {
             </h3>
             {!userType ? (
               <>
-                <BellCurveGraph />
+                <BellCurveGraph allGrades={allGrades} userGrade={userGrade} />
               </>
             ) : (
               <p className="font-semibold mt-4 text-[#343A40]">

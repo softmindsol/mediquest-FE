@@ -257,8 +257,6 @@ const SignUp = () => {
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
             try {
-              console.log(values);
-
               const res = await dispatch(registerUser(values));
 
               if (res.type === "registerUser/fulfilled") {

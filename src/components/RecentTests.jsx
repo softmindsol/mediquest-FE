@@ -17,7 +17,6 @@ const RecentTests = () => {
   );
 
 
-  console.log(quiz);
 
   useEffect(() => {
     const fetchRecentQuizes = async () => {

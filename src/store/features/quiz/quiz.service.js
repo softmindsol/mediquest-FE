@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosWithToken } from "../../../api";
 import toast from "react-hot-toast";
+import { clearPerformance } from "./quiz.slice";
 
 export const createQuiz = createAsyncThunk(
   "createQuiz",
@@ -79,8 +80,10 @@ export const submitQuiz = createAsyncThunk(
 
 export const getSummary = createAsyncThunk(
   "getSummary",
-  async ({ id }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue, dispatch }) => {
     try {
+      dispatch(clearPerformance());
+
       const response = await axiosWithToken.get(`/quiz/results/${id}`);
 
       return response.data.data;
@@ -164,8 +167,6 @@ export const userSuccess = createAsyncThunk(
     try {
       const response = await axiosWithToken.get(`/quiz/userSuccess`);
 
-      console.log(response.data);
-      
       return response.data;
     } catch (error) {
       if (error) {
@@ -175,17 +176,11 @@ export const userSuccess = createAsyncThunk(
   }
 );
 
-
-
 export const userPerformance = createAsyncThunk(
   "userPerformance",
-  async ({ year, timePeriod }, { rejectWithValue }) => {
+  async ({ year }, { rejectWithValue }) => {
     try {
-      const response = await axiosWithToken.get(`/quiz/grades/${year}`, {
-        params: {
-          timePeriod,
-        },
-      });
+      const response = await axiosWithToken.get(`/quiz/grades/${year}`);
 
       return response.data;
     } catch (error) {

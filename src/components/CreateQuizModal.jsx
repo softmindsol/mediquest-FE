@@ -15,7 +15,6 @@ const CreateQuizModal = ({
 }) => {
   const { user = {} } = useSelector((state) => state?.user?.selectedUser);
 
-  console.log(values, "--values");
 
   const dispatch = useDispatch();
   const { subjectQuestions = [] } = useSelector(

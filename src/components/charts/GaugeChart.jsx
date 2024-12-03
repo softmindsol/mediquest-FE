@@ -3,8 +3,6 @@ import ReactApexChart from "react-apexcharts";
 const GaugeChart = ({ heading, series }) => {
   
   const getColor = (value) => {
-    console.log(value, "--value");
-
     if (value < 40) {
       return "#FF0000";
     }

@@ -18,10 +18,7 @@ const initialState = {
   scoreboard: [],
   error: null,
   successData: "",
-  performance: {
-    grades: [],
-    userGrade: 0,
-  },
+  performance: {},
   recentQuiz: [],
 };
 
@@ -29,6 +26,11 @@ const quizSlice = createSlice({
   name: "quiz",
   initialState,
 
+  reducers: {
+    clearPerformance(state) {
+      state.performance = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getQuizQuesitons.pending, (state) => {
@@ -83,10 +85,10 @@ const quizSlice = createSlice({
         state.error = action.payload;
         state.isLoading = false;
       })
-      .addCase(submitQuiz.pending, (state, action) => {
+      .addCase(submitQuiz.pending, (state, _) => {
         state.isLoading = true;
       })
-      .addCase(submitQuiz.fulfilled, (state, action) => {
+      .addCase(submitQuiz.fulfilled, (state, _) => {
         state.isLoading = false;
       })
       .addCase(submitQuiz.rejected, (state, action) => {
@@ -94,20 +96,19 @@ const quizSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(userPerformance.fulfilled, (state, action) => {
-        state.performance.grades = action.payload.data.grades;
-        state.performance.userGrade = action.payload.data.userGrade;
+        state.performance = action.payload.data;
       })
       .addCase(userPerformance.rejected, (state, action) => {
         state.error = action.payload;
       })
-      .addCase(getSummary.pending, (state, action) => {
+      .addCase(getSummary.pending, (state, _) => {
         state.isLoading = true;
       })
-      .addCase(getSummary.fulfilled, (state, action) => {
+      .addCase(getSummary.fulfilled, (state, _) => {
         state.isLoading = false;
         state.quiz = [];
-        state.performance.grades=[]
-        state.performance.userGrade=0
+        // state.performance.grades = [];
+        // state.performance.userGrade = 0;
         state.isApiCalled = false;
         state.recentQuiz = [];
         state.successData = "";
@@ -117,10 +118,10 @@ const quizSlice = createSlice({
         state.isLoading = false;
         state.quiz = [];
       })
-      .addCase(endQuiz.pending, (state, action) => {
+      .addCase(endQuiz.pending, (state, _) => {
         state.isLoading = true;
       })
-      .addCase(endQuiz.fulfilled, (state, action) => {
+      .addCase(endQuiz.fulfilled, (state, _) => {
         state.isLoading = false;
         state.quiz = [];
       })
@@ -151,13 +152,13 @@ const quizSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.quiz = [];
         state.scoreboard = [];
-        state.performance = { grades: [], userGrade: 0 };
+        state.performance = {};
         state.recentQuiz = [];
         state.isApiCalled = false;
         state.successData = "";
       });
   },
 });
-
+export const { clearPerformance } = quizSlice.actions;
 export default quizSlice.reducer;
 
