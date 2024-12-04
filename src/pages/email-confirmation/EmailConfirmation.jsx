@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Notification from "../../components/Notification";
 import { checkMail, resendMail } from "../../store/features/auth/auth.service";
-import { Navigate, useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
+  const [resendMailLoading, setResendMailLoading] = useState(false);
+  const [verifiedMailLoading, setVerifiedMailLoading] = useState(false);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const [isEmailSent, setIsEmailSent] = useState(true);
   const [notification, setNotification] = useState(null);
   const userId = localStorage.getItem("userId");
 
   const handleResendEmail = async () => {
+    setResendMailLoading(true);
     const response = await dispatch(resendMail(userId));
+    setResendMailLoading(false);
     if (response.type === "resendMail/fulfilled") {
       setNotification({ title: response.payload.message, type: "success" });
     } else {
@@ -28,11 +31,16 @@ const EmailVerification = () => {
   };
 
   const handleConfirmEmail = async () => {
+    setVerifiedMailLoading(true);
     const response = await dispatch(checkMail(userId));
-
+    setVerifiedMailLoading(false);
 
     if (response.type === "checkMail/fulfilled") {
-      navigate("/log-in");
+      setNotification({ title: "Email verified! Redirecting now..." });
+      setVerifiedMailLoading(true);
+      setTimeout(() => {
+        navigate("/log-in");
+      }, 2000);
     } else {
       setNotification({
         title:
@@ -42,15 +50,14 @@ const EmailVerification = () => {
     }
   };
 
-  // Determine the notification color based on the type
   const getNotificationColor = (type) => {
     switch (type) {
       case "success":
-        return "bg-green-200 border-green-400"; // Example success color
+        return "bg-green-200 border-green-400";
       case "error":
-        return "bg-red-200 border-red-400"; // Red color for errors
+        return "bg-red-200 border-red-400";
       default:
-        return "bg-[#CFF4FC] border-[#6EDFF6]"; // Default color
+        return "bg-[#CFF4FC] border-[#6EDFF6]";
     }
   };
 
@@ -86,6 +93,7 @@ const EmailVerification = () => {
 
           <div className="flex items-center justify-end gap-5 p-4">
             <button
+              disabled={resendMailLoading}
               onClick={handleResendEmail}
               className="px-4 py-2 bg-[#808080] font-semibold text-title-p text-white rounded-md"
             >
@@ -93,6 +101,7 @@ const EmailVerification = () => {
             </button>
 
             <button
+              disabled={verifiedMailLoading}
               onClick={handleConfirmEmail}
               className="px-4 py-2 bg-[#007AFF] font-semibold text-title-p text-white rounded-md"
             >

@@ -23,7 +23,6 @@ import Loader from "./Loader";
 
 const QuestionTemplate = () => {
   const state = useSelector((state) => state?.quiz?.quiz || []);
-
   const { scoreboard = [], isLoading = false } = useSelector(
     (state) => state?.quiz || {}
   );
