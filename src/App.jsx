@@ -17,6 +17,8 @@ import LandingPage from "./pages/landingpage/LandingPage";
 import ForgotPassword from "./pages/forget-password/ForgotPassword";
 import ResetPassword from "./pages/forget-password/ResetPassword";
 import NewPassword from "./pages/forget-password/NewPassword";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -119,7 +121,9 @@ function App() {
           path="/question/:id"
           element={
             <ProtectedRoute>
-              <Question />
+              <QueryClientProvider client={queryClient}>
+                <Question />
+              </QueryClientProvider>
             </ProtectedRoute>
           }
         />

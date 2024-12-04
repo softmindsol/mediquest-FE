@@ -41,7 +41,6 @@ const Improvements = ({
   };
 
   const handleAddSuggestion = (suggestion) => {
-    // Allow only one suggestion at a time
     setSuggestionText(suggestion);
   };
 

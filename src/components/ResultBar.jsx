@@ -1,6 +1,4 @@
-import React from "react";
-
-const ResultsBar = ({ score, percentile }) => {
+const ResultsBar = ({ score }) => {
   const greenWidth = score;
   const redWidth = 100 - score;
 
@@ -9,8 +7,7 @@ const ResultsBar = ({ score, percentile }) => {
       {/* Results Text */}
       <div className="text-[15px] font-medium mb-4">Results</div>
       <p className="text-center mx-auto text-[14px] mb-6 lg:max-w-lg">
-        Your average score of<span className="font-bold"> {score}%</span> puts
-        you on the {percentile}th percentile of users who are taking the exam.
+        Your average score is<span className="font-bold"> {score}%</span>
       </p>
 
       <div className="flex w-full h-4 bg-gray-300 rounded-full">

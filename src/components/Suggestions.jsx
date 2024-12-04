@@ -2,60 +2,47 @@ import { useCallback, useState } from "react";
 import { BsHandThumbsDown, BsHandThumbsUp } from "react-icons/bs";
 import { FaRegCommentDots, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { createSelector } from "reselect";
 import { useDrawer } from "../context/drawer";
 import { getComments } from "../store/features/discussion/discussion.service";
-import {
-  getQuizQuesitons,
-  likeDislikeQuestion,
-} from "../store/features/quiz/quiz.service";
+import { likeDislikeQuestion } from "../store/features/quiz/quiz.service";
 import DiscussionDrawer from "./discussion/DiscussionDrawer";
 import GenericDrawer from "./generic-drawer";
 import Improvements from "./Improvements";
 
-const Suggestions = ({ pageNo = "", id = "" }) => {
+const Suggestions = ({ setLike, setDisLike, like, dislike }) => {
   const dispatch = useDispatch();
-
+  const { openDrawer } = useDrawer();
   const discussionCount = useSelector(
     (state) => state?.quiz?.quiz[1]?.discussionCount || 0
   );
-
-  const selectQuiz = (state) => state?.quiz?.quiz || [];
-  const selectLikesAndDislikes = createSelector([selectQuiz], (quiz) => ({
-    likes: quiz[1]?.likes || 0,
-    dislikes: quiz[1]?.dislikes || 0,
-    isUserLiked: quiz[1]?.isUserLiked || { liked: false, disliked: false },
-    documentId: quiz[0]?.documentId || "",
-    questionId: quiz[0]?.questionId || "",
-  }));
 
   const { comments = [], isApiFetched = false } = useSelector(
     (state) => state?.discussion || {}
   );
 
-  const { likes, dislikes, isUserLiked, documentId, questionId } = useSelector(
-    selectLikesAndDislikes
+  const questionId = useSelector(
+    (state) => state?.quiz?.quiz[0]?.questionId || ""
   );
-  const handleGetDiscussion = async () => {
-    if (comments.length === 0 && !isApiFetched)
-      await dispatch(getComments({ question: questionId }));
-  };
 
-  const { openDrawer } = useDrawer();
-
-  const openDiscussionDrawer = useCallback(() => {
-    openDrawer(<DiscussionDrawer />, `Discussion(${discussionCount || 0})`);
-  }, [comments?.total, openDrawer]);
+  const documentId = useSelector(
+    (state) => state?.quiz?.quiz[0]?.documentId || ""
+  );
 
   const [isLoading, setLoading] = useState({
     likeIsLoading: false,
     dislikeIsLoading: false,
   });
 
-  const totalVotes = likes + dislikes;
-  const likePercentage = totalVotes === 0 ? 0 : (likes / totalVotes) * 100;
-  const dislikePercentage =
-    totalVotes === 0 ? 0 : (dislikes / totalVotes) * 100;
+  const [showImproveSection, setShowImproveSection] = useState(false);
+  const [suggestionText, setSuggestionText] = useState("");
+
+  const handleToggle = () => setShowImproveSection((prev) => !prev);
+
+  const handleGetDiscussion = useCallback(async () => {
+    if (comments.length === 0 && !isApiFetched) {
+      await dispatch(getComments({ question: questionId }));
+    }
+  }, [dispatch, comments.length, isApiFetched, questionId]);
 
   const handleLikeDislike = useCallback(
     async (action) => {
@@ -64,29 +51,41 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
         [action === "like" ? "likeIsLoading" : "dislikeIsLoading"]: true,
       }));
 
-      const res = await dispatch(
-        likeDislikeQuestion({ action, documentId, questionId })
-      );
-
-      if (res.type === "likeDislikeQuestion/fulfilled") {
-        await dispatch(
-          getQuizQuesitons({
-            pageNo,
-            id,
-            isNextClicked: true,
-            isPrevClicked: false,
-          })
+      try {
+        const res = await dispatch(
+          likeDislikeQuestion({ action, documentId, questionId })
         );
+
+        if (res.type === "likeDislikeQuestion/fulfilled") {
+          if (action === "like") {
+            if (like) {
+              setLike(false);
+            } else {
+              setLike(true);
+              setDisLike(false);
+            }
+          } else {
+            if (dislike) {
+              setDisLike(false);
+            } else {
+              setDisLike(true);
+              setLike(false);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Like/Dislike failed:", error);
+      } finally {
+        setLoading({ likeIsLoading: false, dislikeIsLoading: false });
       }
-      setLoading({ likeIsLoading: false, dislikeIsLoading: false });
     },
-    [dispatch, documentId, questionId, pageNo, id]
+    [dispatch, documentId, questionId, like, dislike, setLike, setDisLike]
   );
 
-  const [showImproveSection, setShowImproveSection] = useState(false);
-  const [suggestionText, setSuggestionText] = useState("");
-
-  const handleToggle = () => setShowImproveSection((prev) => !prev);
+  const openDiscussionDrawer = useCallback(() => {
+    handleGetDiscussion();
+    openDrawer(<DiscussionDrawer />, `Discussion(${discussionCount || 0})`);
+  }, [handleGetDiscussion, openDrawer, discussionCount]);
 
   const renderLikeDislikeButton = (type, isLoading, isLiked, onClick) => {
     const Icon =
@@ -112,20 +111,17 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
 
   return (
     <div className="max-w-4xl p-6">
-      <div className="flex gap-4 items-center border border-[#6c757d] rounded-xl px-2">
+      <div className="flex md:gap-4 items-center border w-72 md:w-100 border-[#6c757d] rounded-xl md:px-2">
         <div className="border-r p-2 border-[#6c757d]">
-          {renderLikeDislikeButton(
-            "like",
-            isLoading.likeIsLoading,
-            isUserLiked.liked,
-            () => handleLikeDislike("like")
+          {renderLikeDislikeButton("like", isLoading.likeIsLoading, like, () =>
+            handleLikeDislike("like")
           )}
         </div>
         <div className="border-r p-2 border-[#6c757d]">
           {renderLikeDislikeButton(
             "dislike",
             isLoading.dislikeIsLoading,
-            isUserLiked.disliked,
+            dislike,
             () => handleLikeDislike("dislike")
           )}
         </div>
@@ -133,10 +129,7 @@ const Suggestions = ({ pageNo = "", id = "" }) => {
           onClick={openDiscussionDrawer}
           className="text-[#6c757d]  p-2 border-r cursor-pointer border-[#6c757d]"
         >
-          <div
-            className="flex items-center gap-x-2"
-            onClick={handleGetDiscussion}
-          >
+          <div className="flex items-center gap-x-2">
             <FaRegCommentDots size={20} /> Discuss ({discussionCount || 0})
           </div>
         </div>

@@ -32,8 +32,7 @@ const Summary = () => {
     totalScore,
     score,
     scoreboard,
-    percentile,
-    rank,
+    averageScore,
     name,
   } = data;
 
@@ -101,7 +100,7 @@ const Summary = () => {
                 </div>
               </div>
             </div>
-            <ResultsBar score={percentile} percentile={rank} />
+            <ResultsBar score={averageScore} />
 
             <div className="lg:col-span-2 mt-auto bg-white rounded-lg border border-[#E6E9EC] p-9">
               <div className="flex items-center justify-between mb-4">

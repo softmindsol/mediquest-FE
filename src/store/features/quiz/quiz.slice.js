@@ -25,7 +25,6 @@ const initialState = {
 const quizSlice = createSlice({
   name: "quiz",
   initialState,
-
   reducers: {
     clearPerformance(state) {
       state.performance = {};
@@ -159,6 +158,6 @@ const quizSlice = createSlice({
       });
   },
 });
-export const { clearPerformance } = quizSlice.actions;
+export const { clearPerformance, resetLikeDislikeState } = quizSlice.actions;
 export default quizSlice.reducer;
 

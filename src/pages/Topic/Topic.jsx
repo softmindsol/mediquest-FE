@@ -15,6 +15,7 @@ import { getCurrentUser } from "../../store/features/auth/auth.service";
 const universityNames = categoryItems.map((item) => item.name);
 
 const Topic = () => {
+
   const { subjectQuestions = [], user = {} } = useSelector(
     (state) => state?.user?.selectedUser
   );

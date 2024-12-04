@@ -20,8 +20,12 @@ import {
 } from "react-icons/md";
 import Timer from "./Timer";
 import Loader from "./Loader";
+import { useQuery } from "@tanstack/react-query";
 
 const QuestionTemplate = () => {
+  const [like, setLike] = useState(false);
+  const [dislike, setDisLike] = useState(false);
+
   const state = useSelector((state) => state?.quiz?.quiz || []);
   const { scoreboard = [], isLoading = false } = useSelector(
     (state) => state?.quiz || {}
@@ -51,6 +55,11 @@ const QuestionTemplate = () => {
       const res = await dispatch(
         getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
       );
+
+      if (res.type === "getQuizQuesitons/fulfilled") {
+        setLike(res.payload.isUserLikeDislike.liked);
+        setDisLike(res.payload.isUserLikeDislike.disliked);
+      }
       if (res?.payload?.questions?.length > 0) {
         setImage(res.payload.questions[0].image_url);
         setNextClicked(false);
@@ -98,7 +107,12 @@ const QuestionTemplate = () => {
         if (pageNo === quizDetail?.totalQuestions) {
           setNextClicked(true);
           dispatch(
-            getQuizQuesitons({ pageNo, id, isNextClicked: true, isPrevClicked })
+            getQuizQuesitons({
+              pageNo,
+              id,
+              isNextClicked: true,
+              isPrevClicked,
+            })
           );
         } else {
           handleNext();
@@ -210,7 +224,9 @@ const QuestionTemplate = () => {
               <div className="my-6 mt-6">
                 <h2
                   className="font-semibold text-title-p"
-                  dangerouslySetInnerHTML={{ __html: quizQuestions?.question }}
+                  dangerouslySetInnerHTML={{
+                    __html: quizQuestions?.question,
+                  }}
                 />
               </div>
 
@@ -292,7 +308,14 @@ const QuestionTemplate = () => {
                 </div>
               </div>
             </form>
-            <Suggestions pageNo={pageNo} id={id} />
+            <Suggestions
+              setLike={setLike}
+              setDisLike={setDisLike}
+              like={like}
+              dislike={dislike}
+              pageNo={pageNo}
+              id={id}
+            />
           </div>
 
           <div className="lg:w-[12%] w-fit bg-white rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start"></div>

@@ -6,7 +6,6 @@ import App from "./App.jsx";
 import "./index.css";
 import store from "./store/index.js";
 import { DrawerProvider } from "./context/drawer/index.jsx";
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <DrawerProvider>
