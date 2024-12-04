@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { SlArrowRight } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getRecentQuiz, resumeQuiz } from "../store/features/quiz/quiz.service";
 import DotsLoader from "./Loader/dots-loader";
 
@@ -15,8 +15,6 @@ const RecentTests = () => {
   const { recentQuiz: quiz = [], isApiCalled = false } = useSelector(
     (state) => state.quiz || {}
   );
-
-
 
   useEffect(() => {
     const fetchRecentQuizes = async () => {
@@ -76,7 +74,11 @@ const RecentTests = () => {
           <DotsLoader />
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-[#CED4DA]">
+        <div
+          className={`${
+            quiz.length > 0 ? "bg-white rounded-lg border border-[#CED4DA]" : ""
+          }`}
+        >
           {quiz && quiz.length > 0 ? (
             quiz.map((test, index) => (
               <div key={index} className="border-b border-[#CED4DA]">
@@ -145,12 +147,6 @@ const RecentTests = () => {
                                   Cancel
                                 </button>
                                 <button
-                                  // to={`/question/${test?.quizId?._id}?pageNo=${
-                                  //   test?.currentQuestionIndex === 0
-                                  //     ? 1
-                                  //     : test?.currentQuestionIndex
-                                  // }`}
-                                  // to={}
                                   onClick={() =>
                                     handleResumeQuiz(
                                       test?.quizId?._id || "",
@@ -176,7 +172,9 @@ const RecentTests = () => {
               </div>
             ))
           ) : (
-            <div className="px-3 py-2">Your quiz count is 0</div>
+            <div className="text-sm text-center bg-transparent text-[#6C6C6C]">
+              Create quiz to get started
+            </div>
           )}
         </div>
       )}

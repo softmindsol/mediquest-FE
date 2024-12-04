@@ -309,19 +309,21 @@ return (
               <div>
                 <label
                   htmlFor="time"
-                  className="block text-[14px] font-semibold text-[#111827]"
+                  className={`block text-[14px] font-semibold  ${
+                    userType ? "text-[#9CA3AF]" : "text-[#111827]"
+                  }`}
                 >
                   Time (minutes)
                 </label>
                 <input
                   type="number"
-                  disabled={userType || values.mode !== "Timed"} // Disable for free users
+                  disabled={userType || values.mode !== "Timed"}
                   placeholder="Enter time in minutes"
                   value={formdata.timerDuration}
                   min={1}
                   max={90}
                   name="timerDuration"
-                  onChange={handleTimerDurationChange} // Separate handler for timer duration
+                  onChange={handleTimerDurationChange}
                   className={`mt-1 px-4 py-2 text-[#838f9b] text-title-p w-62.5 focus:outline-none rounded-[4px] border ${
                     formErrors.timerDuration
                       ? "border-red-500"
@@ -473,7 +475,8 @@ return (
                 />
                 <label
                   title={
-                    userType ? "Timed Mode is not available for your plan" : ""
+                    userType &&
+                    "Timed Mode is not available for your plan.Please upgrade your plan"
                   }
                   className="text-[15px] font-medium text-primary"
                 >
@@ -523,6 +526,10 @@ return (
                 type="text"
                 onClick={handleToggle}
                 placeholder="Search"
+                title={
+                  userType &&
+                  "University search is not available for your plan. Please upgrade your plan"
+                }
                 className="w-full py-2 rounded-md cursor-pointer px-7 focus:outline-none placeholder-secondary"
                 value={searchTerm}
                 disabled={userType}

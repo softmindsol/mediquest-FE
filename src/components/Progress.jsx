@@ -101,6 +101,9 @@ const Progress = () => {
         <div className="grid justify-center grid-cols-1 gap-6 mt-10 lg:grid-cols-2">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <div className="text-center">
+              <h1 className="text-[#343A40] text-base leading-[24.2px] font-semibold">
+                Performance
+              </h1>
               {successData && <GaugeChart series={[successData]} />}
             </div>
           </div>
