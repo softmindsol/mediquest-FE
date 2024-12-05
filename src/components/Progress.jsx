@@ -13,6 +13,7 @@ const Progress = () => {
 
   const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
   const userType = user?.userType?.plan === "FREE";
+  console.log("🚀 ~ Progress ~ userType:", userType);
 
   const { successData = "", performance = {} } = useSelector(
     (state) => state?.quiz || {}
@@ -73,31 +74,39 @@ const Progress = () => {
       </h2>
 
       <div className="p-5 bg-white rounded-xl mb-30">
-        {!userType && (
-          <div className="relative flex justify-end pr-3">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="bg-white border flex border-[#007AFF] text-[#007AFF] font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md"
-            >
-              {selectedOption.label}
-              <GoChevronDown size={20} className="text-[#007AFF]" />
-            </button>
+        <div className="relative flex justify-end pr-3">
+          <button
+            onClick={() => {
+              if (userType) return;
+              setIsOpen(!isOpen);
+            }}
+            className={`bg-white border flex  font-semibold text-[12px] px-4 items-center gap-2 py-2 rounded-md ${
+              userType
+                ? "border-[#747474] text-[#5D5D5D]"
+                : "border-[#007AFF] text-[#007AFF]"
+            }`}
+          >
+            {selectedOption.label}
+            <GoChevronDown
+              size={20}
+              className={`${userType ? "text-[#5D5D5D]" : "text-[#007AFF]"}`}
+            />
+          </button>
 
-            {isOpen && (
-              <div className="absolute mt-11 right-1 bg-white border border-[#E4E6EF] rounded-md shadow-lg w-[10%] z-40">
-                {options.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleOptionClick(option)}
-                    className="px-4 py-2 text-[#007AFF] hover:bg-[#F3F6F9] cursor-pointer text-[12px] font-medium"
-                  >
-                    {option.label}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          {isOpen && (
+            <div className="absolute mt-11 right-1 bg-white border border-[#E4E6EF] rounded-md shadow-lg w-[10%] z-40">
+              {options.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleOptionClick(option)}
+                  className="px-4 py-2 text-[#007AFF] hover:bg-[#F3F6F9] cursor-pointer text-[12px] font-medium"
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="grid justify-center grid-cols-1 gap-6 mt-10 lg:grid-cols-2">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <div className="text-center">
@@ -112,15 +121,14 @@ const Progress = () => {
             <h3 className="text-[#343A40] text-title-sm font-semibold">
               Performance compared to Year 1 students
             </h3>
-            {!userType ? (
-              <>
-                <BellCurveGraph allGrades={allGrades} userGrade={userGrade} />
-              </>
-            ) : (
+            {userType && (
               <p className="font-semibold mt-4 text-[#343A40]">
                 Not available for your plan
               </p>
             )}
+            <>
+              <BellCurveGraph allGrades={allGrades} userGrade={userGrade} />
+            </>
           </div>
         </div>
       </div>

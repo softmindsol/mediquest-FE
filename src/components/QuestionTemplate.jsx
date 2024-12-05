@@ -20,10 +20,18 @@ import Button from "./Button";
 import Loader from "./Loader";
 import Suggestions from "./Suggestions";
 import Timer from "./Timer";
+import { useModal } from "../context/modal";
+import WarningModal from "./modal/WarningModal";
+import Modal from "./modal";
 
 const QuestionTemplate = () => {
   const [like, setLike] = useState(false);
   const [dislike, setDisLike] = useState(false);
+  const { openModal, closeModal } = useModal();
+
+  const openConfirmationModal = () => {
+    openModal(<WarningModal closeModal={closeModal} onClick={handleEndQuiz} />);
+  };
 
   const state = useSelector((state) => state?.quiz?.quiz || []);
   const { scoreboard = [], isLoading = false } = useSelector(
@@ -124,7 +132,9 @@ const QuestionTemplate = () => {
       if (res.type === "endQuiz/fulfilled") {
         navigate("/");
       }
+      closeModal();
     } else {
+      closeModal();
       navigate("/");
     }
   };
@@ -145,7 +155,7 @@ const QuestionTemplate = () => {
       <div className="flex items-center justify-between py-4 m-auto text-center bg-white shadow px-7">
         <p className="text-title-sm font-semibold text-[#3A57E8]">MEDQUEST</p>
         <p
-          onClick={handleEndQuiz}
+          onClick={openConfirmationModal}
           className="text-title-p cursor-pointer font-semibold text-[#FF3B30]"
         >
           End Quiz
@@ -328,6 +338,7 @@ const QuestionTemplate = () => {
           )}
         </div>
       </div>
+      <Modal />
     </div>
   );
 };

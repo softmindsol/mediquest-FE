@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import "./index.css";
 import store from "./store/index.js";
 import { DrawerProvider } from "./context/drawer/index.jsx";
+import { ModalProvider } from "./context/modal/index.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <DrawerProvider>
@@ -20,8 +21,9 @@ createRoot(document.getElementById("root")).render(
             },
           }}
         />
-
-        <App />
+        <ModalProvider>
+          <App />
+        </ModalProvider>
       </Provider>
     </DrawerProvider>
   </StrictMode>

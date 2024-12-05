@@ -1,12 +1,45 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
+  const { user = {} } = useSelector((state) => state?.user?.selectedUser || {});
+  const userType = user?.userType?.plan === "FREE"; // true for FREE users
+
   const [hovered, setHovered] = useState(false);
   const [hoveredDot, setHoveredDot] = useState(false);
 
+  // If userType is "FREE", we generate a random bell curve
   const graphData = useMemo(() => {
+    if (userType) {
+      // Generate random normal distribution data for FREE users
+      const mean = 75; // Let's assume mean is 75
+      const stdDev = 15; // Standard deviation
+      const points = [];
+      const min = mean - 4 * stdDev;
+      const max = mean + 4 * stdDev;
+
+      // Random points generation for the curve
+      for (let x = min; x <= max; x += stdDev / 10) {
+        points.push([x, normalPDF(x, mean, stdDev)]);
+      }
+
+      return {
+        points,
+        mean,
+        stdDev,
+        userGradeNumber: Math.random() * (max - min) + min, // Random user grade between min and max
+        zScore: null,
+        percentile: null,
+        betterThanUsers: null,
+        userGradeY: null,
+        min,
+        max,
+      };
+    }
+
+    // Otherwise, proceed with actual data (as is in the original code)
     const userGradeNumber = Number(userGrade);
     if (userGradeNumber === 0) {
       return null;
@@ -20,6 +53,7 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
     if (!validGrades.length || isNaN(userGradeNumber)) {
       return null;
     }
+
     const mean =
       validGrades.reduce((sum, grade) => sum + grade, 0) / validGrades.length;
     const variance =
@@ -63,7 +97,7 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
       max,
       xPosition,
     };
-  }, [allGrades, userGrade]);
+  }, [allGrades, userGrade, userType]);
 
   if (!graphData) {
     return <div>Unable to generate bell curve due to insufficient data.</div>;
@@ -118,17 +152,23 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
         zones: [
           {
             value: 50,
-            color: "#1e90ff",
-            fillColor: "rgba(30, 144, 255, 0.3)",
+            color: userType ? "#747474" : "#1e90ff", // Grey if FREE, blue otherwise
+            fillColor: userType
+              ? "rgba(116, 116, 116, 0.3)"
+              : "rgba(30, 144, 255, 0.3)", // Grey fill if FREE, blue fill otherwise
           },
           {
             value: 100,
-            color: "#32cd32",
-            fillColor: "rgba(50, 205, 50, 0.3)",
+            color: userType ? "#5D5D5D" : "#32cd32", // Grey if FREE, green otherwise
+            fillColor: userType
+              ? "rgba(93, 93, 93, 0.3)"
+              : "rgba(50, 205, 50, 0.3)", // Grey fill if FREE, green fill otherwise
           },
           {
-            color: "#ff4500",
-            fillColor: "rgba(255, 69, 0, 0.3)",
+            color: userType ? "#5D5D5D" : "#ff4500", // Grey if FREE, orange otherwise
+            fillColor: userType
+              ? "rgba(93, 93, 93, 0.3)"
+              : "rgba(255, 69, 0, 0.3)", // Grey fill if FREE, orange fill otherwise
           },
         ],
         tooltip: {
@@ -136,7 +176,7 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
         },
       },
 
-      {
+      !userType && {
         name: "User Grade",
         type: "scatter",
         data: [[graphData?.userGradeNumber, graphData?.userGradeY]],
@@ -157,7 +197,8 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
           },
         },
       },
-    ],
+    ].filter(Boolean), // Filter out `undefined` if userType is true
+
     tooltip: {
       enabled: false,
       headerFormat: "",
@@ -168,10 +209,12 @@ const BellCurveGraph = ({ allGrades = [], userGrade = "" }) => {
   return (
     <div className="w-full max-w-4xl p-4">
       <div className="p-4 mb-4 bg-gray-100 rounded">
-        <p>
-          You are better than {graphData?.betterThanUsers?.toFixed(2)}% of the
-          class
-        </p>
+        {!userType && (
+          <p>
+            You are better than {graphData?.betterThanUsers?.toFixed(2)}% of the
+            class
+          </p>
+        )}
       </div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
@@ -195,6 +238,7 @@ function normalCDF(z) {
       t *
         (-0.356563782 +
           t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+
   return z > 0 ? 1 - prob : prob;
 }
 
