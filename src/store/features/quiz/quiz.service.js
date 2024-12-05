@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosWithToken } from "../../../api";
 import toast from "react-hot-toast";
-import { clearPerformance } from "./quiz.slice";
+import { clearPerformance, clearRecentQuizAndSuccessData } from "./quiz.slice";
 
 export const createQuiz = createAsyncThunk(
   "createQuiz",
@@ -39,7 +39,6 @@ export const getQuizQuesitons = createAsyncThunk(
   "getQuizQuesitons",
   async ({ pageNo, id, isNextClicked, isPrevClicked }, { rejectWithValue }) => {
     const params = {};
-
     if (pageNo) {
       params.pageNo = pageNo;
     }
@@ -64,8 +63,9 @@ export const getQuizQuesitons = createAsyncThunk(
 
 export const submitQuiz = createAsyncThunk(
   "submitQuiz",
-  async (data, { rejectWithValue }) => {
+  async (data, { rejectWithValue, dispatch }) => {
     try {
+      dispatch(clearRecentQuizAndSuccessData());
       const response = await axiosWithToken.post(`quiz/submit-answer`, data);
 
       return response.data.data;

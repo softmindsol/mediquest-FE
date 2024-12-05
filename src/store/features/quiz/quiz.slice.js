@@ -29,6 +29,11 @@ const quizSlice = createSlice({
     clearPerformance(state) {
       state.performance = {};
     },
+    clearRecentQuizAndSuccessData(state) {
+      state.recentQuiz = [];
+      state.isApiCalled = false;
+      state.successData = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -64,8 +69,8 @@ const quizSlice = createSlice({
         });
 
         state.scoreboard = scoreboard;
-        state.isApiCalled = false;
-        state.recentQuiz = [];
+        // state.isApiCalled = false;
+        // state.recentQuiz = [];
         state.isLoading = false;
       })
       .addCase(getQuizQuesitons.rejected, (state, action) => {
@@ -158,6 +163,7 @@ const quizSlice = createSlice({
       });
   },
 });
-export const { clearPerformance, resetLikeDislikeState } = quizSlice.actions;
+export const { clearPerformance, clearRecentQuizAndSuccessData } =
+  quizSlice.actions;
 export default quizSlice.reducer;
 

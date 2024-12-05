@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
+import {
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
 import { SlArrowRight } from "react-icons/sl";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
   useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import Button from "./Button";
-import { useDispatch, useSelector } from "react-redux";
 import {
   endQuiz,
   getQuizQuesitons,
   submitQuiz,
 } from "../store/features/quiz/quiz.service";
-import Suggestions from "./Suggestions";
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
-import Timer from "./Timer";
+import Button from "./Button";
 import Loader from "./Loader";
-import { useQuery } from "@tanstack/react-query";
+import Suggestions from "./Suggestions";
+import Timer from "./Timer";
 
 const QuestionTemplate = () => {
   const [like, setLike] = useState(false);
@@ -91,8 +90,6 @@ const QuestionTemplate = () => {
     e.preventDefault();
     if (selectedOptions.length === 0) {
       setError("Please select at least one option.");
-    } else if (selectedOptions.length > 2) {
-      setError("You can select a maximum of two options.");
     } else {
       const values = {
         selectedOptions,
@@ -138,7 +135,7 @@ const QuestionTemplate = () => {
       setSelectedOptions(
         selectedOptions.filter((option) => option !== optionValue)
       );
-    } else if (selectedOptions.length < 2) {
+    } else {
       setSelectedOptions([...selectedOptions, optionValue]);
     }
   };
@@ -252,9 +249,14 @@ const QuestionTemplate = () => {
                             <input
                               type="checkbox"
                               className="mr-3 min-w-[16px] min-h-[16px] text-[#838f9b] cursor-pointer"
-                              checked={selectedOptions.includes(
-                                String.fromCharCode(65 + index)
-                              )}
+                              checked={
+                                quizQuestions?.userAttempt?.includes(
+                                  String.fromCharCode(65 + index)
+                                ) ||
+                                selectedOptions.includes(
+                                  String.fromCharCode(65 + index)
+                                )
+                              }
                               onChange={() => handleOptionChange(index)}
                               disabled={
                                 !quizQuestions?.hasAnswered
