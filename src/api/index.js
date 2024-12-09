@@ -1,6 +1,4 @@
 import axios from "axios";
-import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -24,7 +22,6 @@ axiosWithToken.interceptors.response.use(
       (response && response.data.error === "jwt expired") ||
       response.data.error === "Token has been invalidated. Please log in again."
     ) {
-      await toast.error("Session expired. Please log in again.");
       localStorage.removeItem("isLoggedIn");
       // Redirect to the login page
       setTimeout(() => {
@@ -36,6 +33,4 @@ axiosWithToken.interceptors.response.use(
   }
 );
 
-
-
-export { axiosWithToken, apiClient };
+export { apiClient, axiosWithToken };
