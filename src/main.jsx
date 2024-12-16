@@ -8,14 +8,14 @@ import { DrawerProvider } from "./context/drawer/index.jsx";
 import { ModalProvider } from "./context/modal/index.jsx";
 import ToasterComponent from "./components/ToasterComponent.jsx";
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <DrawerProvider>
-      <Provider store={store}>
-        <ToasterComponent />
-        <ModalProvider>
-          <App />
-        </ModalProvider>
-      </Provider>
-    </DrawerProvider>
-  </StrictMode>
+  // <StrictMode>
+  <DrawerProvider>
+    <Provider store={store}>
+      <ToasterComponent />
+      <ModalProvider>
+        <App />
+      </ModalProvider>
+    </Provider>
+  </DrawerProvider>
+  // </StrictMode>
 );

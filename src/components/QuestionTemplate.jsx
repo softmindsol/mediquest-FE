@@ -7,6 +7,7 @@ import { SlArrowRight } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
+  useLocation,
   useNavigate,
   useParams,
   useSearchParams,
@@ -23,121 +24,195 @@ import Timer from "./Timer";
 import { useModal } from "../context/modal";
 import WarningModal from "./modal/WarningModal";
 import Modal from "./modal";
+import {
+  decrementQuestionIndex,
+  incrementQuestionIndex,
+  resetQuiz,
+} from "../store/features/quiz/quiz.slice";
+import { axiosWithToken } from "../api";
+import decryptQuestionData from "../helpers/decrypt.helpers";
 
 const QuestionTemplate = () => {
-  const [like, setLike] = useState(false);
-  const [dislike, setDisLike] = useState(false);
+  const location = useLocation();
+  const { id } = location.state;
+
+  const [questions, setQuestions] = useState([]);
+  // console.log("🚀 ~ QuestionTemplate ~ questions:OK1", questions);
+  const [quizDetail, setQuizDetail] = useState({
+    totalQuestions: 0,
+    score: 0,
+    mode: "",
+    isSubmit: false,
+    currentQuestionIndex: 0,
+  });
+  const [isLoading, setLoading] = useState(false);
   const { openModal, closeModal } = useModal();
+
+  // console.log(quizDetail.currentQuestionIndex);
 
   const openConfirmationModal = () => {
     openModal(<WarningModal closeModal={closeModal} onClick={handleEndQuiz} />);
   };
 
-  const state = useSelector((state) => state?.quiz?.quiz || []);
-  const { scoreboard = [], isLoading = false } = useSelector(
-    (state) => state?.quiz || {}
-  );
+  // const {
+  //   questions = [],
+  //   score = 0,
+  //   totalQuestions = 0,
+  //   currentQuestionIndex = 0,
+  //   mode = "Tutor",
+  //   isSubmit,
+  // } = useSelector((state) => state?.quiz || []);
+
+  const question = questions[quizDetail.currentQuestionIndex];
+
+  const state = useSelector((state) => state?.quiz || {});
+
+  const { scoreboard = [] } = useSelector((state) => state?.quiz || {});
 
   const quizQuestions = state[0];
-  const quizDetail = state[1];
+  // const quizDetail = state[1];
   const [isSubmitLoading, setSubmitLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const [isNextClicked, setNextClicked] = useState(true);
-  const [isPrevClicked, setPrevClicked] = useState(true);
   const navigate = useNavigate();
-  const [params, setParams] = useSearchParams();
-  const pageNo = parseInt(params.get("pageNo")) || 1;
   const [error, setError] = useState("");
-  const [image, setImage] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const calculateScore = (
-    (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
-  ).toFixed(1);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      const res = await dispatch(
-        getQuizQuesitons({ pageNo, id, isNextClicked, isPrevClicked })
-      );
-
-      if (res.type === "getQuizQuesitons/fulfilled") {
-        setLike(res.payload.isUserLikeDislike.liked);
-        setDisLike(res.payload.isUserLikeDislike.disliked);
-      }
-      if (res?.payload?.questions?.length > 0) {
-        setImage(res.payload.questions[0].image_url);
-        setNextClicked(false);
-        setPrevClicked(false);
-      }
-    };
-    fetchQuestions();
-  }, [pageNo, dispatch]);
+  console.log("me", page);
 
   const handleNext = () => {
-    setNextClicked(true);
-    if (pageNo < quizDetail?.totalQuestions) {
-      setParams({ pageNo: pageNo + 1 });
-      setSelectedOptions([]);
-      setError("");
+    setSelectedOptions([]);
+    setError("");
+
+    const nextIndex = quizDetail.currentQuestionIndex + 1;
+
+    // Check if the next set of questions needs to be fetched
+    const isCloseToEnd = !questions[nextIndex + 3]; // Checking if three questions ahead is undefined
+
+    if (nextIndex < quizDetail.totalQuestions) {
+      setQuizDetail((prev) => ({
+        ...prev,
+        currentQuestionIndex: nextIndex,
+      }));
+
+      if (isCloseToEnd && nextIndex + 3 < quizDetail.totalQuestions) {
+        console.log("Fetching next page...");
+        setPage((prev) => prev + 1);
+      }
     }
   };
 
   const handlePrev = () => {
-    setPrevClicked(true);
-    if (pageNo > 1) {
-      setParams({ pageNo: pageNo - 1 });
-      setSelectedOptions([]);
-      setError("");
+    if (quizDetail.currentQuestionIndex > 0) {
+      setQuizDetail((prev) => ({
+        ...prev,
+        currentQuestionIndex: prev.currentQuestionIndex - 1,
+      }));
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (selectedOptions.length === 0) {
-      setError("Please select at least one option.");
-    } else {
-      const values = {
-        selectedOptions,
-        quizId: id,
-        questionIndex: pageNo,
-      };
+  // const calculateScore = (
+  //   (quizDetail?.score / quizDetail?.totalQuestions) * 100 || 0
+  // ).toFixed(1);
 
-      setSubmitLoading(true);
-      const res = await dispatch(submitQuiz(values));
-      setSubmitLoading(false);
-      if (res.type === "submitQuiz/fulfilled") {
-        if (pageNo === quizDetail?.totalQuestions) {
-          setNextClicked(true);
-          dispatch(
-            getQuizQuesitons({
-              pageNo,
-              id,
-              isNextClicked: true,
-              isPrevClicked,
-            })
-          );
-        } else {
-          handleNext();
-        }
-      }
-    }
-  };
+  useEffect(() => {
+    setLoading(true);
+    const fetchQuestions = async () => {
+      const res = await axiosWithToken.get(`/quiz/get-quiz-questions/${id}`, {
+        params: {
+          page,
+        },
+      });
 
-  const handleEndQuiz = async () => {
-    if (quizDetail?.mode === "Timed") {
-      const res = await dispatch(endQuiz({ id }));
-      if (res.type === "endQuiz/fulfilled") {
-        navigate("/");
-      }
-      closeModal();
-    } else {
-      closeModal();
-      navigate("/");
-    }
-  };
+      setLoading(false);
+      const {
+        questions: quizQuestions,
+        totalQuestions,
+        score,
+        mode,
+        isSubmit,
+      } = res.data.data;
+
+      const decryptedQuestions = quizQuestions.map((question) => {
+        return decryptQuestionData(question, "secretKey");
+      });
+      setQuestions((prevQuestions) => [
+        ...prevQuestions,
+        ...decryptedQuestions,
+      ]);
+
+      setQuizDetail((prev) => ({
+        ...prev,
+        totalQuestions: totalQuestions,
+        score: score,
+        mode: mode,
+        isSubmit: isSubmit,
+        currentQuestionIndex: prev.currentQuestionIndex,
+      }));
+    };
+    fetchQuestions();
+  }, [page, id]);
+
+  // const handleNext = () => {
+  //   if (pageNo < quizDetail?.totalQuestions) {
+  //     setParams({ pageNo: pageNo + 1 });
+  //     setSelectedOptions([]);
+  //     setError("");
+  //   }
+  // };
+
+  // const handlePrev = () => {
+  //   if (pageNo > 1) {
+  //     setParams({ pageNo: pageNo - 1 });
+  //     setSelectedOptions([]);
+  //     setError("");
+  //   }
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (selectedOptions.length === 0) {
+  //     setError("Please select at least one option.");
+  //   } else {
+  //     const values = {
+  //       selectedOptions,
+  //       quizId: id,
+  //       questionIndex: pageNo,
+  //     };
+
+  //     setSubmitLoading(true);
+  //     const res = await dispatch(submitQuiz(values));
+  //     setSubmitLoading(false);
+  //     if (res.type === "submitQuiz/fulfilled") {
+  //       if (pageNo === quizDetail?.totalQuestions) {
+  //         dispatch(
+  //           getQuizQuesitons({
+  //             pageNo,
+  //             id,
+  //             isNextClicked: true,
+  //             isPrevClicked,
+  //           })
+  //         );
+  //       } else {
+  //         handleNext();
+  //       }
+  //     }
+  //   }
+  // };
+
+  // const handleEndQuiz = async () => {
+  //   if (quizDetail?.mode === "Timed") {
+  //     const res = await dispatch(endQuiz({ id }));
+  //     if (res.type === "endQuiz/fulfilled") {
+  //       navigate("/");
+  //     }
+  //     closeModal();
+  //   } else {
+  //     closeModal();
+  //     navigate("/");
+  //   }
+  // };
 
   const handleOptionChange = (index) => {
     const optionValue = String.fromCharCode(65 + index);
@@ -165,7 +240,7 @@ const QuestionTemplate = () => {
         <div className="flex flex-wrap justify-between lg:flex-nowrap">
           <div className="lg:w-[12%] w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
             <div className="text-[#575757] bg-[#F8F9FA] border-b border-[#DEE2E6] rounded-xl text-center py-4 text-title-p px-4 font-semibold">
-              Score: {calculateScore}%
+              Score: {quizDetail.score}%
             </div>
             <div className="overflow-y-auto max-h-[70vh]">
               <ul className="px-6 mx-auto mt-4 space-y-2 text-center pb-7">
@@ -195,11 +270,11 @@ const QuestionTemplate = () => {
               </ul>
             </div>
           </div>
-          {quizDetail?.mode === "Timed" && (
+          {/* {quizDetail?.mode === "Timed" && (
             <div className="lg:w-[12%] lg:hidden block w-fit bg-white border border-[#7749F8] rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start">
-              <Timer startTime={quizDetail && quizDetail?.startTime} id={id} />
+              <Timer id={id} />
             </div>
-          )}
+          )} */}
 
           <div className="lg:w-[70%] w-full bg-white shadow-md p-8 rounded-md">
             <div className="flex justify-between mb-10">
@@ -209,12 +284,15 @@ const QuestionTemplate = () => {
                 leftIcon={MdOutlineKeyboardArrowLeft}
                 leftIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handlePrev}
-                disabled={pageNo === 1 || isLoading}
-                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
+                disabled={
+                  quizDetail.currentQuestionIndex + 1 === 1 || isLoading
+                }
+                className="bg-white border select-none border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
 
               <span className="bg-[#3A57E8] text-title-p rounded-[4px] text-white font-normal py-2 px-6">
-                {pageNo} of {quizDetail?.totalQuestions}
+                {quizDetail.currentQuestionIndex + 1} of&nbsp;
+                {quizDetail.totalQuestions}
               </span>
 
               <Button
@@ -223,32 +301,38 @@ const QuestionTemplate = () => {
                 rightIcon={MdOutlineKeyboardArrowRight}
                 rightIconStyle="text-[#ADB5BD] text-[25px]"
                 onClick={handleNext}
-                disabled={pageNo >= quizDetail?.totalQuestions || isLoading}
-                className="bg-white border border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
+                disabled={
+                  quizDetail.currentQuestionIndex + 1 ===
+                    quizDetail.totalQuestions || isLoading
+                }
+                className="bg-white border select-none border-[#E9ECEF] text-secondary rounded-[4px] flex items-center py-2 px-4 hover:bg-gray-100 focus:outline-none hover:shadow-md"
               />
             </div>
-            <form onSubmit={handleSubmit}>
+            <form
+            // onSubmit={handleSubmit}
+            >
               <div className="my-6 mt-6">
                 <h2
                   className="font-semibold text-title-p"
                   dangerouslySetInnerHTML={{
-                    __html: quizQuestions?.question,
+                    __html: question?.question || "",
                   }}
                 />
               </div>
 
-              {image && (
+              {question?.image_url && (
                 <div className="flex my-8 ">
                   <img
-                    src={image}
+                    src={question?.image_url}
                     className="w-64 h-32"
-                    alt="Question visual"
+                    alt="Question Image"
+                    loading="lazy"
                   />
                 </div>
               )}
               <div className="mt-auto space-y-6 lg:col-span-2">
                 <div className="bg-white mx-6 rounded-lg border border-[#E6E9EC]">
-                  {quizQuestions?.options?.map(
+                  {question?.options?.map(
                     (category, index) =>
                       category && (
                         <div
@@ -260,7 +344,7 @@ const QuestionTemplate = () => {
                               type="checkbox"
                               className="mr-3 min-w-[16px] min-h-[16px] text-[#838f9b] cursor-pointer"
                               checked={
-                                quizQuestions?.userAttempt?.includes(
+                                question?.userAttempt?.includes(
                                   String.fromCharCode(65 + index)
                                 ) ||
                                 selectedOptions.includes(
@@ -269,8 +353,8 @@ const QuestionTemplate = () => {
                               }
                               onChange={() => handleOptionChange(index)}
                               disabled={
-                                !quizQuestions?.hasAnswered
-                                  ? !quizQuestions?.hasAnswered
+                                !question?.hasAnswered
+                                  ? !question?.hasAnswered
                                   : false
                               }
                             />
@@ -320,14 +404,14 @@ const QuestionTemplate = () => {
                 </div>
               </div>
             </form>
-            <Suggestions
+            {/* <Suggestions
               setLike={setLike}
               setDisLike={setDisLike}
               like={like}
               dislike={dislike}
               pageNo={pageNo}
               id={id}
-            />
+            /> */}
           </div>
 
           <div className="lg:w-[12%] w-fit bg-white rounded-xl lg:mr-4 mb-4 lg:mb-0 self-start"></div>

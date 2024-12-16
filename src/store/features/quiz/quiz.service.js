@@ -35,22 +35,48 @@ export const getRecentQuiz = createAsyncThunk(
   }
 );
 
+// export const getQuizQuesitons = createAsyncThunk(
+//   "getQuizQuesitons",
+//   async ({ id }, { rejectWithValue }) => {
+//     // const params = {};
+//     // if (pageNo) {
+//     //   params.pageNo = pageNo;
+//     // }
+
+//     try {
+//       const response = await axiosWithToken.post(`quiz/get-quiz-questions`, {
+//         id,
+//         // isNextClicked,
+//         // isPrevClicked,
+//         // page: pageNo,
+//       });
+
+//       console.log(response.data);
+
+//       return response.data.data;
+//     } catch (error) {
+//       if (error) {
+//         toast.error(error?.response?.data?.error);
+//         return rejectWithValue(error);
+//       }
+//     }
+//   }
+// );
+
+
+
 export const getQuizQuesitons = createAsyncThunk(
   "getQuizQuesitons",
-  async ({ pageNo, id, isNextClicked, isPrevClicked }, { rejectWithValue }) => {
+  async ({ id,page=1 }, { rejectWithValue }) => {
     const params = {};
-    if (pageNo) {
-      params.pageNo = pageNo;
+    if (page) {
+      params.pageNo = page;
     }
 
     try {
-      const response = await axiosWithToken.post(`quiz/get-quiz-questions`, {
-        isNextClicked,
-        isPrevClicked,
-        id,
-        page: pageNo,
-      });
-
+      const response = await axiosWithToken.get(`quiz/get-quiz-questions/${id}`, {
+        params
+      });      
       return response.data.data;
     } catch (error) {
       if (error) {
@@ -60,7 +86,6 @@ export const getQuizQuesitons = createAsyncThunk(
     }
   }
 );
-
 export const submitQuiz = createAsyncThunk(
   "submitQuiz",
   async (data, { rejectWithValue, dispatch }) => {

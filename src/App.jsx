@@ -118,7 +118,7 @@ function App() {
           }
         />
         <Route
-          path="/question/:id"
+          path="/question"
           element={
             <ProtectedRoute>
               <QueryClientProvider client={queryClient}>

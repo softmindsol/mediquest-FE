@@ -119,7 +119,8 @@ const CreateQuizModal = ({
       }
 
       if (type === "start") {
-        navigate(`/question/${res.payload.data.quiz._id}`);
+        // navigate(`/question/${res.payload.data.quiz._id}`);
+        navigate(`/question`, { state: { id: res.payload.data.quiz._id } });
         closeModal();
         return;
       }
@@ -187,7 +188,7 @@ const CreateQuizModal = ({
               <option value="20">20</option>
               <option value="30">30</option>
               <option value="40">40</option>
-              <option value="50">50</option>
+              <option value="150">30</option>
             </select>
           </div>
 
